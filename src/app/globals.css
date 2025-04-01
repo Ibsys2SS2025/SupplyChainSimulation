@@ -13,7 +13,8 @@
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  /* Statt des Versteckens wird jetzt sichergestellt, dass Inhalte sichtbar bleiben */
+  overflow-x: visible;
 }
 
 body {
