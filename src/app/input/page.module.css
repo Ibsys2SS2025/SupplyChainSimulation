@@ -1,0 +1,36 @@
+.container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    max-width: 700px;
+}
+
+.form {
+    margin-top: 1.5rem;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.nextSteps {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid #eaeaea;
+    animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
