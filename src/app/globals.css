@@ -41,3 +41,10 @@ a {
     color-scheme: dark;
   }
 }
+/* In globals.css */
+.dropdown-toggle::after,
+button[aria-expanded]::after,
+a[aria-expanded]::after {
+  display: none !important; /* Entfernt den Pfeil */
+  content: "" !important;   /* Entfernt jeglichen Inhalt */
+}
