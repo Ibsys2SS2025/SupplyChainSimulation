@@ -32,5 +32,11 @@
     "inspectData": "Inspect Data",
     "xmlData": "XML Data",
     "msgNextPage": "Your data has been saved in the system. Click the button below to go to the next page, or select an option from the sidebar."
-  }
+  },
+    "homepage": {
+        "title": "Welcome to",
+        "description": "Your platform for intelligent production planning.",
+        "description2": "Start now with the setup.",
+        "buttonSetup": "Start Setup"
+    }
 }

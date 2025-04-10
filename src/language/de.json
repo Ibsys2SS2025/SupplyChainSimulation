@@ -35,14 +35,9 @@
   },
   "homepage": {
     "title": "Willkommen bei",
-    "description": "Professionelle Produktionsmanagement-Software von G8-Softworks.",
-    "descriptionA": "Sisyphus ist Ihr unverzichtbares Werkzeug zur Bewältigung von Herausforderungen im Produktionsmanagement. Entwickelt für die Supply Chain Simulation, bietet es eine Lösung, um Sie bei Entscheidungen zu unterstützen:",
-    "bulletA": "Bestellaufgabe",
-    "bulletB": "Produktionsplanung",
-    "bulletC": "Kapazitätsplanung",
-    "descriptionB": "Richten Sie die Produktion an den Marktanforderungen aus und erreichen Sie wichtige Ziele wie verbesserte Lieferzuverlässigkeit, optimierte Ressourcennutzung und reduzierte Fertigungskosten. Experimentieren Sie sicher mit Strategien, erhalten Sie sofortiges Feedback und verfeinern Sie Ihre Fähigkeiten für den realen Erfolg.",
-    "descriptionC": "Bereit, bessere Entscheidungen zu treffen? Beginnen Sie noch heute mit Sisyphus!",
-    "getStarted": "Loslegen"
+    "description": "Deine Plattform für intelligente Produktionsplanung.",
+    "description2": "Starte jetzt mit dem Setup.",
+    "buttonSetup": "Setup starten"
   },
   "disposition": {
     "title": "Disposition",

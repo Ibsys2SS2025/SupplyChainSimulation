@@ -20,11 +20,11 @@ const HomePage: React.FC = () => {
                     {t("homepage.title")} <span className={styles.highlight}>The Four</span>
                 </h1>
                 <p className={styles.subtitle}>
-                    Deine Plattform für intelligente Produktionsplanung.<br />
-                    Starte jetzt mit dem Setup.
+                    {t("homepage.description")}<br />
+                    {t("homepage.description2")}
                 </p>
                 <button onClick={handleClick} className={styles.setupButton}>
-                    Setup starten
+                    {t("homepage.buttonSetup")}
                 </button>
             </div>
         </div>

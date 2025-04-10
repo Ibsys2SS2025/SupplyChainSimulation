@@ -16,5 +16,11 @@
     "orders": "Disposición de componentes",
     "lotsize": "Lotes",
     "export": "Exportar"
+  },
+  "homepage": {
+    "title": "Bienvenido a",
+    "description": "Tu plataforma para una planificación de producción inteligente.",
+    "description2": "Comienza ahora con la configuración.",
+    "buttonSetup": "Iniciar configuración"
   }
 }
