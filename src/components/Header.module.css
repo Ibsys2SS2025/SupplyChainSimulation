@@ -7,11 +7,13 @@
     /* Schattierung für einen "Card"-Effekt */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     /* Abgerundete Ecken */
-    border-radius: 8px;
+    border-radius: 26px;
     /* Übergang, falls du Farben ändern möchtest */
     transition: background-color 0.3s ease;
     /* Etwas mehr Padding, damit es großzügiger wirkt */
     padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem; /* oder z.B. 2rem für mehr Abstand */
+
 }
 
 /***********************************************
@@ -157,7 +159,7 @@
 }
 
 .icon {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
     color: #007bff;
     transition: color 0.3s ease, transform 0.3s ease;
 }
