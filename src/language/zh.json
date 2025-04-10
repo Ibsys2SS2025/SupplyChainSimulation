@@ -1,0 +1,20 @@
+{
+  "global": {
+    "productionPlan": "输入列表",
+    "nextPage": "下一页",
+    "prevPage": "上一页",
+    "title": "企业模拟",
+    "group": "小组",
+    "period": "周期"
+  },
+  "nav": {
+    "setup": "设置",
+    "input": "输入数据",
+    "sellwish": "生产计划",
+    "disposition": "调度",
+    "capacityplan": "产能计划",
+    "orders": "采购计划",
+    "lotsize": "批量",
+    "export": "导出"
+  }
+}

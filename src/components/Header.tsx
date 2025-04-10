@@ -3,6 +3,7 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import '../language/i18n';
 // Wir nutzen das "MdLanguage"-Icon als universelles Sprache-Icon
 import { MdLanguage } from "react-icons/md";
 import styles from "./Header.module.css";
@@ -14,9 +15,9 @@ const Header: React.FC = () => {
     const languages = [
         { code: "en", name: "🇬🇧 English" },
         { code: "de", name: "🇩🇪 Deutsch" },
-        { code: "vt", name: "🇻🇳 Tiếng Việt" },
-        { code: "gr", name: "🇬🇷 Ελληνικά" },
+        { code: "es", name: "🇪🇸 Español" },
         { code: "jp", name: "🇯🇵 日本語" },
+        { code: "zh", name: "🇨🇳 中文 (Mandarin)" },
     ];
 
     // Funktion zum Sprachwechsel

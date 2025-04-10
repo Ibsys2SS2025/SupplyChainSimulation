@@ -1,6 +1,6 @@
 {
   "global": {
-    "productionPlan": "Produktionsplan",
+    "productionPlan": "Eingabeliste",
     "nextPage": "Nächste Seite",
     "prevPage": "Vorherige Seite",
     "title": "Planspiel",
@@ -11,9 +11,9 @@
     "setup": "Setup",
     "input": "Eingabedaten",
     "sellwish": "Produktionsplan",
-    "disposition": "Stücklistenauflösung",
+    "disposition": "Disposition",
     "capacityplan": "Kapazitätsplan",
-    "orders": "Teileverwendungsnachweis",
+    "orders": "Kaufteildisposition",
     "lotsize": "Losgrößen",
     "export": "Export"
   },

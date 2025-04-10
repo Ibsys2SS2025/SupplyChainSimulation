@@ -1,0 +1,20 @@
+{
+  "global": {
+    "productionPlan": "Lista de entrada",
+    "nextPage": "Página siguiente",
+    "prevPage": "Página anterior",
+    "title": "Simulación empresarial",
+    "group": "Grupo",
+    "period": "Período"
+  },
+  "nav": {
+    "setup": "Configuración",
+    "input": "Datos de entrada",
+    "sellwish": "Plan de producción",
+    "disposition": "Disposición",
+    "capacityplan": "Plan de capacidad",
+    "orders": "Disposición de componentes",
+    "lotsize": "Lotes",
+    "export": "Exportar"
+  }
+}

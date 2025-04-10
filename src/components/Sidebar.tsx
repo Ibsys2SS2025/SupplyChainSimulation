@@ -17,16 +17,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isXmlUploaded }) => {
 
     // Liste der Unterpunkte
     const subItems = [
-        t("Produktionsplan"),
-        t("Stücklistenauflösung"),
+        t("Eingabeliste"),
+        t("Disposition"),
         t("Kapazitätsplan"),
-        t("Teileverwendungsnachweis"),
+        t("Kaufteildisposition"),
         t("Losgrößen"),
         t("Export"),
     ];
 
     const handleSetupClick = () => {
-        // Bei Klick navigieren wir immer zur /input-Seite
         router.push("/input");
         // Falls XML bereits hochgeladen wurde, können zusätzlich die Unterpunkte getoggelt werden:
         if (isXmlUploaded) {
@@ -43,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isXmlUploaded }) => {
                     onClick={handleSetupClick}
                     className={`${styles.mainItem} ${!isXmlUploaded ? styles.disabled : ""}`}
                 >
-                    {t("Setup")}
+                    {t("nav.setup")}
                 </ListGroup.Item>
 
                 {/* Unterpunkte: werden nur angezeigt, wenn XML hochgeladen wurde */}
@@ -60,7 +59,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isXmlUploaded }) => {
                 {/* Hinweis, falls keine XML hochgeladen wurde */}
                 {!isXmlUploaded && (
                     <ListGroup.Item className={styles.infoItem}>
-                        {t("Bitte laden Sie eine XML-Datei hoch, um weitere Optionen freizuschalten.")}
                     </ListGroup.Item>
                 )}
             </ListGroup>
