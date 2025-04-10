@@ -3,10 +3,12 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import styles from "./HomePage.module.css";
+import { useTranslation } from "react-i18next";
+
 
 const HomePage: React.FC = () => {
     const router = useRouter();
-
+    const { t } = useTranslation();
     const handleClick = () => {
         router.push("/setup");
     };
@@ -15,7 +17,7 @@ const HomePage: React.FC = () => {
         <div className={styles.pageWrapper}>
             <div className={styles.contentWrapper}>
                 <h1 className={styles.title}>
-                    Willkommen bei <span className={styles.highlight}>The Four</span>
+                    {t("homepage.title")} <span className={styles.highlight}>The Four</span>
                 </h1>
                 <p className={styles.subtitle}>
                     Deine Plattform für intelligente Produktionsplanung.<br />
