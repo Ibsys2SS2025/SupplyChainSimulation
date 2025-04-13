@@ -18,20 +18,16 @@
     "export": "Export"
   },
   "setup": {
-    "title": "Setup",
-    "titleNextSteps": "Next Steps",
-    "description": "Select an XML file containing data from your previous business period. It should end with \"result\", e.g.: \"179_7_result.xml\"",
-    "selectXmlButton": "Select XML",
-    "selectXmlButton_loadtip": "Load an XML file.",
-    "selectXmlButton_success": "XML file successfully loaded!",
-    "selectXmlButton_error": "The file must be of type .xml!",
+    "title": "Upload XML Data",
+    "description": "Please select an XML file to upload into the system.",
+    "selectXmlButton": "Select File",
+    "selectXmlButton_loadtip": "Only XML files are supported.",
     "loadDataButton": "Load Data",
-    "nextPageButton": "Next",
-    "xmlAlertDanger": "The XML file could not be loaded. Please make sure its name ends with \"...result.xml\" and it contains the required data.",
-    "xmlAlertSuccess": "The XML file was successfully loaded into the system.",
-    "inspectData": "Inspect Data",
-    "xmlData": "XML Data",
-    "msgNextPage": "Your data has been saved in the system. Click the button below to go to the next page, or select an option from the sidebar."
+    "xmlAlertDanger": "Error processing XML file.",
+    "xmlAlertSuccess": "File processed successfully!",
+    "titleNextSteps": "Next Steps",
+    "msgNextPage": "The data has been loaded successfully. You may now proceed to the next step.",
+    "nextPageButton": "Continue to Overview"
   },
     "homepage": {
         "title": "Welcome to",

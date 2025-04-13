@@ -22,5 +22,17 @@
     "description": "Tu plataforma para una planificación de producción inteligente.",
     "description2": "Comienza ahora con la configuración.",
     "buttonSetup": "Iniciar configuración"
+  },
+  "setup": {
+    "title": "Subir datos XML",
+    "description": "Por favor, selecciona un archivo XML para cargarlo en el sistema.",
+    "selectXmlButton": "Seleccionar archivo",
+    "selectXmlButton_loadtip": "Solo se admiten archivos XML.",
+    "loadDataButton": "Cargar datos",
+    "xmlAlertDanger": "Error al procesar el archivo XML.",
+    "xmlAlertSuccess": "¡Archivo procesado con éxito!",
+    "titleNextSteps": "Siguientes pasos",
+    "msgNextPage": "Los datos se han cargado correctamente. Ahora puedes continuar.",
+    "nextPageButton": "Continuar al resumen"
   }
 }

@@ -22,5 +22,17 @@
     "description": "您的智能生产计划平台。",
     "description2": "现在开始设置。",
     "buttonSetup": "开始设置"
+  },
+  "setup": {
+    "title": "上传 XML 数据",
+    "description": "请选择一个 XML 文件上传到系统中。",
+    "selectXmlButton": "选择文件",
+    "selectXmlButton_loadtip": "仅支持 XML 文件。",
+    "loadDataButton": "加载数据",
+    "xmlAlertDanger": "处理 XML 文件时出错。",
+    "xmlAlertSuccess": "文件处理成功！",
+    "titleNextSteps": "下一步",
+    "msgNextPage": "数据已成功加载。您现在可以继续下一步。",
+    "nextPageButton": "继续到概览"
   }
 }

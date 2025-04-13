@@ -1,14 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
-import { useRouter } from 'next/navigation';
-import { parseString } from 'xml2js';
+import React, {useState, useEffect} from 'react';
+import {Container, Form, Button, Alert, Spinner} from 'react-bootstrap';
+import {useRouter} from 'next/navigation';
+import {parseString} from 'xml2js';
 import styles from './page.module.css';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import BackButton from '@/components/BackButton';
+import Header from "@/components/Header";
+
 
 const InputPage: React.FC = () => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const router = useRouter();
 
     const [file, setFile] = useState<File | null>(null);
@@ -19,12 +22,13 @@ const InputPage: React.FC = () => {
 
     // XML zu JSON konvertieren
     const convertXmlToJson = (xml: string) => {
-        parseString(xml, { explicitArray: false }, (err, result) => {
+        parseString(xml, {explicitArray: false}, (err, result) => {
             if (err) {
                 setMappingError(true);
                 console.error('XML Parse Fehler:', err);
             } else {
                 setJsonData(result);
+                console.log('XML zu JSON konvertiert:', result);
                 setMappingError(false);
             }
         });
@@ -64,48 +68,45 @@ const InputPage: React.FC = () => {
     };
 
     return (
-        <Container className={styles.container}>
-            <h2>{t('setup.title')}</h2>
-            <p>{t('setup.description')}</p>
+        <div className={styles.container}>
+            <BackButton/>
+
+            <h2 className={styles.title}>{t('setup.title')}</h2>
+            <p className={styles.description}>{t('setup.description')}</p>
 
             <Form className={styles.form}>
                 <Form.Group controlId="xmlUpload" className="mb-3">
-                    <Form.Label>{t('setup.selectXmlButton')}</Form.Label>
-                    <Form.Control type="file" accept=".xml" onChange={handleFileChange} />
+                    <Form.Control type="file" accept=".xml" onChange={handleFileChange}/>
                     <Form.Text className="text-muted">
-                        {t('setup.selectXmlButton_loadtip')}
                     </Form.Text>
                 </Form.Group>
 
-                {mappingError && (
-                    <Alert variant="danger">{t('setup.xmlAlertDanger')}</Alert>
-                )}
-                {dataInitialized && (
-                    <Alert variant="success">{t('setup.xmlAlertSuccess')}</Alert>
-                )}
+                {mappingError && <Alert variant="danger">{t('setup.xmlAlertDanger')}</Alert>}
+                {dataInitialized && <Alert variant="success">{t('setup.xmlAlertSuccess')}</Alert>}
 
-                <Button
-                    variant="outline-info"
-                    className={styles.button}
-                    onClick={mapXmlData}
-                    disabled={!jsonData || isLoading}
-                >
-                    {isLoading && <Spinner size="sm" className="me-2" />}
-                    {t('setup.loadDataButton')}
-                </Button>
+                <div className={styles.button}>
+                    <Button
+                        variant="outline-info"
+                        onClick={mapXmlData}
+                        disabled={!jsonData || isLoading}
+                    >
+                        {isLoading && <Spinner size="sm" className="me-2"/>}
+                        {t('setup.loadDataButton')}
+                    </Button>
+                </div>
             </Form>
 
             {dataInitialized && (
                 <div className={styles.nextSteps}>
                     <h2>{t('setup.titleNextSteps')}</h2>
                     <p>{t('setup.msgNextPage')}</p>
-                    <Button variant="info" onClick={() => router.push('/sellwish')}>
+                    <Button variant="info" onClick={() => router.push('/prognose')}>
                         {t('setup.nextPageButton')}
                     </Button>
                 </div>
             )}
-        </Container>
-    );
-};
+        </div>
 
+    );
+}
 export default InputPage;

@@ -22,5 +22,17 @@
     "description": "インテリジェントな生産計画のためのプラットフォーム。",
     "description2": "今すぐセットアップを開始してください。",
     "buttonSetup": "セットアップを開始"
+  },
+  "setup": {
+    "title": "XMLデータのアップロード",
+    "description": "システムにアップロードするXMLファイルを選択してください。",
+    "selectXmlButton": "ファイルを選択",
+    "selectXmlButton_loadtip": "XMLファイルのみサポートされています。",
+    "loadDataButton": "データを読み込む",
+    "xmlAlertDanger": "XMLファイルの処理中にエラーが発生しました。",
+    "xmlAlertSuccess": "ファイルが正常に処理されました！",
+    "titleNextSteps": "次のステップ",
+    "msgNextPage": "データが正常に読み込まれました。次のステップに進めます。",
+    "nextPageButton": "概要に進む"
   }
 }
