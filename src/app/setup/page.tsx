@@ -1,33 +1,38 @@
-'use client';
+'use client'; // ganz oben!
 
-import React, {useState, useEffect} from 'react';
-import {Container, Form, Button, Alert, Spinner} from 'react-bootstrap';
-import {useRouter} from 'next/navigation';
-import {parseString} from 'xml2js';
+import React, { useState } from 'react';
+import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { useRouter } from 'next/navigation';
+import { parseString } from 'xml2js';
 import styles from './page.module.css';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import BackButton from '@/components/BackButton';
 import Header from "@/components/Header";
 
+// Importiere den Context
+import { useXmlData } from '@/context/XmlDataContext';
 
 const InputPage: React.FC = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const router = useRouter();
 
+    // Hier kommt der globale Zustand:
+    const { xmlData, setXmlData } = useXmlData();
+
     const [file, setFile] = useState<File | null>(null);
-    const [jsonData, setJsonData] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [mappingError, setMappingError] = useState<boolean>(false);
     const [dataInitialized, setDataInitialized] = useState<boolean>(false);
 
-    // XML zu JSON konvertieren
+    // XML → JSON
     const convertXmlToJson = (xml: string) => {
-        parseString(xml, {explicitArray: false}, (err, result) => {
+        parseString(xml, { explicitArray: false }, (err, result) => {
             if (err) {
                 setMappingError(true);
                 console.error('XML Parse Fehler:', err);
             } else {
-                setJsonData(result);
+                // Speichere die geparsten Daten jetzt im Context
+                setXmlData(result);
                 console.log('XML zu JSON konvertiert:', result);
                 setMappingError(false);
             }
@@ -48,16 +53,14 @@ const InputPage: React.FC = () => {
         }
     };
 
-    // Datenverarbeitung simulieren (Hier später API Call einbauen!)
+    // Datenverarbeitung (simuliert)
     const mapXmlData = async () => {
         setIsLoading(true);
         setMappingError(false);
         try {
-            console.log('Mapping Data:', jsonData);
-            // Simuliere Verzögerung
+            console.log('Mapping Data aus dem Kontext:', xmlData);
+            // Warte 1.5 Sekunden (Sim)
             await new Promise((resolve) => setTimeout(resolve, 1500));
-
-            // Setze Dateninitialisierung erfolgreich
             setDataInitialized(true);
         } catch (error) {
             setMappingError(true);
@@ -69,28 +72,34 @@ const InputPage: React.FC = () => {
 
     return (
         <div className={styles.container}>
-            <BackButton/>
+            <BackButton />
 
             <h2 className={styles.title}>{t('setup.title')}</h2>
             <p className={styles.description}>{t('setup.description')}</p>
 
             <Form className={styles.form}>
                 <Form.Group controlId="xmlUpload" className="mb-3">
-                    <Form.Control type="file" accept=".xml" onChange={handleFileChange}/>
-                    <Form.Text className="text-muted">
-                    </Form.Text>
+                    <Form.Control
+                        type="file"
+                        accept=".xml"
+                        onChange={handleFileChange}
+                    />
                 </Form.Group>
 
-                {mappingError && <Alert variant="danger">{t('setup.xmlAlertDanger')}</Alert>}
-                {dataInitialized && <Alert variant="success">{t('setup.xmlAlertSuccess')}</Alert>}
+                {mappingError && (
+                    <Alert variant="danger">{t('setup.xmlAlertDanger')}</Alert>
+                )}
+                {dataInitialized && (
+                    <Alert variant="success">{t('setup.xmlAlertSuccess')}</Alert>
+                )}
 
                 <div className={styles.button}>
                     <Button
                         variant="outline-info"
                         onClick={mapXmlData}
-                        disabled={!jsonData || isLoading}
+                        disabled={!xmlData || isLoading}
                     >
-                        {isLoading && <Spinner size="sm" className="me-2"/>}
+                        {isLoading && <Spinner size="sm" className="me-2" />}
                         {t('setup.loadDataButton')}
                     </Button>
                 </div>
@@ -106,7 +115,7 @@ const InputPage: React.FC = () => {
                 </div>
             )}
         </div>
-
     );
-}
+};
+
 export default InputPage;
