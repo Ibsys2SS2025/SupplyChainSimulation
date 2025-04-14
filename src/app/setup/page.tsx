@@ -7,7 +7,6 @@ import { parseString } from 'xml2js';
 import styles from './page.module.css';
 import { useTranslation } from 'react-i18next';
 import BackButton from '@/components/BackButton';
-import Header from "@/components/Header";
 
 // Importiere den Context
 import { useXmlData } from '@/context/XmlDataContext';

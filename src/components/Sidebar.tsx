@@ -3,65 +3,48 @@
 import React, { useState } from "react";
 import { ListGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "./Sidebar.module.css";
 
-interface SidebarProps {
-    isXmlUploaded: boolean;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ isXmlUploaded }) => {
-    const [showSetupItems, setShowSetupItems] = useState(false);
+const Sidebar: React.FC = () => {
     const { t } = useTranslation();
-    const router = useRouter();
+    const [showSidebar, setShowSidebar] = useState(false);
 
-    // Liste der Unterpunkte
-    const subItems = [
-        t("Eingabeliste"),
-        t("Disposition"),
-        t("Kapazitätsplan"),
-        t("Kaufteildisposition"),
-        t("Losgrößen"),
-        t("Export"),
+    // Navigationseinträge mit Pfad
+    const navItems = [
+        { label: t("nav.input"), path: "/prognose" },
+        { label: t("nav.disposition"), path: "/disposition" },
+        { label: t("nav.capacityplan"), path: "/kapazitaetsplan" },
+        { label: t("nav.orders"), path: "/kaufteildisposition" },
+        { label: t("nav.export"), path: "/export" },
     ];
 
-    const handleSetupClick = () => {
-        router.push("/setup");
-        // Falls XML bereits hochgeladen wurde, können zusätzlich die Unterpunkte getoggelt werden:
-        if (isXmlUploaded) {
-            setShowSetupItems((prev) => !prev);
-        }
-    };
-
     return (
-        <div className={styles.sidebar}>
-            <ListGroup className={styles.listGroup}>
-                {/* Haupt-Eintrag Setup */}
-                <ListGroup.Item
-                    action
-                    onClick={handleSetupClick}
-                    className={`${styles.mainItem} ${!isXmlUploaded ? styles.disabled : ""}`}
-                >
-                    {t("nav.setup")}
-                </ListGroup.Item>
-
-                {/* Unterpunkte: werden nur angezeigt, wenn XML hochgeladen wurde */}
-                {showSetupItems && isXmlUploaded && (
-                    <>
-                        {subItems.map((item, index) => (
-                            <ListGroup.Item key={index} action className={styles.subItem}>
-                                {item}
-                            </ListGroup.Item>
-                        ))}
-                    </>
-                )}
-
-                {/* Hinweis, falls keine XML hochgeladen wurde */}
-                {!isXmlUploaded && (
-                    <ListGroup.Item className={styles.infoItem}>
+        <div className={styles.sidebarWrapper}>
+            {/* Handle zum Öffnen */}
+            <div
+                className={styles.sidebarHandle}
+                onMouseEnter={() => setShowSidebar(true)}
+                onClick={() => setShowSidebar((prev) => !prev)}
+            />
+            {/* Sidebar selbst */}
+            <div
+                className={`${styles.sidebar} ${showSidebar ? styles.visible : ""}`}
+                onMouseLeave={() => setShowSidebar(false)}
+            >
+                <ListGroup className={styles.listGroup}>
+                    <ListGroup.Item className={styles.mainItem}>
+                        {t("nav.setup")}
                     </ListGroup.Item>
-                )}
-            </ListGroup>
+                    {navItems.map(({ label, path }, index) => (
+                        <Link href={path} key={index} passHref>
+                            <ListGroup.Item className={styles.subItem}>
+                                {label}
+                            </ListGroup.Item>
+                        </Link>
+                    ))}
+                </ListGroup>
+            </div>
         </div>
     );
 };

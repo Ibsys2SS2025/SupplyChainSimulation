@@ -1,6 +1,5 @@
 'use client'; // ▲ Muss ganz oben stehen!
 
-import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
@@ -9,6 +8,7 @@ import styles from './layout.module.css';
 
 // Importiere den Provider (der ebenfalls 'use client' enthält)
 import { XmlDataProvider } from '@/context/XmlDataContext';
+import React from "react";
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -32,6 +32,7 @@ export default function RootLayout({
         {/* Hier umschließt der Provider alles */}
         <XmlDataProvider>
             <Header />
+
             <main className={styles.mainContent}>{children}</main>
         </XmlDataProvider>
         </body>

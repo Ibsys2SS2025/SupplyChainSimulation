@@ -1,66 +1,80 @@
-.sidebar {
-    width: 200px;
-    padding: 1rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
+.sidebarWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    display: flex;
+    align-items: center;
 }
 
-.listGroup {
-    border: none;
-
-}
-
-.mainItem {
-    font-weight: bold;
-    background-color: #f0f0f0;
-    border: none;
+.sidebarHandle {
+    width: 20px;
+    height: 500px;
+    background-color: white;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.mainItem:hover {
-    background-color: #e0e0e0;
+.sidebarHandle:hover {
+    background-color: #f0f0f0;
 }
 
-.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.sidebar {
+    position: fixed;
+    top: 50%;
+    left: -240px;
+    transform: translateY(-50%);
+    width: 240px;
+    background-color: white;
+    padding: 2rem 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 0 12px 12px 0;
+    transition: left 0.3s ease;
+    min-height: 300px;
+    height: auto;
 }
 
+.sidebar.visible {
+    left: 10px;
+}
+
+.listGroup {
+    border: none;
+    margin-top: 1rem;
+}
+
+/* Hauptmenü */
+.mainItem {
+    font-weight: bold;
+    font-size: 1.2rem;
+    background-color: transparent;
+    border: none;
+    cursor: default;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Untermenüeinträge */
 .subItem {
     padding-left: 1.5rem;
     border: none;
     transition: background-color 0.3s ease, transform 0.3s ease;
-    /* Animation: leichtes Hereingleiten */
-    opacity: 0;
-    animation: slideIn 0.3s forwards;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    background-color: transparent;
+    cursor: pointer;
 }
 
 .subItem:hover {
     background-color: #f8f8f8;
     transform: translateX(5px);
-}
-
-.infoItem {
-    font-size: 0.9rem;
-    color: #888;
-    background-color: transparent;
-    border: none;
-    margin-top: 0.5rem;
-    text-align: center;
-}
-
-/* Keyframes für das Hereingleiten der Unterpunkte */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    border-radius: 8px;
 }
