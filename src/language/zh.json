@@ -16,5 +16,11 @@
     "orders": "采购计划",
     "lotsize": "批量",
     "export": "导出"
+  },
+  "homepage": {
+    "title": "欢迎来到",
+    "description": "您的智能生产计划平台。",
+    "description2": "现在开始设置。",
+    "buttonSetup": "开始设置"
   }
 }

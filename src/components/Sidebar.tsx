@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isXmlUploaded }) => {
     ];
 
     const handleSetupClick = () => {
-        router.push("/input");
+        router.push("/setup");
         // Falls XML bereits hochgeladen wurde, können zusätzlich die Unterpunkte getoggelt werden:
         if (isXmlUploaded) {
             setShowSetupItems((prev) => !prev);

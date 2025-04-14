@@ -16,5 +16,11 @@
     "orders": "部品手配",
     "lotsize": "ロットサイズ",
     "export": "エクスポート"
+  },
+  "homepage": {
+    "title": "ようこそ",
+    "description": "インテリジェントな生産計画のためのプラットフォーム。",
+    "description2": "今すぐセットアップを開始してください。",
+    "buttonSetup": "セットアップを開始"
   }
 }
