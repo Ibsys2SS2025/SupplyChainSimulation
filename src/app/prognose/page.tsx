@@ -190,7 +190,7 @@ export default function PrognosePlanungPage() {
                         {planungData.map((row, index) => (
                             <tr key={row.article}>
                                 <td>{row.article}</td>
-                                {['producti1', 'productionP2', 'productionP3', 'productionP4'].map((field) => (
+                                {['productionP1', 'productionP2', 'productionP3', 'productionP4'].map((field) => (
                                     <td key={field}>
                                         <input
                                             type="number"

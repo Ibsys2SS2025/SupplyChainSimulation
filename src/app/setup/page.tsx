@@ -1,9 +1,9 @@
-'use client'; // ganz oben!
+'use client';
 
 import React, { useState } from 'react';
 import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
-import { parseString } from 'xml2js';
+import { parseStringPromise } from 'xml2js';
 import styles from './page.module.css';
 import { useTranslation } from 'react-i18next';
 import BackButton from '@/components/BackButton';
@@ -24,18 +24,16 @@ const InputPage: React.FC = () => {
     const [dataInitialized, setDataInitialized] = useState<boolean>(false);
 
     // XML → JSON
-    const convertXmlToJson = (xml: string) => {
-        parseString(xml, { explicitArray: false }, (err, result) => {
-            if (err) {
-                setMappingError(true);
-                console.error('XML Parse Fehler:', err);
-            } else {
-                // Speichere die geparsten Daten jetzt im Context
-                setXmlData(result);
-                console.log('XML zu JSON konvertiert:', result);
-                setMappingError(false);
-            }
-        });
+    const convertXmlToJson = async (xml: string) => {
+        try {
+            const result = await parseStringPromise(xml, { explicitArray: false });
+            setXmlData(result);
+            console.log('XML zu JSON konvertiert:', result);
+            setMappingError(false);
+        } catch (err) {
+            setMappingError(true);
+            console.error('XML Parse Fehler:', err);
+        }
     };
 
     // Datei auswählen
