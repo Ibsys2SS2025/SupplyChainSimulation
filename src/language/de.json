@@ -53,7 +53,8 @@
     "period3": "N+2",
     "period4": "N+3",
     "product": "Produkt",
-    "planning": "Planung"
+    "planning": "Planung",
+    "sum": "Summe"
 
   }
 }

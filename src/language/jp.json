@@ -8,31 +8,52 @@
     "period": "期間"
   },
   "nav": {
-    "setup": "設定",
-    "input": "入力データ",
+    "setup": "セットアップ",
+    "input": "予測",
     "sellwish": "生産計画",
-    "disposition": "ディスポジション",
-    "capacityplan": "容量計画",
-    "orders": "部品手配",
-    "lotsize": "ロットサイズ",
+    "disposition": "配分",
+    "capacityplan": "能力計画",
+    "orders": "部品調達",
     "export": "エクスポート"
   },
-  "homepage": {
-    "title": "ようこそ",
-    "description": "インテリジェントな生産計画のためのプラットフォーム。",
-    "description2": "今すぐセットアップを開始してください。",
-    "buttonSetup": "セットアップを開始"
-  },
   "setup": {
-    "title": "XMLデータのアップロード",
-    "description": "システムにアップロードするXMLファイルを選択してください。",
+    "title": "XMLデータをアップロード",
+    "description": "XMLファイルを選択してシステムに読み込んでください。",
     "selectXmlButton": "ファイルを選択",
-    "selectXmlButton_loadtip": "XMLファイルのみサポートされています。",
+    "selectXmlButton_loadtip": "XMLファイルのみが受け付けられます。",
     "loadDataButton": "データを読み込む",
     "xmlAlertDanger": "XMLファイルの処理中にエラーが発生しました。",
     "xmlAlertSuccess": "ファイルが正常に処理されました！",
     "titleNextSteps": "次のステップ",
-    "msgNextPage": "データが正常に読み込まれました。次のステップに進めます。",
-    "nextPageButton": "概要に進む"
+    "msgNextPage": "データが正常に読み込まれました。次のステップに進むことができます。",
+    "nextPageButton": "概要へ進む"
+  },
+  "homepage": {
+    "title": "ようこそ",
+    "description": "スマートな生産計画のためのプラットフォーム。",
+    "description2": "今すぐセットアップを開始しましょう。",
+    "buttonSetup": "セットアップを開始"
+  },
+  "disposition": {
+    "title": "配分",
+    "sales_request": "販売希望",
+    "stock_safety": "安全在庫",
+    "stock_old": "前期間の在庫",
+    "orders_queued": "待機中の注文",
+    "orders_active": "処理中の注文",
+    "orders_prod": "生産指示",
+    "button_save": "保存",
+    "rowInputErr_negVal": "値は0以上でなければなりません",
+    "rowInputErr_nonNumeric": "値は数値でなければなりません"
+  },
+  "forecast": {
+    "title": "予測",
+    "period": "N",
+    "period2": "N+1",
+    "period3": "N+2",
+    "period4": "N+3",
+    "product": "製品",
+    "planning": "計画",
+    "sum": "合計"
   }
 }

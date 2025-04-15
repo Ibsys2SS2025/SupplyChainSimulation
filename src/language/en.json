@@ -1,38 +1,59 @@
 {
   "global": {
-    "productionPlan": "Input List",
-    "nextPage": "Next Page",
-    "prevPage": "Previous Page",
-    "title": "Business Simulation",
+    "productionPlan": "Input list",
+    "nextPage": "Next page",
+    "prevPage": "Previous page",
+    "title": "Business Game",
     "group": "Group",
     "period": "Period"
   },
   "nav": {
     "setup": "Setup",
-    "input": "Input Data",
-    "sellwish": "Production Plan",
+    "input": "Forecast",
+    "sellwish": "Production plan",
     "disposition": "Disposition",
-    "capacityplan": "Capacity Plan",
-    "orders": "Purchased Parts Planning",
-    "lotsize": "Lot Sizes",
+    "capacityplan": "Capacity plan",
+    "orders": "Procurement",
     "export": "Export"
   },
   "setup": {
     "title": "Upload XML Data",
-    "description": "Please select an XML file to upload into the system.",
-    "selectXmlButton": "Select File",
-    "selectXmlButton_loadtip": "Only XML files are supported.",
-    "loadDataButton": "Load Data",
+    "description": "Please select an XML file to load into the system.",
+    "selectXmlButton": "Select file",
+    "selectXmlButton_loadtip": "Only XML files are accepted.",
+    "loadDataButton": "Load data",
     "xmlAlertDanger": "Error processing XML file.",
     "xmlAlertSuccess": "File processed successfully!",
-    "titleNextSteps": "Next Steps",
-    "msgNextPage": "The data has been loaded successfully. You may now proceed to the next step.",
-    "nextPageButton": "Continue to Overview"
+    "titleNextSteps": "Next steps",
+    "msgNextPage": "The data was successfully loaded. You can now proceed to the next step.",
+    "nextPageButton": "Continue to overview"
   },
-    "homepage": {
-        "title": "Welcome to",
-        "description": "Your platform for intelligent production planning.",
-        "description2": "Start now with the setup.",
-        "buttonSetup": "Start Setup"
-    }
+  "homepage": {
+    "title": "Welcome to",
+    "description": "Your platform for smart production planning.",
+    "description2": "Start now with the setup.",
+    "buttonSetup": "Start setup"
+  },
+  "disposition": {
+    "title": "Disposition",
+    "sales_request": "Sales request",
+    "stock_safety": "Safety stock",
+    "stock_old": "Previous period stock",
+    "orders_queued": "Queued orders",
+    "orders_active": "Orders in progress",
+    "orders_prod": "Production orders",
+    "button_save": "Save",
+    "rowInputErr_negVal": "The value must be greater than or equal to zero",
+    "rowInputErr_nonNumeric": "The value must be a number"
+  },
+  "forecast": {
+    "title": "Forecast",
+    "period": "N",
+    "period2": "N+1",
+    "period3": "N+2",
+    "period4": "N+3",
+    "product": "Product",
+    "planning": "Planning",
+    "sum": "Total"
+  }
 }

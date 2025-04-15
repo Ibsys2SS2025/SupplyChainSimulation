@@ -17,7 +17,6 @@ export const XmlDataProvider = ({ children }: { children: ReactNode }) => {
     const [xmlData, setXmlData] = useState<XmlDataType>(() => {
         if (typeof window !== 'undefined') {
             const storedData = localStorage.getItem('xmlData');
-            console.log('Stored XML Data:', storedData);
             if (storedData) {
                 try {
                     return JSON.parse(storedData);
