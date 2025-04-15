@@ -113,6 +113,7 @@ export default function PrognosePlanungPage() {
     ) => {
         const newValue = Number(value) || 0;
         const newData = [...planungData];
+        // @ts-ignore
         newData[index][field] = newValue;
         setPlanungData(newData);
         updateXmlInternaldata(undefined, newData);
