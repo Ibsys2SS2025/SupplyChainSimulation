@@ -1,33 +1,39 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
-import { parseString } from 'xml2js';
+import { parseStringPromise } from 'xml2js';
 import styles from './page.module.css';
 import { useTranslation } from 'react-i18next';
+import BackButton from '@/components/BackButton';
+
+// Importiere den Context
+import { useXmlData } from '@/context/XmlDataContext';
 
 const InputPage: React.FC = () => {
     const { t } = useTranslation();
     const router = useRouter();
 
+    // Hier kommt der globale Zustand:
+    const { xmlData, setXmlData } = useXmlData();
+
     const [file, setFile] = useState<File | null>(null);
-    const [jsonData, setJsonData] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [mappingError, setMappingError] = useState<boolean>(false);
     const [dataInitialized, setDataInitialized] = useState<boolean>(false);
 
-    // XML zu JSON konvertieren
-    const convertXmlToJson = (xml: string) => {
-        parseString(xml, { explicitArray: false }, (err, result) => {
-            if (err) {
-                setMappingError(true);
-                console.error('XML Parse Fehler:', err);
-            } else {
-                setJsonData(result);
-                setMappingError(false);
-            }
-        });
+    // XML → JSON
+    const convertXmlToJson = async (xml: string) => {
+        try {
+            const result = await parseStringPromise(xml, { explicitArray: false });
+            setXmlData(result);
+            console.log('XML zu JSON konvertiert:', result);
+            setMappingError(false);
+        } catch (err) {
+            setMappingError(true);
+            console.error('XML Parse Fehler:', err);
+        }
     };
 
     // Datei auswählen
@@ -44,16 +50,14 @@ const InputPage: React.FC = () => {
         }
     };
 
-    // Datenverarbeitung simulieren (Hier später API Call einbauen!)
+    // Datenverarbeitung (simuliert)
     const mapXmlData = async () => {
         setIsLoading(true);
         setMappingError(false);
         try {
-            console.log('Mapping Data:', jsonData);
-            // Simuliere Verzögerung
+            console.log('Mapping Data aus dem Kontext:', xmlData);
+            // Warte 1.5 Sekunden (Sim)
             await new Promise((resolve) => setTimeout(resolve, 1500));
-
-            // Setze Dateninitialisierung erfolgreich
             setDataInitialized(true);
         } catch (error) {
             setMappingError(true);
@@ -64,17 +68,19 @@ const InputPage: React.FC = () => {
     };
 
     return (
-        <Container className={styles.container}>
-            <h2>{t('setup.title')}</h2>
-            <p>{t('setup.description')}</p>
+        <div className={styles.container}>
+            <BackButton />
+
+            <h2 className={styles.title}>{t('setup.title')}</h2>
+            <p className={styles.description}>{t('setup.description')}</p>
 
             <Form className={styles.form}>
                 <Form.Group controlId="xmlUpload" className="mb-3">
-                    <Form.Label>{t('setup.selectXmlButton')}</Form.Label>
-                    <Form.Control type="file" accept=".xml" onChange={handleFileChange} />
-                    <Form.Text className="text-muted">
-                        {t('setup.selectXmlButton_loadtip')}
-                    </Form.Text>
+                    <Form.Control
+                        type="file"
+                        accept=".xml"
+                        onChange={handleFileChange}
+                    />
                 </Form.Group>
 
                 {mappingError && (
@@ -84,27 +90,28 @@ const InputPage: React.FC = () => {
                     <Alert variant="success">{t('setup.xmlAlertSuccess')}</Alert>
                 )}
 
-                <Button
-                    variant="outline-info"
-                    className={styles.button}
-                    onClick={mapXmlData}
-                    disabled={!jsonData || isLoading}
-                >
-                    {isLoading && <Spinner size="sm" className="me-2" />}
-                    {t('setup.loadDataButton')}
-                </Button>
+                <div className={styles.button}>
+                    <Button
+                        variant="outline-info"
+                        onClick={mapXmlData}
+                        disabled={!xmlData || isLoading}
+                    >
+                        {isLoading && <Spinner size="sm" className="me-2" />}
+                        {t('setup.loadDataButton')}
+                    </Button>
+                </div>
             </Form>
 
             {dataInitialized && (
                 <div className={styles.nextSteps}>
                     <h2>{t('setup.titleNextSteps')}</h2>
                     <p>{t('setup.msgNextPage')}</p>
-                    <Button variant="info" onClick={() => router.push('/sellwish')}>
+                    <Button variant="info" onClick={() => router.push('/prognose')}>
                         {t('setup.nextPageButton')}
                     </Button>
                 </div>
             )}
-        </Container>
+        </div>
     );
 };
 

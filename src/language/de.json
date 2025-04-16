@@ -9,29 +9,24 @@
   },
   "nav": {
     "setup": "Setup",
-    "input": "Eingabedaten",
+    "input": "Prognose",
     "sellwish": "Produktionsplan",
     "disposition": "Disposition",
     "capacityplan": "Kapazitätsplan",
     "orders": "Kaufteildisposition",
-    "lotsize": "Losgrößen",
     "export": "Export"
   },
   "setup": {
-    "title": "Einrichtung",
-    "titleNextSteps": "Nächste Schritte",
-    "description": "Wählen Sie eine XML-Datei aus, die die Daten Ihrer vorherigen Geschäftsperiode enthält. Sie wird mit \"result\" enden. Z. B.: \"179_7_result.xml\"",
-    "selectXmlButton": "XML auswählen",
-    "selectXmlButton_loadtip": "Laden Sie eine XML-Datei.",
-    "selectXmlButton_success": "XML-Datei erfolgreich geladen!",
-    "selectXmlButton_error": "Die Datei muss vom Typ .xml sein!",
+    "title": "XML-Daten hochladen",
+    "description": "Bitte wähle eine XML-Datei aus, um sie in das System zu laden.",
+    "selectXmlButton": "Datei auswählen",
+    "selectXmlButton_loadtip": "Nur XML-Dateien werden akzeptiert.",
     "loadDataButton": "Daten laden",
-    "nextPageButton": "Weiter",
-    "xmlAlertDanger": "Die XML-Datei konnte nicht geladen werden. Bitte stellen Sie sicher, dass ihr Name \"...result.xml\" lautet und die erforderlichen Daten enthält.",
-    "xmlAlertSuccess": "Die XML-Datei wurde erfolgreich in das System geladen.",
-    "inspectData": "Daten überprüfen",
-    "xmlData": "XML-Daten",
-    "msgNextPage": "Ihre Daten wurden im System gespeichert. Klicken Sie auf die Schaltfläche unten, um zur nächsten Seite zu wechseln, oder wählen Sie eine Option aus der Seitenleiste."
+    "xmlAlertDanger": "Fehler beim Verarbeiten der XML-Datei.",
+    "xmlAlertSuccess": "Datei erfolgreich verarbeitet!",
+    "titleNextSteps": "Nächste Schritte",
+    "msgNextPage": "Die Daten wurden erfolgreich geladen. Du kannst nun mit dem nächsten Schritt fortfahren.",
+    "nextPageButton": "Weiter zur Übersicht"
   },
   "homepage": {
     "title": "Willkommen bei",
@@ -50,5 +45,16 @@
     "button_save": "Speichern",
     "rowInputErr_negVal": "Der Wert muss größer oder gleich Null sein",
     "rowInputErr_nonNumeric": "Der Wert muss eine Zahl sein"
+  },
+  "forecast": {
+    "title": "Prognose",
+    "period": "N",
+    "period2": "N+1",
+    "period3": "N+2",
+    "period4": "N+3",
+    "product": "Produkt",
+    "planning": "Planung",
+    "sum": "Summe"
+
   }
 }

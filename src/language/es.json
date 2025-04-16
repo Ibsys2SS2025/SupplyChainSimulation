@@ -3,24 +3,57 @@
     "productionPlan": "Lista de entrada",
     "nextPage": "Página siguiente",
     "prevPage": "Página anterior",
-    "title": "Simulación empresarial",
+    "title": "Juego de simulación",
     "group": "Grupo",
     "period": "Período"
   },
   "nav": {
     "setup": "Configuración",
-    "input": "Datos de entrada",
+    "input": "Pronóstico",
     "sellwish": "Plan de producción",
     "disposition": "Disposición",
     "capacityplan": "Plan de capacidad",
-    "orders": "Disposición de componentes",
-    "lotsize": "Lotes",
+    "orders": "Abastecimiento",
     "export": "Exportar"
+  },
+  "setup": {
+    "title": "Subir datos XML",
+    "description": "Por favor selecciona un archivo XML para cargar en el sistema.",
+    "selectXmlButton": "Seleccionar archivo",
+    "selectXmlButton_loadtip": "Solo se aceptan archivos XML.",
+    "loadDataButton": "Cargar datos",
+    "xmlAlertDanger": "Error al procesar el archivo XML.",
+    "xmlAlertSuccess": "¡Archivo procesado con éxito!",
+    "titleNextSteps": "Siguientes pasos",
+    "msgNextPage": "Los datos se cargaron correctamente. Puedes continuar con el siguiente paso.",
+    "nextPageButton": "Continuar al resumen"
   },
   "homepage": {
     "title": "Bienvenido a",
-    "description": "Tu plataforma para una planificación de producción inteligente.",
+    "description": "Tu plataforma para la planificación de producción inteligente.",
     "description2": "Comienza ahora con la configuración.",
     "buttonSetup": "Iniciar configuración"
+  },
+  "disposition": {
+    "title": "Disposición",
+    "sales_request": "Solicitud de ventas",
+    "stock_safety": "Stock de seguridad",
+    "stock_old": "Stock del período anterior",
+    "orders_queued": "Pedidos en cola",
+    "orders_active": "Pedidos en proceso",
+    "orders_prod": "Órdenes de producción",
+    "button_save": "Guardar",
+    "rowInputErr_negVal": "El valor debe ser mayor o igual a cero",
+    "rowInputErr_nonNumeric": "El valor debe ser un número"
+  },
+  "forecast": {
+    "title": "Pronóstico",
+    "period": "N",
+    "period2": "N+1",
+    "period3": "N+2",
+    "period4": "N+3",
+    "product": "Producto",
+    "planning": "Planificación",
+    "sum": "Total"
   }
 }
