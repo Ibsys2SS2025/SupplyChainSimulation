@@ -77,6 +77,11 @@
     "itemnumber": "Sachnummer",
     "product": "Produkt",
     "bikemodell": "Modell",
-    "new": "Kapazität (Neu)"
+    "new": "Kapazität (Neu)",
+    "setuptimeNew": "Rüstzeit (Neu)",
+    "capacityrequirementOld": "Kapazitätsbedarf (Rückstand Vorperiode)",
+    "setuptimeOld": "Rüstzeit (Rückstand Vorperiode)",
+    "totalcapacityreq": "Kapazitätsbedarf (Gesamt)",
+    "overtime": "Überstunden pro Tag"
   }
 }

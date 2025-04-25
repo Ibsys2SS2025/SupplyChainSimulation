@@ -25,9 +25,18 @@
 
 /* Summenzeile */
 .sumRow td {
-    background-color: #f1f4f7;
+    background-color: #f9fbfc;
     font-weight: bold;
     border-top: 2px solid #b0b8bb;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.75rem; /* Sollte zum Rest der Tabelle passen */
+}
+
+.sumRowNew td {
+    background-color: #f9fbfc;
+    border-top: 1px solid #d6dde1;
+    font-weight: bold;
     text-align: center;
     vertical-align: middle;
     padding: 0.75rem; /* Sollte zum Rest der Tabelle passen */
@@ -51,6 +60,16 @@
     white-space: nowrap;
 }
 
+.setupRow td {
+    background-color: #f9fbfc; /* etwas heller als Summe, subtiler Unterschied */
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.75rem;
+    border-top: 1px solid #d6dde1;
+    color: #3f4a54;
+}
+
 /* ====================== */
 /* Tabellenkörper */
 /* ====================== */
@@ -72,10 +91,6 @@
 /* ====================== */
 /* Spezielle Zeilen */
 /* ====================== */
-.sumRow td {
-    background-color: #f1f4f7;
-    font-weight: bold;
-}
 
 /* ====================== */
 /* Eingabefelder in Tabellen */

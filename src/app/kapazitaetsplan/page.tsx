@@ -169,10 +169,30 @@ export default function JsonViewPage() {
                             <tfoot>
                             <tr className={styles.sumRow}>
                                 <td colSpan={3}>{t('capacity.new')}</td>
-                                <td>{/* Order Quantity leer */}</td>
+                                <td></td>
                                 {columnSums.map((sum, index) => (
                                     <td key={`sum-${index}`}>{sum}</td>
                                 ))}
+                            </tr>
+                            <tr className={styles.setupRow}>
+                                <td colSpan={3}>{t('capacity.setuptimeNew')}</td>
+                                <td colSpan={16}></td>
+                            </tr>
+                            <tr className={styles.setupRow}>
+                                <td colSpan={3}>{t('capacity.capacityrequirementOld')}</td>
+                                <td colSpan={16}></td>
+                            </tr>
+                            <tr className={styles.setupRow}>
+                                <td colSpan={3}>{t('capacity.setuptimeOld')}</td>
+                                <td colSpan={16}></td>
+                            </tr>
+                            <tr className={styles.sumRowNew}>
+                                <td colSpan={3}>{t('capacity.totalcapacityreq')}</td>
+                                <td colSpan={16}></td>
+                            </tr>
+                            <tr className={styles.setupRow}>
+                                <td colSpan={3}>{t('capacity.overtime')}</td>
+                                <td colSpan={16}></td>
                             </tr>
                             </tfoot>
                         </table>
