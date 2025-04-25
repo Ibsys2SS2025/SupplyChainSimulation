@@ -1,0 +1,117 @@
+/* ====================== */
+/* Tabellen-Container */
+/* ====================== */
+.tableWrapper,
+.tableContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* ====================== */
+/* Basis-Tabellenstile */
+/* ====================== */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Gleichmäßige Spaltenverteilung */
+    min-width: 600px; /* Für mobile Ansicht (wird später überschrieben) */
+}
+
+/* ====================== */
+/* Tabellenkopf */
+/* ====================== */
+.table thead {
+    background-color: #d0dce0;
+}
+
+.table thead th {
+    text-align: center;
+    font-weight: 600;
+    color: #2f3e46;
+    padding: 0.75rem;
+    border-bottom: 2px solid #b0b8bb;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ====================== */
+/* Tabellenkörper */
+/* ====================== */
+.table tbody td {
+    padding: 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid #e0e5e8;
+    color: #3f4a54;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*white-space: nowrap;*/
+}
+
+/* Letzte Zeile ohne untere Linie */
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* ====================== */
+/* Spezielle Zeilen */
+/* ====================== */
+.sumRow td {
+    background-color: #f1f4f7;
+    font-weight: bold;
+}
+
+/* ====================== */
+/* Eingabefelder in Tabellen */
+/* ====================== */
+.inputCell {
+    width: 70px;
+    padding: 0.4rem;
+    border: 1px solid #c1c8cd;
+    border-radius: 4px;
+    text-align: right;
+    font-size: 0.95rem;
+    background-color: #fafafa;
+}
+
+.inputCell:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
+}
+
+.wrapCell {
+    white-space: normal !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    overflow: visible !important;
+    text-overflow: unset !important;
+}
+
+/* ====================== */
+/* Responsive Anpassungen */
+/* ====================== */
+@media (max-width: 768px) {
+    .tableContainer,
+    .tableWrapper {
+        padding: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .table {
+        min-width: unset; /* Mobile Ansicht: Tabelle darf schmaler werden */
+        table-layout: auto; /* Bessere Anpassung auf kleinen Bildschirmen */
+    }
+
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        white-space: normal; /* Zeilenumbruch auf kleinen Bildschirmen */
+    }
+}

@@ -57,5 +57,25 @@
     "sum": "Summe",
     "lager": "Lager"
 
+  },
+  "capacity": {
+    "title": "Kapazitätsplan",
+    "backwheel": "Hinterrad",
+    "frontwheel": "Vorderrad",
+    "mudguardback": "Schutzblech (hinten)",
+    "mudguardfront": "Schutzblech (vorne)",
+    "bar": "Lenker",
+    "saddle": "Sattel",
+    "frame": "Rahmen",
+    "pedal": "Pedale",
+    "frontwheelcomplete": "Vorderrad (komplett)",
+    "framewheels": "Rahmen und Räder",
+    "bikewithoutpedals": "Fahrrad ohne Pedale",
+    "bike": "Fahrrad (komplett)",
+    "workstation": "Arbeitsplatz",
+    "orderquantity": "Menge",
+    "itemnumber": "Sachnummer",
+    "product": "Produkt",
+    "bikemodell": "Modell"
   }
 }
