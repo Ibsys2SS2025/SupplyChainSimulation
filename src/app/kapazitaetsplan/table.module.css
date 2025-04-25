@@ -23,6 +23,16 @@
     min-width: 600px; /* Für mobile Ansicht (wird später überschrieben) */
 }
 
+/* Summenzeile */
+.sumRow td {
+    background-color: #f1f4f7;
+    font-weight: bold;
+    border-top: 2px solid #b0b8bb;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.75rem; /* Sollte zum Rest der Tabelle passen */
+}
+
 /* ====================== */
 /* Tabellenkopf */
 /* ====================== */

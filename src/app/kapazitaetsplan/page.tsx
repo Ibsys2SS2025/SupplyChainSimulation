@@ -22,6 +22,26 @@ import {
     bikecompleteValues
 } from './productValues';
 
+interface ProductComponent {
+    label: string;
+    code: string;
+    value: number;
+    extraValues: (string | number)[];
+}
+
+const calculateColumnSums = (productComponents: ProductComponent[]) => {
+    const sums = Array(15).fill(0);
+
+    productComponents.forEach(component => {
+        component.extraValues.forEach((extraValue, index) => {
+            if (typeof extraValue === 'number') {
+                sums[index] += extraValue * component.value;
+            }
+        });
+    });
+    return sums;
+};
+
 export default function JsonViewPage() {
     const { xmlData } = useXmlData();
 
@@ -30,6 +50,23 @@ export default function JsonViewPage() {
     }
 
     const { t} = useTranslation();
+
+    const allProductComponents: ProductComponent[] = [
+        ...backWheelValues,
+        ...frontWheelValues,
+        ...mudguardbackValues,
+        ...mudguardfrontValues,
+        barValues,
+        saddleValues,
+        ...frameValues,
+        pedalValues,
+        ...frontwheelcompleteValues,
+        ...framewheelsValues,
+        ...bikewithoutpedalsvalues,
+        ...bikecompleteValues
+    ].flat();
+
+    const columnSums = calculateColumnSums(allProductComponents);
 
     return (
         <div className={styles.pageContainer}>
@@ -129,27 +166,19 @@ export default function JsonViewPage() {
                                 headerText="capacity.bike"
                             />
                             </tbody>
+                            <tfoot>
+                            <tr className={styles.sumRow}>
+                                <td colSpan={3}>{t('capacity.new')}</td>
+                                <td>{/* Order Quantity leer */}</td>
+                                {columnSums.map((sum, index) => (
+                                    <td key={`sum-${index}`}>{sum}</td>
+                                ))}
+                            </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
-
-        /**<div style={{ padding: '2rem' }}>
-            <h2>XML-Daten als JSON</h2>
-            <pre style={{
-                backgroundColor: '#f5f5f5',
-                padding: '1rem',
-                borderRadius: '8px',
-                overflowX: 'auto',
-                whiteSpace: 'pre-wrap'
-            }}>
-                {JSON.stringify(xmlData, null, 2)}
-            </pre>
-        </div>**/
     );
 }

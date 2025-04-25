@@ -76,6 +76,7 @@
     "orderquantity": "Menge",
     "itemnumber": "Sachnummer",
     "product": "Produkt",
-    "bikemodell": "Modell"
+    "bikemodell": "Modell",
+    "new": "Kapazität (Neu)"
   }
 }
