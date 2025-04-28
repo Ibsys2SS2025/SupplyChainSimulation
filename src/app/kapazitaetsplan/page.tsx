@@ -42,8 +42,272 @@ const calculateColumnSums = (productComponents: ProductComponent[]) => {
     return sums;
 };
 
+const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
+    if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
+        console.log("xmlData oder waitinglistworkstations fehlt");
+        return 0;
+    }
+
+    console.log(xmlData);
+
+    const workplaces = xmlData.results.waitinglistworkstations.workplace;
+
+    if (!workplaces || workplaces.length === 0) {
+        console.log("Keine Arbeitsplätze gefunden");
+        return 0;
+    }
+
+    const workplaceList = Array.isArray(workplaces) ? workplaces : [workplaces];
+
+    // Durchlaufen der Arbeitsplätze
+    for (const workplace of workplaceList) {
+        // Zugriff auf das "$" Objekt
+        const workplaceDetails = workplace["$"];
+        if (workplaceDetails) {
+            const workplaceId = parseInt(workplaceDetails.id, 10); // ID als Zahl
+            const timeneed = parseInt(workplaceDetails.timeneed, 10); // timeneed als Zahl
+
+            // Überprüfen, ob die ID übereinstimmt
+            if (workplaceId === id) {
+                console.log(`Gefundener Arbeitsplatz mit ID: ${id}, timeneed: ${timeneed}`);
+                return timeneed || 0; // Rückgabe von timeneed, oder 0, falls nicht vorhanden
+            }
+        }
+    }
+
+    console.log(`Kein Arbeitsplatz mit ID ${id} gefunden`);
+    return 0;
+};
+
+const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: number]: number } => {
+    // Sicherstellen, dass xmlData und die notwendigen Strukturen vorhanden sind
+    if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
+        console.log("xmlData oder waitinglistworkstations fehlt");
+        return {}; // Rückgabe eines leeren Objekts im Fehlerfall
+    }
+
+    console.log("XML Data:", xmlData);  // Weitere Debug-Ausgabe, um die gesamte XML-Datenstruktur zu sehen
+
+    // Abrufen der Arbeitsplätze aus der XML-Datenstruktur
+    const workplaces = xmlData.results.waitinglistworkstations.workplace;
+
+    // Wenn keine Arbeitsplätze vorhanden sind
+    if (!workplaces || workplaces.length === 0) {
+        console.log("Keine Arbeitsplätze gefunden");
+        return {}; // Rückgabe eines leeren Objekts
+    }
+
+    // Sicherstellen, dass workplaces entweder ein Array oder ein einzelnes Objekt ist
+    const workplaceList = Array.isArray(workplaces) ? workplaces : [workplaces];
+
+    const dic: { [key: number]: number } = {};
+
+    // Debug-Ausgabe, um die Liste der Arbeitsplätze zu überprüfen
+    console.log("Workplace List:", workplaceList);
+
+    // Durchlaufen der Arbeitsplätze
+    for (const workplace of workplaceList) {
+        const workplaceId = parseInt(workplace["$"].id);
+
+        // Überprüfen, ob die id des Arbeitsplatzes mit der gesuchten id übereinstimmt
+        console.log("Vergleich ID:", workplaceId, "mit gesuchter ID:", id);
+
+        if (workplaceId === id) {
+            // Nur den Arbeitsplatz berücksichtigen, wenn die ID übereinstimmt
+            console.log("Arbeitsplatz gefunden:", workplace);
+
+            // Abrufen der Warteliste für diesen Arbeitsplatz
+            const workplaceDetailWaitingList = workplace.waitinglist;
+
+            console.log("Warteliste für diesen Arbeitsplatz:", workplaceDetailWaitingList);
+
+            // Wenn eine Warteliste existiert
+            if (workplaceDetailWaitingList) {
+
+                console.log("Wartelisten-Details:", workplaceDetailWaitingList);
+
+                if (Array.isArray(workplaceDetailWaitingList)) {
+                    // Durchlaufen der Wartelisten-Details
+                    for (const workplaceDetail of workplaceDetailWaitingList) {
+                        // Zugriff auf das tatsächliche Objekt im `$`
+                        const item = workplaceDetail["$"].item;
+                        const timeneed = workplaceDetail["$"].timeneed;
+
+                        console.log("Item:", item, "Timeneed:", timeneed);
+
+                        // Hinzufügen der Daten zum Dictionary
+                        dic[parseInt(item)] = parseInt(timeneed);
+                    }
+                } else if (workplaceDetailWaitingList) {
+                    // Falls es ein einzelnes Objekt ist und KEIN Array
+                    const item = workplaceDetailWaitingList["$"].item;
+                    const timeneed = workplaceDetailWaitingList["$"].timeneed;
+                    dic[parseInt(item)] = parseInt(timeneed);
+                }
+            }
+        }
+    }
+
+    // Rückgabe des Dictionary mit den gefundenen Daten
+    console.log("Endgültiges Dictionary:", dic);  // Ausgabe des finalen Dictionary
+    return dic;
+};
+
+
+
+
+const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
+    let summe: number = 0;
+
+    if(id == 6 || id == 1 || id == 2 || id == 3 || id == 4 || id == 10 || id == 13){
+        summe += getWartezeitArbeitsplatz(id, xmlData);
+    }
+
+    if(id == 15){
+        const dic = getWartezeitArbeitsplatzDetail(7, xmlData);
+
+        console.log(dic);
+         if (dic) {
+            for (const index in dic) {
+                if (dic.hasOwnProperty(index)) {
+                    if(parseInt(index) == 26){
+                        summe += dic[index];
+                    }
+                }
+            }
+        }
+         summe += getWartezeitArbeitsplatz(id, xmlData);
+    }
+
+    if(id == 14){
+        const dic = getWartezeitArbeitsplatzDetail(6, xmlData);
+        console.log(dic);
+        if (dic) {
+            for (const index in dic) {
+                if (dic.hasOwnProperty(index)) {
+                    if(parseInt(index) == 16){
+                        summe += dic[index];
+                    }
+                }
+            }
+        }
+        summe += getWartezeitArbeitsplatz(id, xmlData);
+    }
+
+    if(id == 12){
+        const wartezeit = getWartezeitArbeitsplatz(13, xmlData);
+        if (wartezeit) {
+            summe += wartezeit;
+        }
+        summe += getWartezeitArbeitsplatz(id, xmlData);
+    }
+
+    if(id == 11){
+        const wartezeit = getWartezeitArbeitsplatz(10, xmlData);
+        if (wartezeit) {
+            summe += wartezeit;
+        }
+        summe += getWartezeitArbeitsplatz(id, xmlData);
+    }
+
+    if(id == 8){
+        const wartezeitSechsDic = getWartezeitArbeitsplatzDetail(6, xmlData);
+        const wartezeitDreizehn = getWartezeitArbeitsplatz(13, xmlData);
+        const wartezeitZwoelf = getWartezeitArbeitsplatz(12, xmlData);
+
+        summe+= wartezeitZwoelf + wartezeitDreizehn;
+
+        if (wartezeitSechsDic) {
+            for (const index in wartezeitSechsDic) {
+                if (wartezeitSechsDic.hasOwnProperty(index)) {
+                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20){
+                        summe += wartezeitSechsDic[index];
+                    }
+                }
+            }
+        }
+    }
+
+    if(id == 7){
+        const wartezeitSechsDic = getWartezeitArbeitsplatzDetail(6, xmlData);
+        const wartezeitDreizehn = getWartezeitArbeitsplatz(13, xmlData);
+        const wartezeitZwoelf = getWartezeitArbeitsplatz(12, xmlData);
+        const wartezeitAcht = getWartezeitArbeitsplatz(8, xmlData);
+        const wartezeitSiebenDic = getWartezeitArbeitsplatzDetail(7, xmlData);
+
+        summe+= wartezeitZwoelf + wartezeitDreizehn + wartezeitAcht;
+
+        if (wartezeitSechsDic) {
+            for (const index in wartezeitSechsDic) {
+                if (wartezeitSechsDic.hasOwnProperty(index)) {
+                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20){
+                        summe += wartezeitSechsDic[index];
+                    }
+                }
+            }
+        }
+
+        if (wartezeitSiebenDic) {
+            for (const index in wartezeitSiebenDic) {
+                if (wartezeitSiebenDic.hasOwnProperty(index)) {
+                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20 || parseInt(index) == 10 || parseInt(index) == 11 || parseInt(index) == 12 || parseInt(index) == 13 || parseInt(index) == 14 || parseInt(index) == 15){
+                        summe += wartezeitSiebenDic[index];
+                    }
+                }
+            }
+        }
+    }
+
+    if(id == 9){
+        const wartezeitSechsDic = getWartezeitArbeitsplatzDetail(6, xmlData);
+        const wartezeitDreizehn = getWartezeitArbeitsplatz(13, xmlData);
+        const wartezeitZwoelf = getWartezeitArbeitsplatz(12, xmlData);
+        const wartezeitAcht = getWartezeitArbeitsplatz(8, xmlData);
+        const wartezeitSiebenDic = getWartezeitArbeitsplatzDetail(7, xmlData);
+        const wartezeitNeun = getWartezeitArbeitsplatz(9, xmlData);
+
+        summe+= wartezeitZwoelf + wartezeitDreizehn + wartezeitAcht;
+
+        if (wartezeitSechsDic) {
+            for (const index in wartezeitSechsDic) {
+                if (wartezeitSechsDic.hasOwnProperty(index)) {
+                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20){
+                        summe += wartezeitSechsDic[index];
+                    }
+                }
+            }
+        }
+
+        if (wartezeitSiebenDic) {
+            for (const index in wartezeitSiebenDic) {
+                if (wartezeitSiebenDic.hasOwnProperty(index)) {
+                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20 || parseInt(index) == 10 || parseInt(index) == 11 || parseInt(index) == 12 || parseInt(index) == 13 || parseInt(index) == 14 || parseInt(index) == 15){
+                        summe += wartezeitSiebenDic[index];
+                    }
+                }
+            }
+        }
+        summe+=wartezeitNeun;
+    }
+
+    return summe;
+}
+
+
+const getWartezeitAlleArbeitsplaetze=(xmlData: any):number[] => {
+    const wartezeiten: number[] = [];
+
+    for (let i = 1; i <= 15; i++) {
+        wartezeiten.push(getWartezeitArbeitsplatzGesamt(xmlData, i));
+    }
+
+    return wartezeiten;
+};
+
 export default function JsonViewPage() {
     const { xmlData } = useXmlData();
+
+    const wartezeiten = getWartezeitAlleArbeitsplaetze(xmlData);
 
     if (!xmlData) {
         return <p>Keine Daten gefunden. Bitte lade zuerst deine XML-Datei.</p>;
@@ -168,31 +432,32 @@ export default function JsonViewPage() {
                             </tbody>
                             <tfoot>
                             <tr className={styles.sumRow}>
-                                <td colSpan={3}>{t('capacity.new')}</td>
-                                <td></td>
+                                <td colSpan={4}>{t('capacity.new')}</td>
                                 {columnSums.map((sum, index) => (
                                     <td key={`sum-${index}`}>{sum}</td>
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
-                                <td colSpan={3}>{t('capacity.setuptimeNew')}</td>
-                                <td colSpan={16}></td>
+                                <td colSpan={4}>{t('capacity.setuptimeNew')}</td>
+                                <td colSpan={15}></td>
                             </tr>
                             <tr className={styles.setupRow}>
-                                <td colSpan={3}>{t('capacity.capacityrequirementOld')}</td>
-                                <td colSpan={16}></td>
+                                <td colSpan={4}>{t('capacity.capacityrequirementOld')}</td>
+                                {wartezeiten.map((wartezeit, index) => (
+                                    <td key={`wartezeit-${index}`}>{wartezeit}</td> // Jeder Wert als <td>
+                                ))}
                             </tr>
                             <tr className={styles.setupRow}>
-                                <td colSpan={3}>{t('capacity.setuptimeOld')}</td>
-                                <td colSpan={16}></td>
+                                <td colSpan={4}>{t('capacity.setuptimeOld')}</td>
+                                <td colSpan={15}></td>
                             </tr>
                             <tr className={styles.sumRowNew}>
-                                <td colSpan={3}>{t('capacity.totalcapacityreq')}</td>
-                                <td colSpan={16}></td>
+                                <td colSpan={4}>{t('capacity.totalcapacityreq')}</td>
+                                <td colSpan={15}></td>
                             </tr>
                             <tr className={styles.setupRow}>
-                                <td colSpan={3}>{t('capacity.overtime')}</td>
-                                <td colSpan={16}></td>
+                                <td colSpan={4}>{t('capacity.overtime')}</td>
+                                <td colSpan={15}></td>
                             </tr>
                             </tfoot>
                         </table>
