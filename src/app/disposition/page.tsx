@@ -26,6 +26,8 @@ export default function JsonViewPage() {
                                 <th></th>
                                 <th>Verbindliche Aufträge / Vertriebswunsch</th>
                                 <th></th>
+                                <th></th>
+                                <th></th>
                                 <th>Geplanter Lagerbestand am Ende der Planperiode (Sicherheitsbestand)</th>
                                 <th></th>
                                 <th>Lagerbestand am Ende der Vorperiode</th>
@@ -40,175 +42,199 @@ export default function JsonViewPage() {
                         <tbody>
                             <tr>
                                 <th scope="row">P1</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td></td>
                                 <td>+</td>
+                                <td></td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
-                            <tr><td colSpan={7}></td></tr>
+                            <tr><td colSpan={15}></td></tr>
                             <tr>
                                 <th scope="row">E26*</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <th scope="row">E51</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
-                            <tr><td colSpan={7}></td></tr>
+                            <tr><td colSpan={15}></td></tr>
                             <tr>
                                 <th scope="row">E16*</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <th scope="row">E17*</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <th scope="row">E50</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
-                            <tr><td colSpan={7}></td></tr>
+                            <tr><td colSpan={15}></td></tr>
                             <tr>
                                 <th scope="row">E4</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <th scope="row">E10</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <th scope="row">E49</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
-                            <tr><td colSpan={7}></td></tr>
+                            <tr><td colSpan={15}></td></tr>
                             <tr>
                                 <th scope="row">E7</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <th scope="row">E13</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <th scope="row">E18</th>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
+                                <td>+</td>
+                                <td></td>
                                 <td>+</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>-</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                                 <td>=</td>
-                                <td><input className={styles.inputCell} type="number" /></td>
+                                <td></td>
                             </tr>
                         </tbody>
                     </table>
