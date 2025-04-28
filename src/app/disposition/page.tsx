@@ -8,6 +8,7 @@ import styles from './disposition.module.css';
 
 export default function JsonViewPage() {
     const { xmlData } = useXmlData();
+    const columns = 14;
 
     if (!xmlData) {
         return <p>Keine Daten gefunden. Bitte lade zuerst deine XML-Datei.</p>;
@@ -18,7 +19,7 @@ export default function JsonViewPage() {
             <Sidebar />
             <div className={styles.content}>
 
-                <h2 className={styles.sectionTitle}>Disposition</h2>
+                <h2 className={styles.sectionTitle}>Disposition P1</h2>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
                         <thead>
@@ -50,13 +51,13 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
-                            <tr><td colSpan={15}></td></tr>
+                            <tr><td colSpan={columns}></td></tr>
                             <tr>
                                 <th scope="row">E26*</th>
                                 <td></td>
@@ -67,9 +68,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -83,13 +84,13 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
-                            <tr><td colSpan={15}></td></tr>
+                            <tr><td colSpan={columns}></td></tr>
                             <tr>
                                 <th scope="row">E16*</th>
                                 <td></td>
@@ -100,9 +101,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -116,9 +117,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -132,9 +133,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -149,9 +150,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -165,9 +166,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -181,13 +182,13 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
-                            <tr><td colSpan={15}></td></tr>
+                            <tr><td colSpan={columns}></td></tr>
                             <tr>
                                 <th scope="row">E7</th>
                                 <td></td>
@@ -198,9 +199,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -214,9 +215,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
@@ -230,9 +231,9 @@ export default function JsonViewPage() {
                                 <td>-</td>
                                 <td></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td><input className={styles.inputCell} type="number" /></td>
                                 <td>=</td>
                                 <td></td>
                             </tr>
