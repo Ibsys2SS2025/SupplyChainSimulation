@@ -172,7 +172,33 @@ const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: numbe
     return dic;
 };
 
+const getRuestzeitOld=(xmlData: any, ...valueGroups: ProductComponent[][]):number[] => {
+    const ruestzeit: number[] = [];
+    let summe: number = 0;
+    for (let i = 1; i < 16; i++) {
+        const dic = getWartezeitArbeitsplatzDetail(i, xmlData);
+        Object.entries(dic).forEach(([key, value]) => {
+            for (const group of valueGroups) {
+                for (const item of group) {
+                    console.log("Arbeitsplatz: ", i, "Produktnummer: ", item.code, "Key: ", key)
+                    if(item.code == key){
+                        console.log("Arbeitsplatz: ", i, "Key: ", key, "Rüstzeit: ", item.setuptime[i-1]);
+                        if (typeof item.setuptime[i-1] === "string") {
+                            summe += parseInt(String(item.setuptime[i - 1]));
+                        }
+                        else{
+                            summe += Number(item.setuptime[i-1]);
+                        }
+                    }
+                }
+            }
+        })
+        ruestzeit.splice(i-1, 0, summe);
+        summe = 0;
+    }
 
+    return ruestzeit;
+}
 
 
 const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
@@ -309,6 +335,27 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
         summe+=wartezeitNeun;
     }
 
+    const ordersinwork = xmlData.results.ordersinwork.workplace;
+    console.log("Oders in work: ", ordersinwork);
+    if (ordersinwork) {
+        const workplaces = Array.isArray(ordersinwork) ? ordersinwork : [ordersinwork];
+        console.log("Workplaces1: ", workplaces);
+        for (const workplace of workplaces) {
+            console.log("Workplaces1: ", workplaces);
+            const idnew = workplace["$"].id;
+            const timeneed = workplace["$"].timeneed;
+            console.log("Gefundene_ID:", parseInt(idnew))
+            console.log("Summe: ", summe);
+            console.log("Vergleich1:", parseInt(idnew), typeof idnew, "==", id, typeof id);
+
+            if (parseInt(idnew) == id) {
+                console.log("Timeneed1: ", timeneed);
+                summe += parseInt(timeneed);
+                console.log("Summe1: ", summe);
+            }
+        }
+    }
+
     return summe;
 }
 
@@ -327,6 +374,23 @@ export default function JsonViewPage() {
     const { xmlData } = useXmlData();
 
     const wartezeiten = getWartezeitAlleArbeitsplaetze(xmlData);
+
+    const valueGroups: ProductComponent[][] = [
+        backWheelValues,     // Gruppe 1
+        frontWheelValues,    // Gruppe 2
+        mudguardbackValues,  // Gruppe 3
+        mudguardfrontValues, // Gruppe 4
+        barValues,           // Gruppe 5
+        saddleValues,        // Gruppe 6
+        frameValues,         // Gruppe 7
+        pedalValues,         // Gruppe 8
+        frontwheelcompleteValues, // Gruppe 9
+        framewheelsValues,   // Gruppe 10
+        bikewithoutpedalsvalues, // Gruppe 11
+        bikecompleteValues   // Gruppe 12
+    ];
+
+    const ruestzeitold = getRuestzeitOld(xmlData, ...valueGroups);
 
     if (!xmlData) {
         return <p>Keine Daten gefunden. Bitte lade zuerst deine XML-Datei.</p>;
@@ -485,7 +549,9 @@ export default function JsonViewPage() {
                             </tr>
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.setuptimeOld')}</td>
-                                <td colSpan={15}></td>
+                                {ruestzeitold.map((time, index) => (
+                                    <td key={index}>{time}</td>
+                                ))}
                             </tr>
                             <tr className={styles.sumRowNew}>
                                 <td colSpan={4}>{t('capacity.totalcapacityreq')}</td>
