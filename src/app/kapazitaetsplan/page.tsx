@@ -27,6 +27,7 @@ interface ProductComponent {
     code: string;
     value: number;
     extraValues: (string | number)[];
+    setuptime: (string | number)[];
 }
 
 const calculateColumnSums = (productComponents: ProductComponent[]) => {
@@ -41,6 +42,24 @@ const calculateColumnSums = (productComponents: ProductComponent[]) => {
     });
     return sums;
 };
+
+function calculateSetupTimePerWorkplace(...valueGroups: ProductComponent[][]): number[] {
+    const totalWorkplaces = 15;
+    const result: number[] = new Array(totalWorkplaces).fill(0);
+
+    for (const group of valueGroups) {
+        for (const item of group) {
+            item.setuptime.forEach((value, index) => {
+                const numericValue = typeof value === "string" ? parseFloat(value) : value;
+                if (!isNaN(numericValue)) {
+                    result[index] += numericValue;
+                }
+            });
+        }
+    }
+
+    return result;
+}
 
 const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
     if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
@@ -330,6 +349,21 @@ export default function JsonViewPage() {
         ...bikecompleteValues
     ].flat();
 
+    const setupTimes = calculateSetupTimePerWorkplace(
+        backWheelValues,
+        frontWheelValues,
+        mudguardbackValues,
+        mudguardfrontValues,
+        barValues,
+        saddleValues,
+        frameValues,
+        pedalValues,
+        frontwheelcompleteValues,
+        framewheelsValues,
+        bikewithoutpedalsvalues,
+        bikecompleteValues
+    );
+
     const columnSums = calculateColumnSums(allProductComponents);
 
     return (
@@ -439,7 +473,9 @@ export default function JsonViewPage() {
                             </tr>
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.setuptimeNew')}</td>
-                                <td colSpan={15}></td>
+                                {setupTimes.map((time, index) => (
+                                    <td key={index}>{time}</td>
+                                ))}
                             </tr>
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.capacityrequirementOld')}</td>
