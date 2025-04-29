@@ -177,7 +177,7 @@ const getRuestzeitOld=(xmlData: any, ...valueGroups: ProductComponent[][]):numbe
     let summe: number = 0;
     for (let i = 1; i < 16; i++) {
         const dic = getWartezeitArbeitsplatzDetail(i, xmlData);
-        Object.entries(dic).forEach(([key, value]) => {
+        Object.entries(dic).forEach(([key]) => {
             for (const group of valueGroups) {
                 for (const item of group) {
                     console.log("Arbeitsplatz: ", i, "Produktnummer: ", item.code, "Key: ", key)
@@ -359,6 +359,27 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     return summe;
 }
 
+const calculateTotalCapacity = (
+    columnSums: number[],
+    setupTimes: number[],
+    wartezeiten: number[],
+    ruestzeitold: number[]
+): number[] => {
+    return columnSums.map((_, index) => {
+        return (
+            (columnSums[index] || 0) +
+            (setupTimes[index] || 0) +
+            (wartezeiten[index] || 0) +
+            (ruestzeitold[index] || 0)
+        );
+    });
+};
+
+const calculateOvertime = (totals: number[]): number[] => {
+    return totals.map((total) => Math.max(0, (total - 2400) / 5));
+};
+
+
 
 const getWartezeitAlleArbeitsplaetze=(xmlData: any):number[] => {
     const wartezeiten: number[] = [];
@@ -429,6 +450,9 @@ export default function JsonViewPage() {
     );
 
     const columnSums = calculateColumnSums(allProductComponents);
+
+    const totalCapacities = calculateTotalCapacity(columnSums, setupTimes, wartezeiten, ruestzeitold);
+    const overtimeValues = calculateOvertime(totalCapacities);
 
     return (
         <div className={styles.pageContainer}>
@@ -553,13 +577,17 @@ export default function JsonViewPage() {
                                     <td key={index}>{time}</td>
                                 ))}
                             </tr>
-                            <tr className={styles.sumRowNew}>
+                            <tr className={styles.sumRow}>
                                 <td colSpan={4}>{t('capacity.totalcapacityreq')}</td>
-                                <td colSpan={15}></td>
+                                {totalCapacities.map((total, index) => (
+                                    <td key={`total-${index}`}>{total}</td>
+                                ))}
                             </tr>
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.overtime')}</td>
-                                <td colSpan={15}></td>
+                                {overtimeValues.map((value, index) => (
+                                    <td key={`overtime-${index}`}>{value}</td>
+                                ))}
                             </tr>
                             </tfoot>
                         </table>
