@@ -82,6 +82,7 @@
     "capacityrequirementOld": "Kapazitätsbedarf (Rückstand Vorperiode)",
     "setuptimeOld": "Rüstzeit (Rückstand Vorperiode)",
     "totalcapacityreq": "Kapazitätsbedarf (Gesamt)",
-    "overtime": "Überstunden pro Tag"
+    "overtime": "Überstunden pro Tag",
+    "customInputs": "Überstunden mit Puffer"
   }
 }

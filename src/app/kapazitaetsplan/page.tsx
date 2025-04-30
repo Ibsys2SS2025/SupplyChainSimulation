@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useXmlData } from '@/context/XmlDataContext';
 import styles from "@/app/kapazitaetsplan/table.module.css";
 import Sidebar from "@/components/Sidebar";
@@ -449,6 +449,8 @@ export default function JsonViewPage() {
         bikecompleteValues
     );
 
+    const [customInputs, setCustomInputs] = useState(Array(15).fill(''));
+
     const columnSums = calculateColumnSums(allProductComponents);
 
     const totalCapacities = calculateTotalCapacity(columnSums, setupTimes, wartezeiten, ruestzeitold);
@@ -587,6 +589,24 @@ export default function JsonViewPage() {
                                 <td colSpan={4}>{t('capacity.overtime')}</td>
                                 {overtimeValues.map((value, index) => (
                                     <td key={`overtime-${index}`}>{value}</td>
+                                ))}
+                            </tr>
+                            <tr className={styles.setupRow}>
+                                <td colSpan={4}>{t('capacity.customInputs')}</td>
+                                {customInputs.map((value, index) => (
+                                    <td key={`input-${index}`}>
+                                        <input
+                                            type="number"
+                                            className={styles.inputCell}
+                                            value={value}
+                                            onChange={(e) => {
+                                                const newValues = [...customInputs];
+                                                newValues[index] = e.target.value;
+                                                setCustomInputs(newValues);
+                                            }}
+                                            name={`customInput-${index}`}
+                                        />
+                                    </td>
                                 ))}
                             </tr>
                             </tfoot>

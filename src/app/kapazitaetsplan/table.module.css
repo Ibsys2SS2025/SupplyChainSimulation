@@ -96,13 +96,15 @@
 /* Eingabefelder in Tabellen */
 /* ====================== */
 .inputCell {
-    width: 70px;
+    width: 60px;
     padding: 0.4rem;
     border: 1px solid #c1c8cd;
     border-radius: 4px;
-    text-align: right;
+    text-align: center;
     font-size: 0.95rem;
     background-color: #fafafa;
+    margin: 0 auto;
+    display: block;
 }
 
 .inputCell:focus {
