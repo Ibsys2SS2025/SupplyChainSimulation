@@ -2,17 +2,23 @@
 
 import React from 'react';
 import { useXmlData } from '@/context/XmlDataContext';
-import { useTranslation } from "react-i18next";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from '@/components/Sidebar';
 import styles from './disposition.module.css';
 
 export default function JsonViewPage() {
-    const { xmlData } = useXmlData();
-    const columns = 14;
+  const { xmlData } = useXmlData();
+  const columns = 14;
 
-    if (!xmlData) {
-        return <p>Keine Daten gefunden. Bitte lade zuerst deine XML-Datei.</p>;
-    }
+  if (!xmlData) {
+    return <p>Lade XML-Daten…</p>;
+  }
+
+  // 1) Normalisiere zu Array (auch wenn nur ein Artikel-Objekt da ist)
+  const articles: any[] = ([] as any[]).concat(xmlData.results?.warehousestock?.article || []);
+
+  // 2) Finde Artikel mit id="1" und lese den amount-Wert
+  const lagerbestandP1 =
+    articles.find((a: any) => a.$?.id?.trim() === '1')?.$?.amount || '-';
 
     return (
         <div className={styles.pageContainer}>
@@ -49,7 +55,7 @@ export default function JsonViewPage() {
                                 <td></td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
-                                <td></td>
+                                <td>{lagerbestandP1}</td>
                                 <td>-</td>
                                 <td><input className={styles.inputCell} type="number" /></td>
                                 <td>-</td>
@@ -239,8 +245,8 @@ export default function JsonViewPage() {
                             </tr>
                         </tbody>
                     </table>
+                    <h5>* = Mehrfachverwendteile</h5>
                 </div>
-
             </div>
         </div>
     );

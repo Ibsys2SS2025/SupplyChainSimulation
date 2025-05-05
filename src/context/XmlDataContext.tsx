@@ -1,4 +1,3 @@
-// src/context/XmlDataContext.tsx
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -13,24 +12,24 @@ interface XmlDataContextProps {
 const XmlDataContext = createContext<XmlDataContextProps | undefined>(undefined);
 
 export const XmlDataProvider = ({ children }: { children: ReactNode }) => {
-    // Lade initiale Daten aus localStorage (falls vorhanden)
+    // Lade xmlData initial aus localStorage
     const [xmlData, setXmlData] = useState<XmlDataType>(() => {
         if (typeof window !== 'undefined') {
-            const storedData = localStorage.getItem('xmlData');
-            if (storedData) {
+            const stored = localStorage.getItem('xmlData');
+            if (stored) {
                 try {
-                    return JSON.parse(storedData);
-                } catch (error) {
-                    console.error('Fehler beim Parsen von localStorage xmlData:', error);
+                    return JSON.parse(stored);
+                } catch {
+                    return null;
                 }
             }
         }
         return null;
     });
 
-    // Speichere die Daten bei jeder Änderung im localStorage
+    // Speichere xmlData bei jeder Änderung im localStorage
     useEffect(() => {
-        if (xmlData) {
+        if (xmlData && typeof window !== 'undefined') {
             localStorage.setItem('xmlData', JSON.stringify(xmlData));
         }
     }, [xmlData]);
