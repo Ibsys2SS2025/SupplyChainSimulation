@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'Meine App',
-  description: 'Dispositionstool',
+  title: 'Planungstool',
+  description: 'Planungstool',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
