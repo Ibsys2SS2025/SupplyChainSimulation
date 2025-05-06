@@ -3,166 +3,101 @@
 import React, { useState } from 'react';
 import { useXmlData } from '@/context/XmlDataContext';
 import Sidebar from '@/components/Sidebar';
+import DispositionTable from '@/components/DispositionTable';
 import styles from './disposition.module.css';
 
-export default function JsonViewPage() {
-    const { xmlData } = useXmlData();
-    const columns = 14;
+const TAB_CONFIG = [
+  {
+    label: 'Disposition P1',
+    productId: 'P1',
+    dynamicIds: ['26', '51', '16', '17', '50', '4', '10', '49', '7', '13', '18'],
+    headline: 'Disposition P1',
+    rowNames: {
+      '26': 'E26*',
+      '51': 'E51',
+      '16': 'E16*',
+      '17': 'E17*',
+      '50': 'E50',
+      '4': 'E4',
+      '10': 'E10',
+      '49': 'E49',
+      '7': 'E7',
+      '13': 'E13',
+      '18': 'E18',
+    } as Record<string, string>
+  },
+  {
+    label: 'Disposition P2',
+    productId: 'P2',
+    dynamicIds: ['26', '56', '16', '17', '55', '5', '11', '54', '8', '14', '19'],
+    headline: 'Disposition P2',
+    rowNames: {
+      '26': 'E26*',
+      '56': 'E56',
+      '16': 'E16*',
+      '17': 'E17*',
+      '55': 'E55',
+      '5': 'E5',
+      '11': 'E11',
+      '54': 'E54',
+      '8': 'E8',
+      '14': 'E14',
+      '19': 'E19',
+    } as Record<string, string>
+  },
+  {
+    label: 'Disposition P3',
+    productId: 'P3',
+    dynamicIds: ['26', '31', '16', '17', '30', '6', '12', '29', '9', '15', '20'],
+    headline: 'Disposition P3',
+    rowNames: {
+      '26': 'E26*',
+      '31': 'E31',
+      '16': 'E16*',
+      '17': 'E17*',
+      '30': 'E30',
+      '6': 'E6',
+      '12': 'E12',
+      '29': 'E29',
+      '9': 'E9',
+      '15': 'E15',
+      '20': 'E20',
+    } as Record<string, string>
+  } 
+];
 
-    if (!xmlData) return <p>Lade XML-Daten…</p>;
+export default function DispositionPage() {
+  const { xmlData } = useXmlData();
+  const [activeTab, setActiveTab] = useState(0);
 
-    const getAmountById = (id: string): number => {
-        const whs = xmlData.results?.warehousestock;
-        const articles = Array.isArray(whs?.article) ? whs.article : [whs?.article];
-        const value = articles.find((a: any) => a?.$?.id === id)?.$?.amount;
-        return value ? Number(value) : 0;
-    };
+  if (!xmlData) return <p>Lade XML-Daten…</p>;
 
-    const dynamicIds = ['26', '51', '16', '17', '50', '4', '10', '49', '7', '13', '18'];
-    const rowsWithSpacing = ['51', '50', '49'];
+  const { productId, dynamicIds, rowNames, headline } = TAB_CONFIG[activeTab];
 
-    const [inputs, setInputs] = useState<Record<string, number[]>>(() =>
-        Object.fromEntries(['P1', ...dynamicIds].map(id => [id, [0, 0, 0]]))
-    );
-
-    const handleInput = (id: string, idx: number, val: number) => {
-        setInputs(prev => {
-            const updated = [...prev[id]];
-            updated[idx] = val;
-            return { ...prev, [id]: updated };
-        });
-    };
-
-    const renderInput = (id: string, idx: number) => (
-        <input
-            className={styles.inputCell}
-            type="number"
-            value={inputs[id][idx]}
-            onChange={e => handleInput(id, idx, Number(e.target.value))}
-        />
-    );
-
-    const getLagerbestand = (id: string) => {
-        const raw = id === 'P1' ? getAmountById('1') : getAmountById(id);
-        return ['16', '17', '26'].includes(id) ? raw / 3 : raw;
-    };
-
-    const calculateTotal = (id: string): number => {
-        const [sicherheitsbestand, warteschlange, inBearbeitung] = inputs[id];
-        const lagerbestand = getLagerbestand(id);
-
-        let total = sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
-
-        if (id !== 'P1') {
-            const prevId = getPreviousId(id);
-            if (prevId) total += calculateTotal(prevId);
-        }
-
-        return total;
-    };
-
-    const getPreviousId = (currentId: string): string => {
-        const index = dynamicIds.indexOf(currentId);
-    
-        // Sonderfall: ganz erste dynamische Zeile → P1 als Vorgänger
-        if (index === 0) return 'P1';
-    
-        for (let i = index - 1; i >= 0; i--) {
-            if (rowsWithSpacing.includes(dynamicIds[i])) {
-                return dynamicIds[i];
-            }
-        }
-    
-        // Wenn keine Leerzeile dazwischen → P1
-        return 'P1';
-    };    
-
-    const getPreviousWarteschlange = (currentId: string): number => {
-        const prevId = getPreviousId(currentId);
-        return prevId ? inputs[prevId]?.[1] ?? 0 : 0;
-    };
-
-    return (
-        <div className={styles.pageContainer}>
-            <Sidebar />
-            <div className={styles.content}>
-                <h2 className={styles.sectionTitle}>Disposition P1</h2>
-                <div className={styles.tableContainer}>
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>Verbindliche Aufträge / Vertriebswunsch</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th>Geplanter Lagerbestand am Ende der Planperiode (Sicherheitsbestand)</th>
-                                <th></th>
-                                <th>Lagerbestand am Ende der Vorperiode</th>
-                                <th></th>
-                                <th>Aufträge in der Warteschlange</th>
-                                <th></th>
-                                <th>Aufträge in Bearbeitung</th>
-                                <th></th>
-                                <th>Produktionsaufträge für die kommende Periode</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* Erste Zeile manuell */}
-                            <tr>
-                                <th scope="row">P1</th>
-                                <td></td>
-                                <td></td>
-                                <td>+</td>
-                                <td></td>
-                                <td>{renderInput('P1', 0)}</td>
-                                <td>-</td>
-                                <td>{getAmountById('1')}</td>
-                                <td>-</td>
-                                <td>{renderInput('P1', 1)}</td>
-                                <td>-</td>
-                                <td>{renderInput('P1', 2)}</td>
-                                <td>=</td>
-                                <td>{calculateTotal('P1')}</td>
-                            </tr>
-                            <tr><td colSpan={columns}></td></tr>
-
-                            {/* Dynamisch */}
-                            {dynamicIds.map((id, index) => {
-                                const total = calculateTotal(id);
-                                const prevId = getPreviousId(id);
-                                const prevTotal = prevId ? calculateTotal(prevId) : 0;
-                                const prevWarteschlange = getPreviousWarteschlange(id);
-
-                                return (
-                                    <React.Fragment key={id}>
-                                        <tr>
-                                            <th scope="row">E{id}{['16', '17', '26'].includes(id) ? '*' : ''}</th>
-                                            <td>{prevTotal}</td>
-                                            <td>+</td>
-                                            <td>{prevWarteschlange}</td>
-                                            <td>+</td>
-                                            <td>{renderInput(id, 0)}</td>
-                                            <td>-</td>
-                                            <td>{getLagerbestand(id)}</td>
-                                            <td>-</td>
-                                            <td>{renderInput(id, 1)}</td>
-                                            <td>-</td>
-                                            <td>{renderInput(id, 2)}</td>
-                                            <td>=</td>
-                                            <td>{total}</td>
-                                        </tr>
-                                        {rowsWithSpacing.includes(id) && (
-                                            <tr><td colSpan={columns}></td></tr>
-                                        )}
-                                    </React.Fragment>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                    <h5>* = Mehrfachverwendteile</h5>
-                </div>
-            </div>
+  return (
+    <div className={styles.pageContainer}>
+      <Sidebar />
+      <div className={styles.content}>
+        <div className={styles.tabContainer}>
+          {TAB_CONFIG.map((tab, index) => (
+            <button
+              key={tab.label}
+              onClick={() => setActiveTab(index)}
+              className={`${styles.tabButton} ${index === activeTab ? styles.active : ''}`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
-    );
+
+        <DispositionTable
+          productId={productId}
+          dynamicIds={dynamicIds}
+          rowNames={rowNames}
+          rowsWithSpacing={['51', '50', '49', '56', '55', '54', '31', '30', '29']}
+          headline={headline}
+        />
+      </div>
+    </div>
+  );
 }
