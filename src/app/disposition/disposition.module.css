@@ -121,3 +121,35 @@
         padding: 1rem;
     }
 }
+
+/* Tabs Container */
+.tabContainer {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Allgemeiner Tab-Button */
+.tabButton {
+    padding: 0.5rem 1rem;
+    background-color: #f0f4f8;
+    border: 1px solid #c1c8cd;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2f3e46;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Hover-Effekt */
+.tabButton:hover {
+    background-color: #e2e8f0;
+}
+
+/* Aktiver Tab */
+.tabButton.active {
+    background-color: #2f3e46;
+    color: white;
+    border-color: #2f3e46;
+}
