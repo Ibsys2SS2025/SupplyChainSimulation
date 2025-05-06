@@ -456,6 +456,14 @@ export default function JsonViewPage() {
     const totalCapacities = calculateTotalCapacity(columnSums, setupTimes, wartezeiten, ruestzeitold);
     const overtimeValues = calculateOvertime(totalCapacities);
 
+    const [dropdownValues, setDropdownValues] = useState(
+        overtimeValues.map((value) => {
+            if (value > 960) return "3";
+            if (value > 480) return "2";
+            return "1";
+        })
+    );
+
     return (
         <div className={styles.pageContainer}>
             <Sidebar />
@@ -589,6 +597,27 @@ export default function JsonViewPage() {
                                 <td colSpan={4}>{t('capacity.overtime')}</td>
                                 {overtimeValues.map((value, index) => (
                                     <td key={`overtime-${index}`}>{value}</td>
+                                ))}
+                            </tr>
+                            <tr className={styles.setupRow}>
+                                <td colSpan={4}>{t('capacity.shiftCount')}</td>
+                                {customInputs.map((_, index) => (
+                                    <td key={`dropdown-${index}`}>
+                                        <select
+                                            className={styles.inputCell}
+                                            value={dropdownValues[index] || '1'}
+                                            onChange={(e) => {
+                                                const newDropdowns = [...dropdownValues];
+                                                newDropdowns[index] = e.target.value as "1" | "2" | "3";
+                                                setDropdownValues(newDropdowns);
+                                            }}
+                                            name={`dropdown-${index}`}
+                                        >
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                        </select>
+                                    </td>
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
