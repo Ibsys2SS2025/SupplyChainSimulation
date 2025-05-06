@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from '@/app/disposition/disposition.module.css';
 import { useXmlData } from '@/context/XmlDataContext';
 
@@ -21,28 +21,26 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     return value ? Number(value) : 0;
   };
 
-  const [inputs, setInputs] = useState<Record<string, number[]>>({});
+  // 💾 Tab-spezifische Eingaben für alle Tabs
+  const [tabInputs, setTabInputs] = useState<Record<string, Record<string, number[]>>>({
+    P1: Object.fromEntries(['P1', '26', '51', '16', '17', '50', '4', '10', '49', '7', '13', '18'].map(id => [id, [0, 0, 0]])),
+    P2: Object.fromEntries(['P2', '26', '56', '16', '17', '54', '5', '11', '53', '8', '14', '19'].map(id => [id, [0, 0, 0]])),
+    P3: Object.fromEntries(['P3', '26', '66', '16', '17', '64', '6', '12', '63', '9', '15', '20'].map(id => [id, [0, 0, 0]])),
+  });
 
-  // Initialisierung bei Mount oder Tab-Wechsel
-  useEffect(() => {
-    const allIds = [productId, ...dynamicIds];
-    const initial: Record<string, number[]> = {};
-    allIds.forEach(id => {
-      initial[id] = [0, 0, 0];
-    });
-    setInputs(initial);
-  }, [productId, dynamicIds]);
+  const inputs = tabInputs[productId];
 
   const handleInput = (id: string, idx: number, val: number) => {
-    setInputs(prev => {
-      const updated = [...(prev[id] ?? [0, 0, 0])];
+    setTabInputs(prev => {
+      const tab = { ...prev[productId] };
+      const updated = [...(tab[id] ?? [0, 0, 0])];
       updated[idx] = val;
-      return { ...prev, [id]: updated };
+      return { ...prev, [productId]: { ...tab, [id]: updated } };
     });
   };
 
   const renderInput = (id: string, idx: number) => {
-    const value = inputs[id]?.[idx] ?? 0;
+    const value = inputs?.[id]?.[idx] ?? 0;
     return (
       <input
         className={styles.inputCell}
@@ -69,11 +67,11 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
 
   const getPreviousWarteschlange = (currentId: string): number => {
     const prevId = getPreviousId(currentId);
-    return prevId ? inputs[prevId]?.[1] ?? 0 : 0;
+    return prevId ? inputs?.[prevId]?.[1] ?? 0 : 0;
   };
 
   const calculateTotal = (id: string): number => {
-    const values = inputs[id] ?? [0, 0, 0];
+    const values = inputs?.[id] ?? [0, 0, 0];
     const [sicherheitsbestand, warteschlange, inBearbeitung] = values;
     const lagerbestand = getLagerbestand(id);
     let total = sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
