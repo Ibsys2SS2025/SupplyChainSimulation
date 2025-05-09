@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo } from 'react';
 import { useXmlData } from '@/context/XmlDataContext';
-import { useTranslation } from "react-i18next";
-import Sidebar from "@/components/Sidebar";
+import { useTranslation } from 'react-i18next';
+import Sidebar from '@/components/Sidebar';
 import styles from './prognose.module.css';
 
-// 1) Definiere hier das fixe Array der Produkte, aus dem wir beide Tabellen aufbauen:
-const products = ['P1','P2','P3'] as const;
+// Fixes Array der Produkte
+const products = ['P1', 'P2', 'P3'] as const;
 
 interface PrognoseRow {
     article:    string;
@@ -29,12 +29,12 @@ export default function PrognosePlanungPage() {
     const { xmlData, setXmlData } = useXmlData();
     const { t } = useTranslation();
 
-    // 2) Sicherstellen, dass wir geparste XML-Daten haben
+    // Abbruch, falls noch keine Daten geladen
     if (!xmlData) {
         return <p>Keine Daten geladen. Bitte lade zuerst deine XML-Datei hoch.</p>;
     }
 
-    // 3) Initiale Daten für Prognose: drei Zeilen P1–P3, alle Werte = 0
+    // Initialwerte für den Fall, dass noch nichts im Context steht
     const initialPrognoseData: PrognoseRow[] = products.map(prod => ({
         article:    prod,
         thisPeriod: 0,
@@ -42,8 +42,6 @@ export default function PrognosePlanungPage() {
         periodN2:   0,
         periodN3:   0,
     }));
-
-    // 4) Initiale Daten für Planung: drei Zeilen P1–P3, alle Werte = 0
     const initialPlanungData: PlanungRow[] = products.map(prod => ({
         article:      prod,
         productionP1: 0,
@@ -52,75 +50,89 @@ export default function PrognosePlanungPage() {
         productionP4: 0,
     }));
 
-    // 5) React-State aus den Initial-Daten
-    const [prognoseData, setPrognoseData] = useState<PrognoseRow[]>(initialPrognoseData);
-    const [planungData, setPlanungData] = useState<PlanungRow[]>(initialPlanungData);
+    // Prognose- und Planungsdaten direkt aus dem Context (oder Fallback auf Initialwerte)
+    const prognoseData: PrognoseRow[] = useMemo(() => {
+        return (xmlData.internaldata?.sellwish as PrognoseRow[]) ?? initialPrognoseData;
+    }, [xmlData.internaldata]);
+    const planungData: PlanungRow[] = useMemo(() => {
+        return (xmlData.internaldata?.planning as PlanungRow[]) ?? initialPlanungData;
+    }, [xmlData.internaldata]);
 
-    // 6) Hilfsfunktion: speichert die aktuellen Prognose- und/oder Planungs-Daten ins Context-Objekt
+    // Funktion, um den Context upzudaten (ohne lokalen State)
     const updateXmlInternaldata = (
         updatedPrognose?: PrognoseRow[],
         updatedPlanung?:  PlanungRow[]
     ) => {
-        const newInternalData = {
+        const newInternal = {
             ...(xmlData.internaldata || {}),
-            ...(updatedPrognose && {
-                sellwish: updatedPrognose.map(row => ({
-                    article:    row.article,
-                    thisPeriod: row.thisPeriod,
-                    periodN1:   row.periodN1,
-                    periodN2:   row.periodN2,
-                    periodN3:   row.periodN3,
-                })),
-            }),
-            ...(updatedPlanung && {
-                planning: updatedPlanung.map(row => ({
-                    article:      row.article,
-                    productionP1: row.productionP1,
-                    productionP2: row.productionP2,
-                    productionP3: row.productionP3,
-                    productionP4: row.productionP4,
-                })),
-            }),
+            ...(updatedPrognose && { sellwish: updatedPrognose }),
+            ...(updatedPlanung  && { planning: updatedPlanung   }),
         };
-
-        setXmlData({
-            ...xmlData,
-            internaldata: newInternalData,
-        });
+        setXmlData({ ...xmlData, internaldata: newInternal });
     };
 
-    // 7) Handler für Änderungen in der Prognose-Tabelle
+    // Handler für Prognose-Änderungen
     const handlePrognoseChange = (
-        index: number,
-        field: keyof Omit<PrognoseRow,'article'>,
-        value: string
+        idx: number,
+        field: keyof Omit<PrognoseRow, 'article'>,
+        val: string
     ) => {
-        const newValue = Number(value) || 0;
-        const newData = [...prognoseData];
-        newData[index][field] = newValue;
-        setPrognoseData(newData);
-        updateXmlInternaldata(newData, undefined);
+        const n = Number(val) || 0;
+        const updated = [...prognoseData];
+        updated[idx][field] = n;
+        updateXmlInternaldata(updated, undefined);
     };
 
-    // 8) Handler für Änderungen in der Planungs-Tabelle
+    // Handler für Planungs-Änderungen
     const handlePlanungChange = (
-        index: number,
+        idx: number,
         field: keyof PlanungRow,
-        value: string
+        val: string
     ) => {
-        const newValue = Number(value) || 0;
-        const newData = [...planungData];
-        // @ts-ignore: TypeScript weiß hier nicht, dass field != 'article'
-        newData[index][field] = newValue;
-        setPlanungData(newData);
-        updateXmlInternaldata(undefined, newData);
+        const n = Number(val) || 0;
+        const updated = [...planungData];
+        // @ts-ignore
+        updated[idx][field] = n;
+        updateXmlInternaldata(undefined, updated);
     };
 
-    // 9) Summe über ein Feld in einer Zeilen-Liste
-    const sum = <T extends Record<string, any>>(arr: T[], key: keyof T): number =>
-        arr.reduce((total, item) => total + (Number(item[key]) || 0), 0);
+    // Hilfsfunktion: Summe über numerische Spalten
+    const sum = <T extends Record<string, any>>(arr: T[], key: keyof T) =>
+        arr.reduce((s, item) => s + (Number(item[key]) || 0), 0);
 
-    // 10) JSX: Tabellen rendern
+    // --- Dynamische Lager-Berechnung über alle Perioden ---
+    const stockMap = useMemo(() => {
+        const map: Record<string, number> = {};
+        xmlData.results.warehousestock.article.forEach(item => {
+            const { id, amount } = item.$;
+            map[id] = Number(amount) || 0;
+        });
+        return map;
+    }, [xmlData]);
+
+    const calculateStock = (rowIdx: number, periodIdx: number): number => {
+        const articleKey = products[rowIdx];
+        const id         = articleKey.slice(1);
+        const start      = stockMap[id] || 0;
+
+        const foreKeys = ['thisPeriod','periodN1','periodN2','periodN3'] as const;
+        const foreKey  = foreKeys[periodIdx] as keyof PrognoseRow;
+        const prodKey  = (`productionP${periodIdx+1}` as keyof PlanungRow);
+
+        const prev = periodIdx === 0
+            ? start
+            : calculateStock(rowIdx, periodIdx - 1);
+
+        const prod = planungData[rowIdx][prodKey] || 0;
+        const fore = prognoseData[rowIdx][foreKey]  || 0;
+
+        return prev + prod - fore;
+    };
+
+    const sumStock = (periodIdx: number) =>
+        products.reduce((s, _, idx) => s + calculateStock(idx, periodIdx), 0);
+
+    // --- Render ---
     return (
         <div className={styles.pageContainer}>
             <Sidebar />
@@ -143,14 +155,12 @@ export default function PrognosePlanungPage() {
                         {prognoseData.map((row, idx) => (
                             <tr key={row.article}>
                                 <td>{row.article}</td>
-                                {(['thisPeriod','periodN1','periodN2','periodN3'] as const).map(field => (
-                                    <td key={field}>
+                                {(['thisPeriod','periodN1','periodN2','periodN3'] as const).map(f => (
+                                    <td key={f}>
                                         <input
                                             type="number"
-                                            value={row[field] || ''}
-                                            onChange={e =>
-                                                handlePrognoseChange(idx, field, e.target.value)
-                                            }
+                                            value={row[f] || ''}
+                                            onChange={e => handlePrognoseChange(idx, f, e.target.value)}
                                             className={styles.inputCell}
                                         />
                                     </td>
@@ -176,35 +186,111 @@ export default function PrognosePlanungPage() {
                         <tr>
                             <th>{t('forecast.product')}</th>
                             <th>{t('forecast.period')}</th>
+                            <th className={styles.lagerHeader}>{t('forecast.lager')}</th>
                             <th>{t('forecast.period2')}</th>
+                            <th className={styles.lagerHeader}>{t('forecast.lager')}</th>
                             <th>{t('forecast.period3')}</th>
+                            <th className={styles.lagerHeader}>{t('forecast.lager')}</th>
                             <th>{t('forecast.period4')}</th>
+                            <th className={styles.lagerHeader}>{t('forecast.lager')}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {planungData.map((row, idx) => (
                             <tr key={row.article}>
                                 <td>{row.article}</td>
-                                {(['productionP1','productionP2','productionP3','productionP4'] as const).map(field => (
-                                    <td key={field}>
-                                        <input
-                                            type="number"
-                                            value={row[field] || ''}
-                                            onChange={e =>
-                                                handlePlanungChange(idx, field, e.target.value)
-                                            }
-                                            className={styles.inputCell}
-                                        />
-                                    </td>
-                                ))}
+
+                                {/* Produktion m */}
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={row.productionP1 || ''}
+                                        onChange={e => handlePlanungChange(idx, 'productionP1', e.target.value)}
+                                        className={styles.inputCell}
+                                    />
+                                </td>
+                                {/* Lager m */}
+                                <td>
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={calculateStock(idx, 0)}
+                                        className={styles.readOnlyCell}
+                                        tabIndex={-1}
+                                    />
+                                </td>
+
+                                {/* Produktion m+1 */}
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={row.productionP2 || ''}
+                                        onChange={e => handlePlanungChange(idx, 'productionP2', e.target.value)}
+                                        className={styles.inputCell}
+                                    />
+                                </td>
+                                {/* Lager m+1 */}
+                                <td>
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={calculateStock(idx, 1)}
+                                        className={styles.readOnlyCell}
+                                        tabIndex={-1}
+                                    />
+                                </td>
+
+                                {/* Produktion m+2 */}
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={row.productionP3 || ''}
+                                        onChange={e => handlePlanungChange(idx, 'productionP3', e.target.value)}
+                                        className={styles.inputCell}
+                                    />
+                                </td>
+                                {/* Lager m+2 */}
+                                <td>
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={calculateStock(idx, 2)}
+                                        className={styles.readOnlyCell}
+                                        tabIndex={-1}
+                                    />
+                                </td>
+
+                                {/* Produktion m+3 */}
+                                <td>
+                                    <input
+                                        type="number"
+                                        value={row.productionP4 || ''}
+                                        onChange={e => handlePlanungChange(idx, 'productionP4', e.target.value)}
+                                        className={styles.inputCell}
+                                    />
+                                </td>
+                                {/* Lager m+3 */}
+                                <td>
+                                    <input
+                                        type="text"
+                                        readOnly
+                                        value={calculateStock(idx, 3)}
+                                        className={styles.readOnlyCell}
+                                        tabIndex={-1}
+                                    />
+                                </td>
                             </tr>
                         ))}
                         <tr className={styles.sumRow}>
                             <td><strong>{t('forecast.sum')}</strong></td>
                             <td><strong>{sum(planungData,'productionP1')}</strong></td>
+                            <td><strong>{sumStock(0)}</strong></td>
                             <td><strong>{sum(planungData,'productionP2')}</strong></td>
+                            <td><strong>{sumStock(1)}</strong></td>
                             <td><strong>{sum(planungData,'productionP3')}</strong></td>
+                            <td><strong>{sumStock(2)}</strong></td>
                             <td><strong>{sum(planungData,'productionP4')}</strong></td>
+                            <td><strong>{sumStock(3)}</strong></td>
                         </tr>
                         </tbody>
                     </table>
