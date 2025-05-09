@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from '@/app/disposition/disposition.module.css';
 import { useXmlData } from '@/context/XmlDataContext';
 
@@ -18,17 +18,73 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     const whs = xmlData.results?.warehousestock;
     const articles = Array.isArray(whs?.article) ? whs.article : [whs?.article];
     const value = articles.find((a: any) => a?.$?.id === id)?.$?.amount;
-    return value ? Number(value) : 0;
+    const raw = value ? Number(value) : 0;
+    return ['16', '17', '26'].includes(id) ? raw / 3 : raw;
   };
 
-  // 💾 Tab-spezifische Eingaben für alle Tabs
-  const [tabInputs, setTabInputs] = useState<Record<string, Record<string, number[]>>>({
-    P1: Object.fromEntries(['P1', '26', '51', '16', '17', '50', '4', '10', '49', '7', '13', '18'].map(id => [id, [0, 0, 0]])),
-    P2: Object.fromEntries(['P2', '26', '56', '16', '17', '54', '5', '11', '53', '8', '14', '19'].map(id => [id, [0, 0, 0]])),
-    P3: Object.fromEntries(['P3', '26', '66', '16', '17', '64', '6', '12', '63', '9', '15', '20'].map(id => [id, [0, 0, 0]])),
-  });
+  const getInitialWaitingAmount = (id: string): number => {
+    const workplaces = xmlData.results?.waitinglistworkstations?.workplace || [];
+    const entries = Array.isArray(workplaces) ? workplaces : [workplaces];
+    let sum = 0;
+    for (const wp of entries) {
+      const waiting = wp.waitinglist;
+      const items = Array.isArray(waiting) ? waiting : (waiting ? [waiting] : []);
+      for (const w of items) {
+        if (w?.$?.item === id) sum += Number(w?.$?.amount ?? 0);
+      }
+    }
+    return ['16', '17', '26'].includes(id) ? sum / 3 : sum;
+  };
 
-  const inputs = tabInputs[productId];
+  const getInitialInProgressAmount = (id: string): number => {
+    const orders = xmlData.results?.ordersinwork?.workplace || [];
+    const entries = Array.isArray(orders) ? orders : [orders];
+    const sum = entries.filter((o: any) => o?.$?.item === id).reduce((acc: number, o: any) => acc + Number(o?.$?.amount ?? 0), 0);
+    return ['16', '17', '26'].includes(id) ? sum / 3 : sum;
+  };
+
+  const getProductionP1 = (productId: string): number => {
+    const planning = xmlData?.internaldata?.planning ?? [];
+    const rows = Array.isArray(planning) ? planning : [planning];
+
+    for (const p of rows) {
+      const article = Array.isArray(p.article) ? p.article[0] : p.article;
+      const prod = Array.isArray(p.productionP1) ? p.productionP1[0] : p.productionP1;
+
+      if (article === productId) {
+        return Number(prod ?? 0);
+      }
+    }
+
+    return 0;
+  };
+
+  const [tabInputs, setTabInputs] = useState<Record<string, Record<string, number[]>>>({});
+
+  useEffect(() => {
+    const allIds = [productId, ...dynamicIds];
+    setTabInputs(prev => {
+      const updated = { ...prev };
+      updated[productId] = updated[productId] || {};
+
+      const productionP1 = getProductionP1(productId);
+
+      allIds.forEach(id => {
+        if (!updated[productId][id]) {
+          const sicherheitsbestand = id === productId ? productionP1 : 0;
+          const warteschlange = getInitialWaitingAmount(id);
+          const inBearbeitung = getInitialInProgressAmount(id);
+          updated[productId][id] = [sicherheitsbestand, warteschlange, inBearbeitung];
+        } else if (id === productId) {
+          updated[productId][id][0] = productionP1;
+        }
+      });
+
+      return updated;
+    });
+  }, [productId, dynamicIds, xmlData?.internaldata?.planning]);
+
+  const inputs = tabInputs[productId] || {};
 
   const handleInput = (id: string, idx: number, val: number) => {
     setTabInputs(prev => {
@@ -51,10 +107,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     );
   };
 
-  const getLagerbestand = (id: string) => {
-    const raw = id === productId ? getAmountById(productId.replace('P', '')) : getAmountById(id);
-    return ['16', '17', '26'].includes(id) ? raw / 3 : raw;
-  };
+  const getLagerbestand = (id: string) => getAmountById(id);
 
   const getPreviousId = (currentId: string): string => {
     const index = dynamicIds.indexOf(currentId);
@@ -75,7 +128,10 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     const [sicherheitsbestand, warteschlange, inBearbeitung] = values;
     const lagerbestand = getLagerbestand(id);
     let total = sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
-    if (id !== productId) {
+    if (id === productId) {
+      const productionP1 = getProductionP1(productId);
+      if (productionP1) total += productionP1;
+    } else {
       const prevId = getPreviousId(id);
       if (prevId) total += calculateTotal(prevId);
     }
@@ -108,7 +164,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
           <tbody>
             <tr>
               <th scope="row">{productId}</th>
-              <td></td>
+              <td>{getProductionP1(productId)}</td>
               <td></td>
               <td>+</td>
               <td></td>
