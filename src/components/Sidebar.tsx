@@ -16,6 +16,7 @@ const Sidebar: React.FC = () => {
         { label: t("nav.disposition"), path: "/disposition" },
         { label: t("nav.capacityplan"), path: "/kapazitaetsplan" },
         { label: t("nav.orders"), path: "/kaufteildisposition" },
+        { label: t("nav.inputfinal"), path: "/eingabetabelle" },
         { label: t("nav.export"), path: "/export" },
     ];
 

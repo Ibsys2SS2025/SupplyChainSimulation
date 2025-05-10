@@ -14,7 +14,8 @@
     "disposition": "Disposition",
     "capacityplan": "Kapazitätsplan",
     "orders": "Kaufteildisposition",
-    "export": "Export"
+    "export": "Export",
+    "inputfinal": "Eingabetabelle"
   },
   "setup": {
     "title": "XML-Daten hochladen",
