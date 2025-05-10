@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styles from '@/app/disposition/disposition.module.css';
 import { useXmlData } from '@/context/XmlDataContext';
 
 interface Props {
-  productId: string; // z.B. "P1", "P2", "P3"
+  productId: string;
   dynamicIds: string[];
   rowsWithSpacing: string[];
   rowNames: Record<string, string>;
   headline: string;
 }
 
+const MULTI_USE_IDS = ['16', '17', '26'];
+
 export default function DispositionTable({ productId, dynamicIds, rowsWithSpacing, rowNames, headline }: Props) {
-  const { xmlData } = useXmlData();
+  const { xmlData, tabInputs, updateInput } = useXmlData();
   const columns = 14;
 
   const getAmountById = (id: string): number => {
@@ -19,7 +21,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     const articles = Array.isArray(whs?.article) ? whs.article : [whs?.article];
     const value = articles.find((a: any) => a?.$?.id === id)?.$?.amount;
     const raw = value ? Number(value) : 0;
-    return ['16', '17', '26'].includes(id) ? raw / 3 : raw;
+    return MULTI_USE_IDS.includes(id) ? raw / 3 : raw;
   };
 
   const getInitialWaitingAmount = (id: string): number => {
@@ -33,66 +35,49 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
         if (w?.$?.item === id) sum += Number(w?.$?.amount ?? 0);
       }
     }
-    return ['16', '17', '26'].includes(id) ? sum / 3 : sum;
+    return MULTI_USE_IDS.includes(id) ? sum / 3 : sum;
   };
 
   const getInitialInProgressAmount = (id: string): number => {
     const orders = xmlData.results?.ordersinwork?.workplace || [];
     const entries = Array.isArray(orders) ? orders : [orders];
     const sum = entries.filter((o: any) => o?.$?.item === id).reduce((acc: number, o: any) => acc + Number(o?.$?.amount ?? 0), 0);
-    return ['16', '17', '26'].includes(id) ? sum / 3 : sum;
+    return MULTI_USE_IDS.includes(id) ? sum / 3 : sum;
   };
 
   const getProductionP1 = (productId: string): number => {
     const planning = xmlData?.internaldata?.planning ?? [];
     const rows = Array.isArray(planning) ? planning : [planning];
-
     for (const p of rows) {
       const article = Array.isArray(p.article) ? p.article[0] : p.article;
       const prod = Array.isArray(p.productionP1) ? p.productionP1[0] : p.productionP1;
-
-      if (article === productId) {
-        return Number(prod ?? 0);
-      }
+      if (article === productId) return Number(prod ?? 0);
     }
-
     return 0;
   };
 
-  const [tabInputs, setTabInputs] = useState<Record<string, Record<string, number[]>>>({});
+  const inputs = tabInputs[productId] || {};
 
   useEffect(() => {
     const allIds = [productId, ...dynamicIds];
-    setTabInputs(prev => {
-      const updated = { ...prev };
-      updated[productId] = updated[productId] || {};
+    const productionP1 = getProductionP1(productId);
 
-      const productionP1 = getProductionP1(productId);
-
-      allIds.forEach(id => {
-        if (!updated[productId][id]) {
-          const sicherheitsbestand = id === productId ? productionP1 : 0;
-          const warteschlange = getInitialWaitingAmount(id);
-          const inBearbeitung = getInitialInProgressAmount(id);
-          updated[productId][id] = [sicherheitsbestand, warteschlange, inBearbeitung];
-        } else if (id === productId) {
-          updated[productId][id][0] = productionP1;
-        }
-      });
-
-      return updated;
+    allIds.forEach(id => {
+      if (!inputs[id]) {
+        const sicherheitsbestand = id === productId ? productionP1 : 0;
+        const warteschlange = getInitialWaitingAmount(id);
+        const inBearbeitung = getInitialInProgressAmount(id);
+        updateInput(productId, id, 0, sicherheitsbestand);
+        updateInput(productId, id, 1, warteschlange);
+        updateInput(productId, id, 2, inBearbeitung);
+      } else if (id === productId) {
+        updateInput(productId, id, 0, productionP1);
+      }
     });
   }, [productId, dynamicIds, xmlData?.internaldata?.planning]);
 
-  const inputs = tabInputs[productId] || {};
-
   const handleInput = (id: string, idx: number, val: number) => {
-    setTabInputs(prev => {
-      const tab = { ...prev[productId] };
-      const updated = [...(tab[id] ?? [0, 0, 0])];
-      updated[idx] = val;
-      return { ...prev, [productId]: { ...tab, [id]: updated } };
-    });
+    updateInput(productId, id, idx, val);
   };
 
   const renderInput = (id: string, idx: number) => {
@@ -107,36 +92,23 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     );
   };
 
-  const getLagerbestand = (id: string) => getAmountById(id);
-
-  const getPreviousId = (currentId: string): string => {
-    const index = dynamicIds.indexOf(currentId);
-    if (index === 0) return productId;
-    for (let i = index - 1; i >= 0; i--) {
-      if (rowsWithSpacing.includes(dynamicIds[i])) return dynamicIds[i];
+  const calculateRowTotal = (
+    id: string,
+    inputs: Record<string, number[]>,
+    isMainProduct: boolean,
+    prevTotal: number,
+    prevWarteschlange: number,
+    lagerbestand: number
+  ): number => {
+    const [sicherheitsbestand, warteschlange, inBearbeitung] = inputs[id] ?? [0, 0, 0];
+    if (isMainProduct) {
+      return getProductionP1(id) + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
     }
-    return productId;
+    return prevTotal + prevWarteschlange + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
   };
 
-  const getPreviousWarteschlange = (currentId: string): number => {
-    const prevId = getPreviousId(currentId);
-    return prevId ? inputs?.[prevId]?.[1] ?? 0 : 0;
-  };
-
-  const calculateTotal = (id: string): number => {
-    const values = inputs?.[id] ?? [0, 0, 0];
-    const [sicherheitsbestand, warteschlange, inBearbeitung] = values;
-    const lagerbestand = getLagerbestand(id);
-    let total = sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
-    if (id === productId) {
-      const productionP1 = getProductionP1(productId);
-      if (productionP1) total += productionP1;
-    } else {
-      const prevId = getPreviousId(id);
-      if (prevId) total += calculateTotal(prevId);
-    }
-    return total;
-  };
+  let lastGroupTotal = 0;
+  let lastGroupWarteschlange = 0;
 
   return (
     <>
@@ -176,27 +148,23 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
               <td>-</td>
               <td>{renderInput(productId, 2)}</td>
               <td>=</td>
-              <td>{calculateTotal(productId)}</td>
+              <td>{lastGroupTotal = calculateRowTotal(productId, inputs, true, 0, 0, getAmountById(productId.replace('P', '')))}</td>
             </tr>
             <tr><td colSpan={columns}></td></tr>
-
             {dynamicIds.map((id) => {
-              const total = calculateTotal(id);
-              const prevId = getPreviousId(id);
-              const prevTotal = prevId ? calculateTotal(prevId) : 0;
-              const prevWarteschlange = getPreviousWarteschlange(id);
-
-              return (
+              const total = calculateRowTotal(id, inputs, false, lastGroupTotal, lastGroupWarteschlange, getAmountById(id));
+              const warteschlange = inputs?.[id]?.[1] ?? 0;
+              const row = (
                 <React.Fragment key={id}>
                   <tr>
                     <th scope="row">{rowNames[id] || id}</th>
-                    <td>{prevTotal}</td>
+                    <td>{lastGroupTotal}</td>
                     <td>+</td>
-                    <td>{prevWarteschlange}</td>
+                    <td>{lastGroupWarteschlange}</td>
                     <td>+</td>
                     <td>{renderInput(id, 0)}</td>
                     <td>-</td>
-                    <td>{getLagerbestand(id)}</td>
+                    <td>{getAmountById(id)}</td>
                     <td>-</td>
                     <td>{renderInput(id, 1)}</td>
                     <td>-</td>
@@ -209,6 +177,11 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
                   )}
                 </React.Fragment>
               );
+              if (rowsWithSpacing.includes(id)) {
+                lastGroupTotal = total;
+                lastGroupWarteschlange = warteschlange;
+              }
+              return row;
             })}
           </tbody>
         </table>
