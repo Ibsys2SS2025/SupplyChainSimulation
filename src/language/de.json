@@ -57,6 +57,9 @@
     "planning": "Planung",
     "sum": "Summe",
     "lager": "Lager"
-
+  },
+  "inputtable": {
+    "split": "Produktionsauftrag splitten",
+    "inputtable": "Eingabetabelle"
   }
 }
