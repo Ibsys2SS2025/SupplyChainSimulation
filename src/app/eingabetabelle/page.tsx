@@ -26,7 +26,6 @@ export default function App() {
     const [sortedIds, setSortedIds] = useState(
         initialData.flatMap(heading => heading.subItems.map(item => item.id))
     );
-    const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -220,7 +219,7 @@ export default function App() {
 
                 return {
                     ...heading,
-                    subItems: heading.subItems.map((item, index) => {
+                    subItems: heading.subItems.map((item) => {
                         if (item.id === itemId) {
                             return { ...item, value: adjustedValue }; // Stelle sicher, dass der Wert den verbleibenden Wert nicht überschreitet
                         }
@@ -316,9 +315,6 @@ export default function App() {
                                         <SortableItem key={item.id} id={item.id}>
                                             <div className={styles.draggableButton}>
                                                 {headings.find(h => h.id === item.parentId)?.title} ({item.value})
-                                                {validationErrors[item.parentId] && (
-                                                    <span className={styles.errorIndicator}>!</span>
-                                                )}
                                             </div>
                                         </SortableItem>
                                     ) : null;
