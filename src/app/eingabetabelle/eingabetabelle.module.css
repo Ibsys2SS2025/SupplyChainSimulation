@@ -26,9 +26,9 @@
 
 /* Linke Seite: Überschriften mit Eingabeliste */
 .itemList {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    flex: 2; /* Linke Seite bekommt mehr Platz */
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Zwei Spalten für die linke Seite */
     gap: 1.5rem;
     overflow-y: auto;
     padding-right: 10px;
@@ -91,14 +91,15 @@
 
 /* Rechte Seite: Dropzone-Container */
 .dropZoneContainer {
-    flex: 1;
+    flex: 1;  /* Rechte Seite bekommt weniger Platz */
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    overflow-y: auto;
+    box-sizing: border-box;  /* sorgt dafür, dass padding die Größe nicht beeinflusst */
+    overflow-y: auto; /* Ermöglicht Scrollen innerhalb der Dropzone-Container */
 }
 
 /* Dropzone selbst */
@@ -112,11 +113,9 @@
     padding: 1rem;
     gap: 0.8rem;
     transition: all 0.2s;
-}
-
-.dropZone.active {
-    background-color: #e0f3e0;
-    border-color: #6c6;
+    flex-grow: 0; /* Verhindert das Wachsen der Dropzone, um sie nicht zu überdehnen */
+    overflow-y: auto;  /* Ermöglicht Scrollen innerhalb der Dropzone */
+    max-height: 100%;  /* Maximale Höhe ist der verfügbare Platz */
 }
 
 /* Dragbarer Button in der Dropzone */
