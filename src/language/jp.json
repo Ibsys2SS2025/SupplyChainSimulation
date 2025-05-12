@@ -34,18 +34,23 @@
     "description2": "今すぐセットアップを開始しましょう。",
     "buttonSetup": "セットアップを開始"
   },
-  "disposition": {
-    "title": "配分",
-    "sales_request": "販売希望",
-    "stock_safety": "安全在庫",
-    "stock_old": "前期間の在庫",
-    "orders_queued": "待機中の注文",
-    "orders_active": "処理中の注文",
-    "orders_prod": "生産指示",
-    "button_save": "保存",
-    "rowInputErr_negVal": "値は0以上でなければなりません",
-    "rowInputErr_nonNumeric": "値は数値でなければなりません"
-  },
+"disposition": {
+  "title": "配分",
+  "sales_request": "販売希望",
+  "stock_safety": "安全在庫",
+  "stock_old": "前期間の在庫",
+  "orders_queued": "待機中の注文",
+  "orders_active": "処理中の注文",
+  "orders_prod": "生産指示",
+  "button_save": "保存",
+  "rowInputErr_negVal": "値は0以上でなければなりません",
+  "rowInputErr_nonNumeric": "値は数値でなければなりません",
+  "tab_p1": "配分 P1",
+  "tab_p2": "配分 P2",
+  "tab_p3": "配分 P3",
+  "no_data": "データが読み込まれていません。先にXMLファイルをアップロードしてください。",
+  "multiuse_hint": "* = 複数用途部品"
+},
   "forecast": {
     "title": "予測",
     "period": "N",
