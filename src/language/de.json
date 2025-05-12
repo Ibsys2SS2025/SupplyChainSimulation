@@ -59,7 +59,8 @@
     "period4": "N+3",
     "product": "Produkt",
     "planning": "Planung",
-    "sum": "Summe"
+    "sum": "Summe",
+    "lager": "Lager"
 
   }
 }

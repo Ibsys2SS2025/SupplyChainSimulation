@@ -59,6 +59,8 @@
     "period4": "N+3",
     "product": "製品",
     "planning": "計画",
-    "sum": "合計"
+    "sum": "合計",
+    "lager": "倉庫"
+
   }
 }

@@ -59,6 +59,8 @@
     "period4": "N+3",
     "product": "Producto",
     "planning": "Planificación",
-    "sum": "Total"
+    "sum": "Total",
+    "lager": "Depósito"
+
   }
 }
