@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import styles from '@/app/disposition/disposition.module.css';
 import { useXmlData } from '@/context/XmlDataContext';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   productId: string;
@@ -14,6 +15,7 @@ const MULTI_USE_IDS = ['16', '17', '26'];
 
 export default function DispositionTable({ productId, dynamicIds, rowsWithSpacing, rowNames, headline }: Props) {
   const { xmlData, tabInputs, updateInput } = useXmlData();
+  const { t } = useTranslation();
   const columns = 14;
 
   const getAmountById = (id: string): number => {
@@ -118,19 +120,19 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
           <thead>
             <tr>
               <th></th>
-              <th>Verbindliche Aufträge / Vertriebswunsch</th>
+              <th>{t('disposition.sales_request')}</th>
               <th></th>
               <th></th>
               <th></th>
-              <th>Geplanter Lagerbestand am Ende der Planperiode (Sicherheitsbestand)</th>
+              <th>{t('disposition.stock_safety')}</th>
               <th></th>
-              <th>Lagerbestand am Ende der Vorperiode</th>
+              <th>{t('disposition.stock_old')}</th>
               <th></th>
-              <th>Aufträge in der Warteschlange</th>
+              <th>{t('disposition.orders_queued')}</th>
               <th></th>
-              <th>Aufträge in Bearbeitung</th>
+              <th>{t('disposition.orders_active')}</th>
               <th></th>
-              <th>Produktionsaufträge für die kommende Periode</th>
+              <th>{t('disposition.orders_prod')}</th>
             </tr>
           </thead>
           <tbody>
@@ -148,7 +150,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
               <td>-</td>
               <td>{renderInput(productId, 2)}</td>
               <td>=</td>
-              <td>{lastGroupTotal = calculateRowTotal(productId, inputs, true, 0, 0, getAmountById(productId.replace('P', '')))}</td>
+              <td>{(() => { const total = calculateRowTotal(productId, inputs, true, 0, 0, getAmountById(productId.replace('P', ''))); lastGroupTotal = total; return Number.isInteger(total) ? total : total.toFixed(2); })()}</td>
             </tr>
             <tr><td colSpan={columns}></td></tr>
             {dynamicIds.map((id) => {
@@ -158,9 +160,9 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
                 <React.Fragment key={id}>
                   <tr>
                     <th scope="row">{rowNames[id] || id}</th>
-                    <td>{lastGroupTotal}</td>
+                    <td>{Number.isInteger(lastGroupTotal) ? lastGroupTotal : lastGroupTotal.toFixed(2)}</td>
                     <td>+</td>
-                    <td>{lastGroupWarteschlange}</td>
+                    <td>{Number.isInteger(lastGroupWarteschlange) ? lastGroupWarteschlange : lastGroupWarteschlange.toFixed(2)}</td>
                     <td>+</td>
                     <td>{renderInput(id, 0)}</td>
                     <td>-</td>
@@ -170,7 +172,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
                     <td>-</td>
                     <td>{renderInput(id, 2)}</td>
                     <td>=</td>
-                    <td>{total}</td>
+                    <td>{Number.isInteger(total) ? total : total.toFixed(2)}</td>
                   </tr>
                   {rowsWithSpacing.includes(id) && (
                     <tr><td colSpan={columns}></td></tr>
@@ -185,7 +187,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
             })}
           </tbody>
         </table>
-        <h5>* = Mehrfachverwendteile</h5>
+        <h5>{t('disposition.multiuse_hint')}</h5>
       </div>
     </>
   );

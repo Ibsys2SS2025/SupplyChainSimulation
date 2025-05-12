@@ -5,6 +5,7 @@ import { useXmlData } from '@/context/XmlDataContext';
 import Sidebar from '@/components/Sidebar';
 import DispositionTable from '@/components/DispositionTable';
 import styles from './disposition.module.css';
+import { useTranslation } from 'react-i18next';
 
 const TAB_CONFIG = [
   {
@@ -69,10 +70,17 @@ const TAB_CONFIG = [
 export default function DispositionPage() {
   const { xmlData } = useXmlData();
   const [activeTab, setActiveTab] = useState(0);
+  const { t } = useTranslation();
 
-  if (!xmlData) return <p>Lade XML-Daten…</p>;
+  if (!xmlData) return <p>{t('disposition.no_data')}</p>;
 
-  const { productId, dynamicIds, rowNames, headline } = TAB_CONFIG[activeTab];
+  const translatedTabs = [
+    t('disposition.tab_p1'),
+    t('disposition.tab_p2'),
+    t('disposition.tab_p3')
+  ];
+
+  const { productId, dynamicIds, rowNames } = TAB_CONFIG[activeTab];
 
   return (
     <div className={styles.pageContainer}>
@@ -85,7 +93,7 @@ export default function DispositionPage() {
               onClick={() => setActiveTab(index)}
               className={`${styles.tabButton} ${index === activeTab ? styles.active : ''}`}
             >
-              {tab.label}
+              {translatedTabs[index]}
             </button>
           ))}
         </div>
@@ -95,7 +103,7 @@ export default function DispositionPage() {
           dynamicIds={dynamicIds}
           rowNames={rowNames}
           rowsWithSpacing={['51', '50', '49', '56', '55', '54', '31', '30', '29']}
-          headline={headline}
+          headline={translatedTabs[activeTab]}
         />
       </div>
     </div>

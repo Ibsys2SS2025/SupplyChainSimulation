@@ -35,17 +35,22 @@
     "buttonSetup": "Iniciar configuración"
   },
   "disposition": {
-    "title": "Disposición",
-    "sales_request": "Solicitud de ventas",
-    "stock_safety": "Stock de seguridad",
-    "stock_old": "Stock del período anterior",
-    "orders_queued": "Pedidos en cola",
-    "orders_active": "Pedidos en proceso",
-    "orders_prod": "Órdenes de producción",
-    "button_save": "Guardar",
-    "rowInputErr_negVal": "El valor debe ser mayor o igual a cero",
-    "rowInputErr_nonNumeric": "El valor debe ser un número"
-  },
+  "title": "Disposición",
+  "sales_request": "Solicitud de ventas",
+  "stock_safety": "Stock de seguridad",
+  "stock_old": "Stock del período anterior",
+  "orders_queued": "Pedidos en cola",
+  "orders_active": "Pedidos en proceso",
+  "orders_prod": "Órdenes de producción",
+  "button_save": "Guardar",
+  "rowInputErr_negVal": "El valor debe ser mayor o igual a cero",
+  "rowInputErr_nonNumeric": "El valor debe ser un número",
+  "tab_p1": "Disposición P1",
+  "tab_p2": "Disposición P2",
+  "tab_p3": "Disposición P3",
+  "no_data": "No se han cargado datos. Por favor, sube primero tu archivo XML.",
+  "multiuse_hint": "* = Componentes de uso múltiple"
+},
   "forecast": {
     "title": "Pronóstico",
     "period": "N",

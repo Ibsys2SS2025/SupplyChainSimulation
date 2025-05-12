@@ -35,17 +35,22 @@
     "buttonSetup": "Start setup"
   },
   "disposition": {
-    "title": "Disposition",
-    "sales_request": "Sales request",
-    "stock_safety": "Safety stock",
-    "stock_old": "Previous period stock",
-    "orders_queued": "Queued orders",
-    "orders_active": "Orders in progress",
-    "orders_prod": "Production orders",
-    "button_save": "Save",
-    "rowInputErr_negVal": "The value must be greater than or equal to zero",
-    "rowInputErr_nonNumeric": "The value must be a number"
-  },
+  "title": "Disposition",
+  "sales_request": "Sales request",
+  "stock_safety": "Safety stock",
+  "stock_old": "Previous period stock",
+  "orders_queued": "Queued orders",
+  "orders_active": "Orders in progress",
+  "orders_prod": "Production orders",
+  "button_save": "Save",
+  "rowInputErr_negVal": "The value must be greater than or equal to zero",
+  "rowInputErr_nonNumeric": "The value must be a number",
+  "tab_p1": "Disposition P1",
+  "tab_p2": "Disposition P2",
+  "tab_p3": "Disposition P3",
+  "no_data": "No data loaded. Please upload your XML file first.",
+  "multiuse_hint": "* = Multi-use components"
+},
   "forecast": {
     "title": "Forecast",
     "period": "N",
