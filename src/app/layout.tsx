@@ -1,41 +1,30 @@
-'use client'; // ▲ Muss ganz oben stehen!
-
-import { Geist, Geist_Mono } from 'next/font/google';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './globals.css';
-import Header from '@/components/Header';
-import styles from './layout.module.css';
-
-// Importiere den Provider (der ebenfalls 'use client' enthält)
-import { XmlDataProvider } from '@/context/XmlDataContext';
-import React from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { ReactNode } from 'react';
+import LayoutClient from './layout.client';
 
 const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin'],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-    variable: '--font-geist-mono',
-    subsets: ['latin'],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
+export const metadata = {
+  title: 'Planungstool',
+  description: 'Planungstool',
+};
 
-export default function RootLayout({
-                                       children,
-                                   }: {
-    children: React.ReactNode;
-}) {
-    return (
-        <html lang="de">
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {/* Hier umschließt der Provider alles */}
-        <XmlDataProvider>
-            <Header />
-
-            <main className={styles.mainContent}>{children}</main>
-        </XmlDataProvider>
-        </body>
-        </html>
-    );
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="de">
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <LayoutClient>{children}</LayoutClient>
+      </body>
+    </html>
+  );
 }
