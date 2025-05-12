@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useXmlData } from '@/context/XmlDataContext';
+
 type Value = {
     label: string;
     code: string;
@@ -14,45 +16,49 @@ type ProductTableProps = {
 };
 
 const ProductTableThree: React.FC<ProductTableProps> = ({ t, values, headerText }) => {
+    const { xmlData } = useXmlData();
+
+    const getTotalForCode = (code: string): number | "" => {
+        if (!xmlData?.internaldata?.totals) return "";
+        const numericCode = Number(code);
+        const total = xmlData.internaldata.totals[numericCode];
+        if (total < 0) return 0;
+        return total ?? "";
+    };
+
+    const updatedValues = values.map((item) => {
+        const total = getTotalForCode(item.code);
+        return {
+            ...item,
+            value: typeof total === 'number' ? total : item.value,
+        };
+    });
+
     return (
         <>
-            <tr>
-                <td
-                    rowSpan={3}
-                    className="wrapCell"
-                    style={{ maxWidth: '150px', wordBreak: 'break-word' }}
-                >
-                    {t(headerText)}
-                </td>
-                <td>{values[0].label}</td>
-                <td>{values[0].code}</td>
-                <td>{values[0].value}</td>
-                {values[0].extraValues.map((extraValue, index) => (
-                    <td key={index}>
-                        {typeof extraValue === 'number' ? extraValue * values[0].value : ""}
-                    </td>
-                ))}
-            </tr>
-            <tr>
-                <td>{values[1].label}</td>
-                <td>{values[1].code}</td>
-                <td>{values[1].value}</td>
-                {values[1].extraValues.map((extraValue, index) => (
-                    <td key={index}>
-                        {typeof extraValue === 'number' ? extraValue * values[1].value : ""}
-                    </td>
-                ))}
-            </tr>
-            <tr>
-                <td>{values[2].label}</td>
-                <td>{values[2].code}</td>
-                <td>{values[2].value}</td>
-                {values[2].extraValues.map((extraValue, index) => (
-                    <td key={index}>
-                        {typeof extraValue === 'number' ? extraValue * values[2].value : ""}
-                    </td>
-                ))}
-            </tr>
+            {updatedValues.map((item, rowIndex) => (
+                <tr key={rowIndex}>
+                    {rowIndex === 0 && (
+                        <td
+                            rowSpan={updatedValues.length}
+                            className="wrapCell"
+                            style={{ maxWidth: '150px', wordBreak: 'break-word' }}
+                        >
+                            {t(headerText)}
+                        </td>
+                    )}
+                    <td>{item.label}</td>
+                    <td>{item.code}</td>
+                    <td>{item.value}</td>
+                    {item.extraValues.map((extraValue, index) => (
+                        <td key={index}>
+                            {typeof extraValue === 'number'
+                                ? Math.max(0, extraValue * item.value)
+                                : ""}
+                        </td>
+                    ))}
+                </tr>
+            ))}
         </>
     );
 };

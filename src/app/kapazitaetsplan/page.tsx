@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useXmlData } from '@/context/XmlDataContext';
+import React, {useState} from 'react';
+import {useXmlData} from '@/context/XmlDataContext';
 import styles from "@/app/kapazitaetsplan/table.module.css";
 import Sidebar from "@/components/Sidebar";
 import {useTranslation} from "react-i18next";
@@ -9,17 +9,17 @@ import ProductTableThree from './tablerowThree';
 import ProductTableOne from "@/app/kapazitaetsplan/tablerowOne";
 import {
     backWheelValues,
+    barValues,
+    bikecompleteValues,
+    bikewithoutpedalsvalues,
+    frameValues,
+    framewheelsValues,
+    frontwheelcompleteValues,
     frontWheelValues,
     mudguardbackValues,
     mudguardfrontValues,
-    barValues,
-    saddleValues,
-    frameValues,
     pedalValues,
-    frontwheelcompleteValues,
-    framewheelsValues,
-    bikewithoutpedalsvalues,
-    bikecompleteValues
+    saddleValues
 } from './productValues';
 
 interface ProductComponent {
@@ -67,98 +67,65 @@ const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
         return 0;
     }
 
-    console.log(xmlData);
-
     const workplaces = xmlData.results.waitinglistworkstations.workplace;
 
     if (!workplaces || workplaces.length === 0) {
-        console.log("Keine Arbeitsplätze gefunden");
         return 0;
     }
 
     const workplaceList = Array.isArray(workplaces) ? workplaces : [workplaces];
 
-    // Durchlaufen der Arbeitsplätze
     for (const workplace of workplaceList) {
-        // Zugriff auf das "$" Objekt
         const workplaceDetails = workplace["$"];
         if (workplaceDetails) {
             const workplaceId = parseInt(workplaceDetails.id, 10); // ID als Zahl
             const timeneed = parseInt(workplaceDetails.timeneed, 10); // timeneed als Zahl
 
-            // Überprüfen, ob die ID übereinstimmt
             if (workplaceId === id) {
-                console.log(`Gefundener Arbeitsplatz mit ID: ${id}, timeneed: ${timeneed}`);
                 return timeneed || 0; // Rückgabe von timeneed, oder 0, falls nicht vorhanden
             }
         }
     }
 
-    console.log(`Kein Arbeitsplatz mit ID ${id} gefunden`);
     return 0;
 };
 
 const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: number]: number } => {
-    // Sicherstellen, dass xmlData und die notwendigen Strukturen vorhanden sind
     if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
         console.log("xmlData oder waitinglistworkstations fehlt");
-        return {}; // Rückgabe eines leeren Objekts im Fehlerfall
+        return {};
     }
 
-    console.log("XML Data:", xmlData);  // Weitere Debug-Ausgabe, um die gesamte XML-Datenstruktur zu sehen
-
-    // Abrufen der Arbeitsplätze aus der XML-Datenstruktur
     const workplaces = xmlData.results.waitinglistworkstations.workplace;
 
-    // Wenn keine Arbeitsplätze vorhanden sind
     if (!workplaces || workplaces.length === 0) {
-        console.log("Keine Arbeitsplätze gefunden");
-        return {}; // Rückgabe eines leeren Objekts
+        return {};
     }
 
-    // Sicherstellen, dass workplaces entweder ein Array oder ein einzelnes Objekt ist
     const workplaceList = Array.isArray(workplaces) ? workplaces : [workplaces];
 
     const dic: { [key: number]: number } = {};
 
-    // Debug-Ausgabe, um die Liste der Arbeitsplätze zu überprüfen
-    console.log("Workplace List:", workplaceList);
-
-    // Durchlaufen der Arbeitsplätze
     for (const workplace of workplaceList) {
         const workplaceId = parseInt(workplace["$"].id);
 
-        // Überprüfen, ob die id des Arbeitsplatzes mit der gesuchten id übereinstimmt
         console.log("Vergleich ID:", workplaceId, "mit gesuchter ID:", id);
 
         if (workplaceId === id) {
-            // Nur den Arbeitsplatz berücksichtigen, wenn die ID übereinstimmt
-            console.log("Arbeitsplatz gefunden:", workplace);
 
-            // Abrufen der Warteliste für diesen Arbeitsplatz
             const workplaceDetailWaitingList = workplace.waitinglist;
 
-            console.log("Warteliste für diesen Arbeitsplatz:", workplaceDetailWaitingList);
-
-            // Wenn eine Warteliste existiert
             if (workplaceDetailWaitingList) {
 
-                console.log("Wartelisten-Details:", workplaceDetailWaitingList);
-
                 if (Array.isArray(workplaceDetailWaitingList)) {
-                    // Durchlaufen der Wartelisten-Details
                     for (const workplaceDetail of workplaceDetailWaitingList) {
-                        // Zugriff auf das tatsächliche Objekt im `$`
+
                         const item = workplaceDetail["$"].item;
                         const timeneed = workplaceDetail["$"].timeneed;
 
-                        console.log("Item:", item, "Timeneed:", timeneed);
-
-                        // Hinzufügen der Daten zum Dictionary
                         dic[parseInt(item)] = parseInt(timeneed);
                     }
                 } else if (workplaceDetailWaitingList) {
-                    // Falls es ein einzelnes Objekt ist und KEIN Array
                     const item = workplaceDetailWaitingList["$"].item;
                     const timeneed = workplaceDetailWaitingList["$"].timeneed;
                     dic[parseInt(item)] = parseInt(timeneed);
@@ -166,9 +133,6 @@ const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: numbe
             }
         }
     }
-
-    // Rückgabe des Dictionary mit den gefundenen Daten
-    console.log("Endgültiges Dictionary:", dic);  // Ausgabe des finalen Dictionary
     return dic;
 };
 
@@ -180,9 +144,7 @@ const getRuestzeitOld=(xmlData: any, ...valueGroups: ProductComponent[][]):numbe
         Object.entries(dic).forEach(([key]) => {
             for (const group of valueGroups) {
                 for (const item of group) {
-                    console.log("Arbeitsplatz: ", i, "Produktnummer: ", item.code, "Key: ", key)
                     if(item.code == key){
-                        console.log("Arbeitsplatz: ", i, "Key: ", key, "Rüstzeit: ", item.setuptime[i-1]);
                         if (typeof item.setuptime[i-1] === "string") {
                             summe += parseInt(String(item.setuptime[i - 1]));
                         }
@@ -211,7 +173,6 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     if(id == 15){
         const dic = getWartezeitArbeitsplatzDetail(7, xmlData);
 
-        console.log(dic);
          if (dic) {
             for (const index in dic) {
                 if (dic.hasOwnProperty(index)) {
@@ -226,7 +187,6 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
 
     if(id == 14){
         const dic = getWartezeitArbeitsplatzDetail(6, xmlData);
-        console.log(dic);
         if (dic) {
             for (const index in dic) {
                 if (dic.hasOwnProperty(index)) {
@@ -336,22 +296,14 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     }
 
     const ordersinwork = xmlData.results.ordersinwork.workplace;
-    console.log("Oders in work: ", ordersinwork);
     if (ordersinwork) {
         const workplaces = Array.isArray(ordersinwork) ? ordersinwork : [ordersinwork];
-        console.log("Workplaces1: ", workplaces);
         for (const workplace of workplaces) {
-            console.log("Workplaces1: ", workplaces);
             const idnew = workplace["$"].id;
             const timeneed = workplace["$"].timeneed;
-            console.log("Gefundene_ID:", parseInt(idnew))
-            console.log("Summe: ", summe);
-            console.log("Vergleich1:", parseInt(idnew), typeof idnew, "==", id, typeof id);
 
             if (parseInt(idnew) == id) {
-                console.log("Timeneed1: ", timeneed);
                 summe += parseInt(timeneed);
-                console.log("Summe1: ", summe);
             }
         }
     }
@@ -372,6 +324,20 @@ const calculateTotalCapacity = (
             (wartezeiten[index] || 0) +
             (ruestzeitold[index] || 0)
         );
+    });
+};
+
+const useEnrichedProductComponents = (productComponents: ProductComponent[], xmlData: any) => {
+
+    const totals = xmlData?.internaldata?.totals || {};
+
+    return productComponents.map((item) => {
+        const codeNumber = Number(item.code);
+        const newValue = totals[codeNumber];
+        return {
+            ...item,
+            value: typeof newValue === 'number' ? newValue : item.value,
+        };
     });
 };
 
@@ -397,18 +363,18 @@ export default function JsonViewPage() {
     const wartezeiten = getWartezeitAlleArbeitsplaetze(xmlData);
 
     const valueGroups: ProductComponent[][] = [
-        backWheelValues,     // Gruppe 1
-        frontWheelValues,    // Gruppe 2
-        mudguardbackValues,  // Gruppe 3
-        mudguardfrontValues, // Gruppe 4
-        barValues,           // Gruppe 5
-        saddleValues,        // Gruppe 6
-        frameValues,         // Gruppe 7
-        pedalValues,         // Gruppe 8
-        frontwheelcompleteValues, // Gruppe 9
-        framewheelsValues,   // Gruppe 10
-        bikewithoutpedalsvalues, // Gruppe 11
-        bikecompleteValues   // Gruppe 12
+        backWheelValues,
+        frontWheelValues,
+        mudguardbackValues,
+        mudguardfrontValues,
+        barValues,
+        saddleValues,
+        frameValues,
+        pedalValues,
+        frontwheelcompleteValues,
+        framewheelsValues,
+        bikewithoutpedalsvalues,
+        bikecompleteValues
     ];
 
     const ruestzeitold = getRuestzeitOld(xmlData, ...valueGroups);
@@ -451,7 +417,9 @@ export default function JsonViewPage() {
 
     const [customInputs, setCustomInputs] = useState(Array(15).fill(''));
 
-    const columnSums = calculateColumnSums(allProductComponents);
+    const enrichedComponents = useEnrichedProductComponents(allProductComponents, xmlData);
+
+    const columnSums = calculateColumnSums(enrichedComponents);
 
     const totalCapacities = calculateTotalCapacity(columnSums, setupTimes, wartezeiten, ruestzeitold);
     const overtimeValues = calculateOvertime(totalCapacities);
@@ -600,6 +568,24 @@ export default function JsonViewPage() {
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
+                                <td colSpan={4}>{t('capacity.customInputs')}</td>
+                                {customInputs.map((value, index) => (
+                                    <td key={`input-${index}`}>
+                                        <input
+                                            type="number"
+                                            className={styles.inputCell}
+                                            value={value}
+                                            onChange={(e) => {
+                                                const newValues = [...customInputs];
+                                                newValues[index] = e.target.value;
+                                                setCustomInputs(newValues);
+                                            }}
+                                            name={`customInput-${index}`}
+                                        />
+                                    </td>
+                                ))}
+                            </tr>
+                            <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.shiftCount')}</td>
                                 {customInputs.map((_, index) => (
                                     <td key={`dropdown-${index}`}>
@@ -617,24 +603,6 @@ export default function JsonViewPage() {
                                             <option value="2">2</option>
                                             <option value="3">3</option>
                                         </select>
-                                    </td>
-                                ))}
-                            </tr>
-                            <tr className={styles.setupRow}>
-                                <td colSpan={4}>{t('capacity.customInputs')}</td>
-                                {customInputs.map((value, index) => (
-                                    <td key={`input-${index}`}>
-                                        <input
-                                            type="number"
-                                            className={styles.inputCell}
-                                            value={value}
-                                            onChange={(e) => {
-                                                const newValues = [...customInputs];
-                                                newValues[index] = e.target.value;
-                                                setCustomInputs(newValues);
-                                            }}
-                                            name={`customInput-${index}`}
-                                        />
                                     </td>
                                 ))}
                             </tr>
