@@ -94,6 +94,8 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     );
   };
 
+  const formatValue = (val: number) => Number.isInteger(val) ? val : val.toFixed(2);
+
   const calculateRowTotal = (
     id: string,
     inputs: Record<string, number[]>,
@@ -146,9 +148,9 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
               <td>-</td>
               <td>{getAmountById(productId.replace('P', ''))}</td>
               <td>-</td>
-              <td>{renderInput(productId, 1)}</td>
+              <td>{formatValue(inputs?.[productId]?.[1] ?? 0)}</td>
               <td>-</td>
-              <td>{renderInput(productId, 2)}</td>
+              <td>{formatValue(inputs?.[productId]?.[2] ?? 0)}</td>
               <td>=</td>
               <td>{(() => { const total = calculateRowTotal(productId, inputs, true, 0, 0, getAmountById(productId.replace('P', ''))); lastGroupTotal = total; return Number.isInteger(total) ? total : total.toFixed(2); })()}</td>
             </tr>
@@ -168,9 +170,9 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
                     <td>-</td>
                     <td>{getAmountById(id)}</td>
                     <td>-</td>
-                    <td>{renderInput(id, 1)}</td>
+                    <td>{formatValue(inputs?.[id]?.[1] ?? 0)}</td>
                     <td>-</td>
-                    <td>{renderInput(id, 2)}</td>
+                    <td>{formatValue(inputs?.[id]?.[2] ?? 0)}</td>
                     <td>=</td>
                     <td>{Number.isInteger(total) ? total : total.toFixed(2)}</td>
                   </tr>
