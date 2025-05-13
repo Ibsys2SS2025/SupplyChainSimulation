@@ -221,6 +221,15 @@
     background-color: #c82333;
 }
 
+.successMessage {
+    color: #2f3e46; /* Sattes Grün, Bootstrap-like */
+    margin-left: 8px;
+    font-weight: 500; /* Normal oder 'lighter' */
+    font-size: 0.8em;
+    display: inline-flex;
+    align-items: center;
+}
+
 /* Responsive Anpassungen */
 @media (max-width: 768px) {
     .itemRow {

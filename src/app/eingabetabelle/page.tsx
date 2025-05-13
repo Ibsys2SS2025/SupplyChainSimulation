@@ -18,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 import { useXmlData, XmlDataType } from '@/context/XmlDataContext';
 import Sidebar from '@/components/Sidebar';
 
-// Typisierung der Daten
 interface SubItem {
     id: string;
     parentId: string;
@@ -31,8 +30,8 @@ interface Heading {
     subItems: SubItem[];
 }
 
-export default function App() {
-    // Laden von `headings` und `sortedIds` aus dem localStorage, falls vorhanden
+export default function Inputtable() {
+
     const [headings, setHeadings] = useState<Heading[]>(() => {
         const savedHeadings = localStorage.getItem('inputtable_headings');
         if (savedHeadings) {
@@ -205,6 +204,49 @@ export default function App() {
         }
     }, [sortedIds]);
 
+    const getArticleValueById = (id: string): number => {
+        if (!xmlData?.results.warehousestock?.article) return 0;
+        const article = xmlData.results.warehousestock.article.find((a: any) => a?.$?.id === id);
+        return article ? parseInt(article.$.amount) || 0 : 0;
+    };
+
+    const checkCondition = (id1: string, id2: string, id3: string, id4: string,) => {
+        const e1Value = getHeadingValueFromTotals(id1);
+        console.log(id1, e1Value);
+        let e2Value = getArticleValueById(id2);
+        console.log(id2, e2Value);
+        let e3Value = getArticleValueById(id3);
+        console.log(id3, e3Value);
+        let e4Value = getArticleValueById(id4);
+        console.log(id4, e4Value);
+        if(id2 === '16' || id2 === '17' || id2 === '26') {
+            e2Value = e2Value/3;
+        }
+        if(id3 === '16' || id3 === '17' || id3 === '26') {
+            e3Value = e3Value/3;
+        }
+        if(id4 === '16' || id4 === '17' || id4 === '26') {
+            e3Value = e3Value/3;
+        }
+        return e2Value >= e1Value && e3Value >= e1Value && e4Value >= e1Value;
+    };
+
+    const checkCondition2 = (id1: string, id2: string, id3: string) => {
+        const e1Value = getHeadingValueFromTotals(id1);
+        console.log(id1, e1Value);
+        let e2Value = getArticleValueById(id2);
+        console.log(id2, e2Value);
+        let e3Value = getArticleValueById(id3);
+        console.log(id3, e3Value);
+        if(id2 === '16' || id2 === '17' || id2 === '26') {
+            e2Value = e2Value/3;
+        }
+        if(id3 === '16' || id3 === '17' || id3 === '26') {
+            e3Value = e3Value/3;
+        }
+        return e2Value >= e1Value && e3Value >= e1Value;
+    };
+
     return (
         <div className={styles.pageContainer}>
             <Sidebar />
@@ -214,7 +256,28 @@ export default function App() {
                     {headings.map((heading) => (
                         <div key={heading.id} className={styles.headingSection}>
                             <div className={styles.headingRow}>
-                                <span className={styles.headingLabel}>{heading.title}</span>
+                                <span className={styles.headingLabel}>
+                                    {heading.title}
+                                    {((heading.title === 'E49' && checkCondition('E49', '13', '18', '7')) ||
+                                        (heading.title === 'E54' && checkCondition('E54', '14', '19', '8')) ||
+                                        (heading.title === 'E50' && checkCondition('E50', '49', '4', '10')) ||
+                                        (heading.title === 'E55' && checkCondition('E55', '54', '5', '11')) ||
+                                        (heading.title === 'E30' && checkCondition('E30', '29', '6', '12')) ||
+                                        (heading.title === 'E56' && checkCondition('E56', '17', '16', '55')) ||
+                                        (heading.title === 'E51' && checkCondition('E51', '17', '16', '50')) ||
+                                        (heading.title === 'E31' && checkCondition('E31', '17', '16', '30')) ||
+                                        (heading.title === 'P1' && checkCondition2('P1', '51', '26')) ||
+                                        (heading.title === 'P2' && checkCondition2('P2', '56', '26')) ||
+                                        (heading.title === 'P3' && checkCondition2('P3', '31', '26')) ||
+                                        (heading.title === 'E29' && checkCondition('E29', '15', '20', '9'))) && (
+                                            <>
+                                                {' '}
+                                                <span className={styles.successMessage}>
+                                                    {t('inputtable.productionMessage')}
+                                                </span>
+                                            </>
+                                        )}
+                                </span>
                                 <input
                                     type="number"
                                     className={styles.headingValueInput}

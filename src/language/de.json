@@ -65,6 +65,7 @@
   },
   "inputtable": {
     "split": "Produktionsauftrag splitten",
-    "inputtable": "Eingabetabelle"
+    "inputtable": "Eingabetabelle",
+    "productionMessage": "➔ Kann vollständig aus dem Lager produziert werden!"
   }
 }
