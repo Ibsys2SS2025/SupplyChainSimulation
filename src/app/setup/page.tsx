@@ -89,7 +89,7 @@ const InputPage: React.FC = () => {
                     <Button
                         variant="outline-info"
                         onClick={mapXmlData}
-                        disabled={!xmlData || isLoading}
+                        disabled={!file || isLoading}
                     >
                         {isLoading && <Spinner size="sm" className="me-2" />}
                         {t('setup.loadDataButton')}
@@ -101,7 +101,10 @@ const InputPage: React.FC = () => {
                 <div className={styles.nextSteps}>
                     <h2>{t('setup.titleNextSteps')}</h2>
                     <p>{t('setup.msgNextPage')}</p>
-                    <Button variant="info" onClick={() => router.push('/prognose')}>
+                    <Button
+                        variant="info"
+                        onClick={() => router.push('/prognose')}
+                    >
                         {t('setup.nextPageButton')}
                     </Button>
                 </div>
