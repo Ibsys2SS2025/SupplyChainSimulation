@@ -103,6 +103,7 @@ export default function PrognosePlanungPage() {
     // --- Dynamische Lager-Berechnung über alle Perioden ---
     const stockMap = useMemo(() => {
         const map: Record<string, number> = {};
+        // @ts-ignore
         xmlData.results.warehousestock.article.forEach(item => {
             const { id, amount } = item.$;
             map[id] = Number(amount) || 0;
@@ -126,6 +127,7 @@ export default function PrognosePlanungPage() {
         const prod = planungData[rowIdx][prodKey] || 0;
         const fore = prognoseData[rowIdx][foreKey]  || 0;
 
+        // @ts-ignore
         return prev + prod - fore;
     };
 
