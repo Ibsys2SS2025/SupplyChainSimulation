@@ -1,21 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Container, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
 import { parseStringPromise } from 'xml2js';
 import styles from './page.module.css';
 import { useTranslation } from 'react-i18next';
 import BackButton from '@/components/BackButton';
-
-// Importiere den Context
 import { useXmlData } from '@/context/XmlDataContext';
 
 const InputPage: React.FC = () => {
     const { t } = useTranslation();
     const router = useRouter();
-
-    // Hier kommt der globale Zustand:
     const { xmlData, setXmlData } = useXmlData();
 
     const [file, setFile] = useState<File | null>(null);
@@ -50,13 +46,12 @@ const InputPage: React.FC = () => {
         }
     };
 
-    // Datenverarbeitung (simuliert)
+    // Datenverarbeitung simuliert
     const mapXmlData = async () => {
         setIsLoading(true);
         setMappingError(false);
         try {
             console.log('Mapping Data aus dem Kontext:', xmlData);
-            // Warte 1.5 Sekunden (Sim)
             await new Promise((resolve) => setTimeout(resolve, 1500));
             setDataInitialized(true);
         } catch (error) {

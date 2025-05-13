@@ -34,18 +34,23 @@
     "description2": "立即开始设置。",
     "buttonSetup": "开始设置"
   },
-  "disposition": {
-    "title": "调度",
-    "sales_request": "销售请求",
-    "stock_safety": "安全库存",
-    "stock_old": "上期库存",
-    "orders_queued": "排队订单",
-    "orders_active": "进行中的订单",
-    "orders_prod": "生产订单",
-    "button_save": "保存",
-    "rowInputErr_negVal": "值必须大于或等于零",
-    "rowInputErr_nonNumeric": "值必须是数字"
-  },
+ "disposition": {
+  "title": "调度",
+  "sales_request": "销售请求",
+  "stock_safety": "安全库存",
+  "stock_old": "上期库存",
+  "orders_queued": "排队订单",
+  "orders_active": "进行中的订单",
+  "orders_prod": "生产订单",
+  "button_save": "保存",
+  "rowInputErr_negVal": "值必须大于或等于零",
+  "rowInputErr_nonNumeric": "值必须是数字",
+  "tab_p1": "调度 P1",
+  "tab_p2": "调度 P2",
+  "tab_p3": "调度 P3",
+  "no_data": "尚未加载数据。请先上传你的 XML 文件。",
+  "multiuse_hint": "* = 多用途组件"
+},
   "forecast": {
     "title": "预测",
     "period": "N",

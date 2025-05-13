@@ -35,17 +35,22 @@
     "buttonSetup": "Setup starten"
   },
   "disposition": {
-    "title": "Disposition",
-    "sales_request": "Vertriebswunsch",
-    "stock_safety": "Sicherheitsbestand",
-    "stock_old": "Lagerbestand Vorperiode",
-    "orders_queued": "Aufträge in der Warteschlange",
-    "orders_active": "Aufträge in Bearbeitung",
-    "orders_prod": "Produktionsaufträge",
-    "button_save": "Speichern",
-    "rowInputErr_negVal": "Der Wert muss größer oder gleich Null sein",
-    "rowInputErr_nonNumeric": "Der Wert muss eine Zahl sein"
-  },
+  "title": "Disposition",
+  "sales_request": "Vertriebswunsch",
+  "stock_safety": "Sicherheitsbestand",
+  "stock_old": "Lagerbestand Vorperiode",
+  "orders_queued": "Aufträge in der Warteschlange",
+  "orders_active": "Aufträge in Bearbeitung",
+  "orders_prod": "Produktionsaufträge",
+  "button_save": "Speichern",
+  "rowInputErr_negVal": "Der Wert muss größer oder gleich Null sein",
+  "rowInputErr_nonNumeric": "Der Wert muss eine Zahl sein",
+  "tab_p1": "Disposition P1",
+  "tab_p2": "Disposition P2",
+  "tab_p3": "Disposition P3",
+  "no_data": "Keine Daten geladen. Bitte lade zuerst deine XML-Datei hoch.",
+  "multiuse_hint": "* = Mehrfachverwendteile"
+},
   "forecast": {
     "title": "Prognose",
     "period": "N",
