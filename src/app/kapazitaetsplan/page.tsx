@@ -1,7 +1,7 @@
 'use client';
 
-import React, {useState} from 'react';
-import {useXmlData} from '@/context/XmlDataContext';
+import React, {useEffect, useState} from 'react';
+import {useXmlData, XmlDataType} from '@/context/XmlDataContext';
 import styles from "@/app/kapazitaetsplan/table.module.css";
 import Sidebar from "@/components/Sidebar";
 import {useTranslation} from "react-i18next";
@@ -355,7 +355,7 @@ const getWartezeitAlleArbeitsplaetze=(xmlData: any):number[] => {
 };
 
 export default function Kapazitaetsplanung() {
-    const { xmlData } = useXmlData();
+    const { xmlData, setXmlData } = useXmlData();
 
     const wartezeiten = getWartezeitAlleArbeitsplaetze(xmlData);
 
@@ -428,6 +428,27 @@ export default function Kapazitaetsplanung() {
             return "1";
         })
     );
+
+    useEffect(() => {
+        if (!xmlData) return;
+
+        const capacityData: Record<string, { input: number, shift: number }> = {};
+
+        customInputs.forEach((value, index) => {
+            capacityData[(index + 1).toString()] = {
+                input: Number(value),
+                shift: Number(dropdownValues[index] ?? '1'),
+            };
+        });
+
+        setXmlData((prev: XmlDataType) => ({
+            ...prev,
+            internaldata: {
+                ...prev.internaldata,
+                capacity: capacityData
+            }
+        }));
+    }, [customInputs, dropdownValues]);
 
     return (
         <div className={styles.pageContainer}>
