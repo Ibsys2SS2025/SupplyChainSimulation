@@ -162,7 +162,6 @@ const getRuestzeitOld=(xmlData: any, ...valueGroups: ProductComponent[][]):numbe
     return ruestzeit;
 }
 
-
 const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     let summe: number = 0;
 
@@ -316,7 +315,7 @@ const calculateTotalCapacity = (
     setupTimes: number[],
     wartezeiten: number[],
     ruestzeitold: number[]
-): number[] => {
+    ): number[] => {
     return columnSums.map((_, index) => {
         return (
             (columnSums[index] || 0) +
@@ -345,8 +344,6 @@ const calculateOvertime = (totals: number[]): number[] => {
     return totals.map((total) => Math.max(0, (total - 2400) / 5));
 };
 
-
-
 const getWartezeitAlleArbeitsplaetze=(xmlData: any):number[] => {
     const wartezeiten: number[] = [];
 
@@ -357,7 +354,7 @@ const getWartezeitAlleArbeitsplaetze=(xmlData: any):number[] => {
     return wartezeiten;
 };
 
-export default function JsonViewPage() {
+export default function Kapazitaetsplanung() {
     const { xmlData } = useXmlData();
 
     const wartezeiten = getWartezeitAlleArbeitsplaetze(xmlData);
