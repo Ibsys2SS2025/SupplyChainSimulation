@@ -63,7 +63,6 @@ function calculateSetupTimePerWorkplace(...valueGroups: ProductComponent[][]): n
 
 const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
     if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
-        console.log("xmlData oder waitinglistworkstations fehlt");
         return 0;
     }
 
@@ -92,7 +91,6 @@ const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
 
 const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: number]: number } => {
     if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
-        console.log("xmlData oder waitinglistworkstations fehlt");
         return {};
     }
 
@@ -108,9 +106,6 @@ const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: numbe
 
     for (const workplace of workplaceList) {
         const workplaceId = parseInt(workplace["$"].id);
-
-        console.log("Vergleich ID:", workplaceId, "mit gesuchter ID:", id);
-
         if (workplaceId === id) {
 
             const workplaceDetailWaitingList = workplace.waitinglist;
