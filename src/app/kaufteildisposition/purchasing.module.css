@@ -102,3 +102,14 @@
         padding: 1rem;
     }
 }
+.nOrder {
+    background-color: #e6f7ff; /* Rot-Ton für N */
+}
+
+.eOrder {
+    background-color: #ffebeb; /* Blau-Ton für E */
+}
+
+.jitOrder {
+    background-color: #EE1111; /* Grün-Ton für JIT */
+}
