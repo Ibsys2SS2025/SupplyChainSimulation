@@ -65,6 +65,8 @@
   "inputtable": {
     "split": "生産指示を分割",
     "inputtable": "入力テーブル",
-    "productionMessage": "➔ 在庫から完全に生産可能です！"
+    "productionMessage": "➔ 在庫から完全に生産可能です！",
+    "waitinglistmessageInWork": "(作業中)",
+    "waitinglistmessageWait": "(待機中)"
   }
 }

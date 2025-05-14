@@ -230,6 +230,28 @@
     align-items: center;
 }
 
+.warteschlangeStatus {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.warteschlangeItem {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+}
+
+.inWork {
+    background-color: #4caf50; /* grün */
+}
+
+.waiting {
+    background-color: #2f3e46; /* oder dein Blau, z.B. #2196f3 */
+}
+
 /* Responsive Anpassungen */
 @media (max-width: 768px) {
     .itemRow {

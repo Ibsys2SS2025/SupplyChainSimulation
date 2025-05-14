@@ -65,6 +65,9 @@
   "inputtable": {
     "split": "Split production order",
     "inputtable": "Input table",
-    "productionMessage": "➔ Can be fully produced from stock!"
+    "productionMessage": "➔ Can be fully produced from stock!",
+    "waitinglistmessageInWork": "(in progress)",
+    "waitinglistmessageWait": "(waiting)"
+
   }
 }

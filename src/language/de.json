@@ -66,6 +66,8 @@
   "inputtable": {
     "split": "Produktionsauftrag splitten",
     "inputtable": "Eingabetabelle",
-    "productionMessage": "➔ Kann vollständig aus dem Lager produziert werden!"
+    "productionMessage": "➔ Kann vollständig aus dem Lager produziert werden!",
+    "waitinglistmessageInWork": "(in Arbeit)",
+    "waitinglistmessageWait": "(wartend)"
   }
 }

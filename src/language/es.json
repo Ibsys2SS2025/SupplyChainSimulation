@@ -65,6 +65,8 @@
   "inputtable": {
     "split": "Dividir orden de producción",
     "inputtable": "Tabla de entrada",
-    "productionMessage": "➔ ¡Puede producirse completamente desde el almacén!"
+    "productionMessage": "➔ ¡Puede producirse completamente desde el almacén!",
+    "waitinglistmessageInWork": "(en progreso)",
+    "waitinglistmessageWait": "(en espera)"
   }
 }

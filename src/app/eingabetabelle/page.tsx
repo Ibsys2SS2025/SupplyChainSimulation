@@ -30,6 +30,61 @@ interface Heading {
     subItems: SubItem[];
 }
 
+type WarteschlangeDict = {
+    [key: string]: {
+        anzahl: string;
+        inwork: boolean;
+    };
+};
+
+const getWarteschlange = (xmlData: any): WarteschlangeDict | null => {
+    if (
+        !xmlData?.results?.waitinglistworkstations?.workplace ||
+        !xmlData?.results?.ordersinwork?.workplace
+    ) {
+        return null;
+    }
+
+    const warteschlange: WarteschlangeDict = {};
+
+    const inWorkItems = new Set<string>();
+    const ordersInWork = Array.isArray(xmlData.results.ordersinwork.workplace)
+        ? xmlData.results.ordersinwork.workplace
+        : [xmlData.results.ordersinwork.workplace];
+
+    ordersInWork.forEach((wp: any) => {
+        const item = wp?.$?.item;
+        if (item) {
+            inWorkItems.add(item);
+        }
+    });
+
+    const workplaces = Array.isArray(xmlData.results.waitinglistworkstations.workplace)
+        ? xmlData.results.waitinglistworkstations.workplace
+        : [xmlData.results.waitinglistworkstations.workplace];
+
+    workplaces.forEach((wp: any) => {
+        const waitingLists = wp.waitinglist;
+        if (waitingLists) {
+            const waitingArray = Array.isArray(waitingLists) ? waitingLists : [waitingLists];
+            waitingArray.forEach((wl: any) => {
+                const item = wl?.$?.item;
+                const amount = wl?.$?.amount;
+                if (item && amount) {
+                    const keyPrefix = ['1', '2', '3'].includes(item) ? 'P' : 'E';
+                    const formattedKey = `${keyPrefix}${item}`;
+                    warteschlange[formattedKey] = {
+                        anzahl: amount,
+                        inwork: inWorkItems.has(item),
+                    };
+                }
+            });
+        }
+    });
+
+    return warteschlange;
+};
+
 export default function Inputtable() {
 
     const [headings, setHeadings] = useState<Heading[]>(() => {
@@ -41,7 +96,7 @@ export default function Inputtable() {
                 console.error('Error parsing headings from localStorage:', error);
             }
         }
-        return initialData; // Wenn keine gespeicherten Daten vorhanden sind, benutze initialData
+        return initialData;
     });
 
     const [sortedIds, setSortedIds] = useState<string[]>(() => {
@@ -58,6 +113,8 @@ export default function Inputtable() {
 
     const { xmlData, setXmlData } = useXmlData();
     const totals = xmlData?.internaldata?.totals || {};
+
+    const warteschlange = getWarteschlange(xmlData);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -191,7 +248,6 @@ export default function Inputtable() {
         );
     };
 
-    // Speichern der Daten in localStorage, wenn sich der Zustand ändert
     useEffect(() => {
         if (headings) {
             localStorage.setItem('inputtable_headings', JSON.stringify(headings));
@@ -212,13 +268,9 @@ export default function Inputtable() {
 
     const checkCondition = (id1: string, id2: string, id3: string, id4: string,) => {
         const e1Value = getHeadingValueFromTotals(id1);
-        console.log(id1, e1Value);
         let e2Value = getArticleValueById(id2);
-        console.log(id2, e2Value);
         let e3Value = getArticleValueById(id3);
-        console.log(id3, e3Value);
         let e4Value = getArticleValueById(id4);
-        console.log(id4, e4Value);
         if(id2 === '16' || id2 === '17' || id2 === '26') {
             e2Value = e2Value/3;
         }
@@ -233,11 +285,8 @@ export default function Inputtable() {
 
     const checkCondition2 = (id1: string, id2: string, id3: string) => {
         const e1Value = getHeadingValueFromTotals(id1);
-        console.log(id1, e1Value);
         let e2Value = getArticleValueById(id2);
-        console.log(id2, e2Value);
         let e3Value = getArticleValueById(id3);
-        console.log(id3, e3Value);
         if(id2 === '16' || id2 === '17' || id2 === '26') {
             e2Value = e2Value/3;
         }
@@ -312,8 +361,20 @@ export default function Inputtable() {
                         </div>
                     ))}
                 </div>
-
                 <div className={styles.dropZoneContainer}>
+                    {warteschlange && (
+                        <div className={styles.warteschlangeStatus}>
+                            {Object.entries(warteschlange).map(([itemId, info]) => (
+                                <div
+                                    key={itemId}
+                                    className={`${styles.warteschlangeItem} ${info.inwork ? styles.inWork : styles.waiting}`}
+                                >
+                                    {itemId}: {info.anzahl} {info.inwork ? t('inputtable.waitinglistmessageInWork') : t('inputtable.waitinglistmessageWait')}
+
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <DndContext sensors={sensors} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
                         <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
                             <div className={styles.dropZone}>
