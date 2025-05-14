@@ -293,6 +293,7 @@ export default function Inputtable() {
                                         value={item.value}
                                         onChange={(e) => updateSubItemValue(item.id, Math.max(0, Number(e.target.value)))}
                                         disabled={index === 0}
+                                        step={"10"}
                                     />
                                     {index > 0 && (
                                         <button

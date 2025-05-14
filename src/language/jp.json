@@ -61,6 +61,10 @@
     "planning": "計画",
     "sum": "合計",
     "lager": "倉庫"
-
+  },
+  "inputtable": {
+    "split": "生産指示を分割",
+    "inputtable": "入力テーブル",
+    "productionMessage": "➔ 在庫から完全に生産可能です！"
   }
 }

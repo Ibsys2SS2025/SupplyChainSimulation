@@ -61,6 +61,10 @@
     "planning": "Planificación",
     "sum": "Total",
     "lager": "Depósito"
-
+  },
+  "inputtable": {
+    "split": "Dividir orden de producción",
+    "inputtable": "Tabla de entrada",
+    "productionMessage": "➔ ¡Puede producirse completamente desde el almacén!"
   }
 }

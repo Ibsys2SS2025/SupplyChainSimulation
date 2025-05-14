@@ -61,6 +61,10 @@
     "planning": "Planning",
     "sum": "Total",
     "lager": "Warehouse"
-
+  },
+  "inputtable": {
+    "split": "Split production order",
+    "inputtable": "Input table",
+    "productionMessage": "➔ Can be fully produced from stock!"
   }
 }

@@ -61,6 +61,10 @@
     "planning": "计划",
     "sum": "总计",
     "lager": "倉庫"
-
+  },
+  "inputtable": {
+    "split": "拆分生产订单",
+    "inputtable": "输入表格",
+    "productionMessage": "➔ 可以完全从库存生产！"
   }
 }
