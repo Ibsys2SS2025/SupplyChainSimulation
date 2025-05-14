@@ -61,6 +61,33 @@
     "planning": "计划",
     "sum": "总计",
     "lager": "倉庫"
-
+  },
+  "capacity": {
+    "title": "产能计划",
+    "backwheel": "后轮",
+    "frontwheel": "前轮",
+    "mudguardback": "挡泥板（后）",
+    "mudguardfront": "挡泥板（前）",
+    "bar": "车把",
+    "saddle": "鞍座",
+    "frame": "车架",
+    "pedal": "脚踏",
+    "frontwheelcomplete": "前轮（完整）",
+    "framewheels": "车架和车轮",
+    "bikewithoutpedals": "无脚踏自行车",
+    "bike": "自行车（完整）",
+    "workstation": "工作站",
+    "orderquantity": "数量",
+    "itemnumber": "物料编号",
+    "product": "产品",
+    "bikemodell": "型号",
+    "new": "产能（新）",
+    "setuptimeNew": "设置时间（新）",
+    "capacityrequirementOld": "产能需求（前期积压）",
+    "setuptimeOld": "设置时间（前期积压）",
+    "totalcapacityreq": "总产能需求",
+    "overtime": "每日加班时间",
+    "customInputs": "带缓冲的加班时间",
+    "shiftCount": "班次数"
   }
 }

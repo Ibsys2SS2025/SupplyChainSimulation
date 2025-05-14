@@ -61,6 +61,33 @@
     "planning": "Planificación",
     "sum": "Total",
     "lager": "Depósito"
-
+  },
+  "capacity": {
+    "title": "Planificación de capacidad",
+    "backwheel": "Rueda trasera",
+    "frontwheel": "Rueda delantera",
+    "mudguardback": "Guardabarros (trasero)",
+    "mudguardfront": "Guardabarros (delantero)",
+    "bar": "Manillar",
+    "saddle": "Sillín",
+    "frame": "Cuadro",
+    "pedal": "Pedal",
+    "frontwheelcomplete": "Rueda delantera (completa)",
+    "framewheels": "Cuadro y ruedas",
+    "bikewithoutpedals": "Bicicleta sin pedales",
+    "bike": "Bicicleta (completa)",
+    "workstation": "Puesto de trabajo",
+    "orderquantity": "Cantidad",
+    "itemnumber": "Número de artículo",
+    "product": "Producto",
+    "bikemodell": "Modelo",
+    "new": "Capacidad (nueva)",
+    "setuptimeNew": "Tiempo de configuración (nuevo)",
+    "capacityrequirementOld": "Requisito de capacidad (pendiente del período anterior)",
+    "setuptimeOld": "Tiempo de configuración (pendiente del período anterior)",
+    "totalcapacityreq": "Requisito total de capacidad",
+    "overtime": "Horas extra por día",
+    "customInputs": "Horas extra con margen",
+    "shiftCount": "Número de turnos"
   }
 }

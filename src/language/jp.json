@@ -61,6 +61,33 @@
     "planning": "計画",
     "sum": "合計",
     "lager": "倉庫"
-
+  },
+  "capacity": {
+    "title": "能力計画",
+    "backwheel": "後輪",
+    "frontwheel": "前輪",
+    "mudguardback": "泥除け（後）",
+    "mudguardfront": "泥除け（前）",
+    "bar": "ハンドル",
+    "saddle": "サドル",
+    "frame": "フレーム",
+    "pedal": "ペダル",
+    "frontwheelcomplete": "前輪（完成品）",
+    "framewheels": "フレームと車輪",
+    "bikewithoutpedals": "ペダルなし自転車",
+    "bike": "自転車（完成品）",
+    "workstation": "作業ステーション",
+    "orderquantity": "数量",
+    "itemnumber": "品番",
+    "product": "製品",
+    "bikemodell": "モデル",
+    "new": "能力（新規）",
+    "setuptimeNew": "セットアップ時間（新規）",
+    "capacityrequirementOld": "能力要件（前期間残）",
+    "setuptimeOld": "セットアップ時間（前期間残）",
+    "totalcapacityreq": "総能力要件",
+    "overtime": "1日あたりの残業時間",
+    "customInputs": "バッファ付き残業時間",
+    "shiftCount": "シフト数"
   }
 }

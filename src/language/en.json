@@ -61,6 +61,34 @@
     "planning": "Planning",
     "sum": "Total",
     "lager": "Warehouse"
-
+  },
+  "capacity": {
+    "title": "Capacity Planning",
+    "backwheel": "Rear Wheel",
+    "frontwheel": "Front Wheel",
+    "mudguardback": "Mudguard (rear)",
+    "mudguardfront": "Mudguard (front)",
+    "bar": "Handlebar",
+    "saddle": "Saddle",
+    "frame": "Frame",
+    "pedal": "Pedal",
+    "frontwheelcomplete": "Front Wheel (complete)",
+    "framewheels": "Frame and Wheels",
+    "bikewithoutpedals": "Bicycle without Pedals",
+    "bike": "Bicycle (complete)",
+    "workstation": "Workstation",
+    "orderquantity": "Quantity",
+    "itemnumber": "Item Number",
+    "product": "Product",
+    "bikemodell": "Model",
+    "new": "Capacity (New)",
+    "setuptimeNew": "Setup Time (New)",
+    "capacityrequirementOld": "Capacity Requirement (Previous Period Backlog)",
+    "setuptimeOld": "Setup Time (Previous Period Backlog)",
+    "totalcapacityreq": "Total Capacity Requirement",
+    "overtime": "Overtime per Day",
+    "customInputs": "Overtime with Buffer",
+    "shiftCount": "Number of Shifts"
   }
+
 }
