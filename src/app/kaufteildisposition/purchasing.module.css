@@ -1,0 +1,117 @@
+/* Gesamt-Container: Flex-Layout für Sidebar + Inhalt */
+.pageContainer {
+    display: flex;
+    background-color: #edf0f3;  /* gedämpftes Grau statt Reinweiß */
+    min-height: 100vh;
+}
+
+/* Hauptinhalt (rechts neben der Sidebar) */
+.content {
+    flex: 1;
+    padding: 2rem;
+    /* Falls die Sidebar fix sein sollte, kann hier ein margin-left definiert werden,
+       z. B.: margin-left: 260px; */
+}
+
+/* Überschriften für die Abschnitte (Prognose, Planung) */
+.sectionTitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #2f3e46;
+    margin: 2rem 0 1rem 0;  /* Mehr Abstand nach oben (vom Header) und zwischen den Abschnitten */
+}
+
+/* Tabellen-Container im "Card"-Stil */
+.tableContainer {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+    padding: 1rem;
+    margin-bottom: 2rem;  /* Abstand zwischen den Tabellen */
+    overflow-x: auto;
+}
+
+/* Basis-Styles für die Tabelle */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+/* Kopfzeile */
+.table thead {
+    background-color: #d0dce0;
+}
+
+.table thead th {
+    text-align: center;
+    font-weight: 600;
+    color: #2f3e46;
+    padding: 0.75rem;
+    border-bottom: 2px solid #b0b8bb;
+}
+
+/* Tabellenkörper */
+.table tbody td {
+    padding: 0.75rem;
+    text-align: center;
+    border-bottom: 1px solid #e0e5e8;
+    color: #3f4a54;
+}
+
+/* Letzte Zeile ohne untere Linie */
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* Eingabefelder in der Tabelle */
+.inputCell {
+    width: 70px;
+    padding: 0.4rem;
+    border: 1px solid #c1c8cd;
+    border-radius: 4px;
+    text-align: right;
+    font-size: 0.95rem;
+    background-color: #fafafa;
+    color: #000000
+}
+
+/* Fokus-Effekt für Eingabefelder */
+.inputCell:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 768px) {
+    .sectionTitle {
+        font-size: 1.3rem;
+        margin: 1.5rem 0 0.75rem 0;
+    }
+    .table {
+        min-width: 600px;
+    }
+    .content {
+        padding: 1rem;
+    }
+}
+.nOrder {
+    background-color: #e6f7ff; /* Rot-Ton für N */
+}
+
+.eOrder {
+    background-color: #ffebeb; /* Blau-Ton für E */
+}
+
+.jitOrder {
+    background-color: #EE1111; /* Grün-Ton für JIT */
+}
+.totalCost {
+    margin-top: 30px;
+    margin-left:2200px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}

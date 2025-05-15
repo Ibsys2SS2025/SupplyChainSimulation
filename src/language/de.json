@@ -16,6 +16,9 @@
     "orders": "Kaufteildisposition",
     "export": "Export",
     "inputfinal": "Eingabetabelle"
+    "export": "Export",
+    "directsell": "Direktverkauf",
+    "stock": "Lagerbestand"
   },
   "setup": {
     "title": "XML-Daten hochladen",
@@ -97,5 +100,48 @@
     "overtime": "Überstunden pro Tag",
     "customInputs": "Überstunden mit Puffer",
     "shiftCount": "Anzahl der Schichten"
+
+  },
+  "columns": {
+    "partNumber": "Kaufteilnummer",
+    "deliveryTime": "Lieferfrist",
+    "deviation": "Abweichung",
+    "p1": "P1",
+    "p2": "P2",
+    "p3": "P3",
+    "initialStock": "Anfangsbestand n",
+    "n": "n",
+    "n1": "n+1",
+    "n2": "n+2",
+    "n3": "n+3",
+    "orderAmount": "Bestellmenge",
+    "orderType": "Bestellart",
+    "storageCost": "Lagerkosten"
+  },
+  "extra": {
+    "button_save": "Bestellempfehlung berechnen",
+    "totalOrderValue": "Gesamtlagerwert"
+
+  },
+  "orderTypes": {
+    "normal": "Normal",
+    "rush": "Eil",
+    "justinTime": "Just-in-Time",
+    "none": "Keine"
+  },
+  "warehouse": {
+    "title": "Lagerbestände",
+    "articleId": "Artikel-ID",
+    "amount": "Bestand",
+    "unitPrice": "Einzelpreis (€)",
+    "stockValue": "Lagerwert (€)",
+    "totalStockValue": "Gesamtlagerwert"
+  },
+  "directsale": {
+    "title": "Direktverkauf",
+    "article": "Artikel",
+    "quantity": "Menge",
+    "price": "Preis (€)",
+    "penalty": "Konventionalstrafe (€)"
   }
 }

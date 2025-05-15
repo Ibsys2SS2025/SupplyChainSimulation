@@ -14,7 +14,9 @@
     "disposition": "Disposition",
     "capacityplan": "Capacity plan",
     "orders": "Procurement",
-    "export": "Export"
+    "export": "Export",
+    "directsell": "Direct Sale",
+    "stock": "Stock"
   },
   "setup": {
     "title": "Upload XML Data",
@@ -97,5 +99,47 @@
     "waitinglistmessageInWork": "(in progress)",
     "waitinglistmessageWait": "(waiting)"
 
+  },
+  "columns": {
+    "partNumber": "Part Number",
+    "deliveryTime": "Delivery Time",
+    "deviation": "Deviation",
+    "p1": "P1",
+    "p2": "P2",
+    "p3": "P3",
+    "initialStock": "Initial Stock n",
+    "n": "n",
+    "n1": "n+1",
+    "n2": "n+2",
+    "n3": "n+3",
+    "orderAmount": "Order Quantity",
+    "orderType": "Order Type",
+    "storageCost": "Storage Cost"
+  },
+  "extra": {
+    "button_save": "Calculate order suggestion",
+    "totalOrderValue": "Total Order Value"
+  },
+  "orderTypes": {
+    "normal": "Normal",
+    "rush": "Express",
+    "justinTime": "Just in Time",
+    "none": "None"
+  },
+  "warehouse": {
+    "title": "Warehouse Stock",
+    "articleId": "Article ID",
+    "amount": "Quantity",
+    "unitPrice": "Unit Price (€)",
+    "stockValue": "Stock Value (€)",
+    "totalStockValue": "Total Stock Value"
+  },
+  "directsale": {
+    "title": "Direct Sale",
+    "article": "Article",
+    "quantity": "Quantity",
+    "price": "Price (€)",
+    "penalty": "Penalty (€)"
   }
+
 }
