@@ -109,10 +109,10 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     lagerbestand: number
   ): number => {
     const [sicherheitsbestand, warteschlange, inBearbeitung] = inputs[id] ?? [0, 0, 0];
-    if (isMainProduct) {
-      return getProductionP1(id) + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
-    }
-    return prevTotal + prevWarteschlange + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
+    let result = isMainProduct
+      ? getProductionP1(id) + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung
+      : prevTotal + prevWarteschlange + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
+    return result < 0 ? 0 : result;
   };
 
   let lastGroupTotal = 0;
