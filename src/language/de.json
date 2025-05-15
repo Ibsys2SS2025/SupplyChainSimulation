@@ -37,9 +37,9 @@
   },
   "disposition": {
   "title": "Disposition",
-  "sales_request": "Vertriebswunsch",
+  "sales_request": "Verbindliche Aufträge / Vertriebswunsch",
   "stock_safety": "Sicherheitsbestand",
-  "stock_old": "Lagerbestand Vorperiode",
+  "stock_old": "Lagerbestand am Ende der Vorperiode",
   "orders_queued": "Aufträge in der Warteschlange",
   "orders_active": "Aufträge in Bearbeitung",
   "orders_prod": "Produktionsaufträge",
