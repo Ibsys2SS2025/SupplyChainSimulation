@@ -13,7 +13,7 @@ interface DirectSaleItem {
     penalty: number;
 }
 
-const initialItems: DirectSaleItem[] = [
+const defaultItems: DirectSaleItem[] = [
     { article: 1, quantity: 0, price: 0.0, penalty: 0.0 },
     { article: 2, quantity: 0, price: 0.0, penalty: 0.0 },
     { article: 3, quantity: 0, price: 0.0, penalty: 0.0 },
@@ -21,18 +21,24 @@ const initialItems: DirectSaleItem[] = [
 
 export default function DirectSalePage() {
     const { xmlData, setXmlData } = useXmlData();
-    const [items, setItems] = useState<DirectSaleItem[]>(initialItems);
     const { t } = useTranslation();
 
-    const handleChange = (article: number, field: keyof DirectSaleItem, value: string) => {
-        const updated = items.map(item =>
-            item.article === article
-                ? { ...item, [field]: field === 'article' ? Number(value) : parseFloat(value) || 0 }
-                : item
-        );
-        setItems(updated);
-    };
+    // 1️⃣ Initialisieren aus XML oder Defaults
+    const [items, setItems] = useState<DirectSaleItem[]>(() => {
+        const raw = xmlData?.selldirect?.item;
+        if (!raw) return defaultItems;
 
+        const parsed = Array.isArray(raw) ? raw : [raw];
+
+        return parsed.map((entry: any) => ({
+            article: parseInt(entry.$.article),
+            quantity: parseInt(entry.$.quantity),
+            price: parseFloat(entry.$.price),
+            penalty: parseFloat(entry.$.penalty),
+        }));
+    });
+
+    // 2️⃣ Änderungen live speichern
     useEffect(() => {
         const newXml = {
             ...xmlData,
@@ -47,8 +53,18 @@ export default function DirectSalePage() {
                 })),
             },
         };
+
         setXmlData(newXml);
     }, [items]);
+
+    const handleChange = (article: number, field: keyof DirectSaleItem, value: string) => {
+        const updated = items.map(item =>
+            item.article === article
+                ? { ...item, [field]: field === 'article' ? Number(value) : parseFloat(value) || 0 }
+                : item
+        );
+        setItems(updated);
+    };
 
     return (
         <div className={styles.pageContainer}>
