@@ -1,20 +1,36 @@
 /***********************************************
- * NAVBAR-STYLES
+ * NAVBAR-STYLES – Flexbasierte Anordnung
  ***********************************************/
 .navbar {
-    /* Leichte Hintergrundfarbe */
+    position: relative;
+    left: 50%; margin-left: -50vw;
+    width: 100vw;
+    max-width: none; /* keine maximale Breite */
+    display: flex;                /* Flexbox aktivieren */
+    justify-content: space-between;/* Logo links, Icon rechts */
+    align-items: center;
     background-color: #f8f9fa;
-    /* Schattierung für einen "Card"-Effekt */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    /* Abgerundete Ecken */
     border-radius: 26px;
-    /* Übergang, falls du Farben ändern möchtest */
     transition: background-color 0.3s ease;
-    /* Etwas mehr Padding, damit es großzügiger wirkt */
-    padding: 0.75rem 1rem;
-    margin-top: 1rem; /* neu hinzufügen */
+    padding: 0.75rem 2rem;        /* extra horizontaler Abstand */
+    margin-top: 1rem;
+}
 
+/* Falls du intern doch ein .container nutzt: */
+.navbar > .container {
+    max-width: none;              /* keine Bootstrap-Maximallänge */
+    padding-left: 0;
+    padding-right: 0;
+}
 
+/* Sprach-Icon ganz rechts */
+.langSelector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Durch space-between reicht margin-left:auto, aber hier nur zur Sicherheit: */
+    margin-left: auto;
 }
 
 /***********************************************
@@ -28,23 +44,13 @@
 }
 
 .logo {
-    /* Leichte Start-Animation */
     animation: logoEntry 0.8s ease-in-out;
 }
 
 @keyframes logoEntry {
-    0% {
-        transform: scale(0.5) rotate(-5deg);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.05) rotate(2deg);
-        opacity: 0.7;
-    }
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
+    0%   { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+    50%  { transform: scale(1.05) rotate(2deg); opacity: 0.7; }
+    100% { transform: scale(1) rotate(0deg);   opacity: 1; }
 }
 
 .brandText {
@@ -53,7 +59,6 @@
     color: #171717;
     transition: color 0.3s ease;
 }
-
 .brandText:hover {
     color: #007bff;
 }
@@ -62,89 +67,57 @@
  * TOGGLE-BUTTON
  ***********************************************/
 .navbarToggle {
-    /* Leichte Hintergrundfarbe & Rand für den Toggle-Button */
     display: inline-block;
     background-color: #eaeaea;
     border: 1px solid #ccc;
     transition: background-color 0.3s ease, transform 0.3s ease;
     border-radius: 6px;
 }
-
-/* Sicherstellen, dass kein Pfeil für Toggle angezeigt wird */
 .navbarToggle::after {
-    display: none !important; /* Pfeil eliminieren */
-    content: "" !important;   /* Entfernen jeglicher Inhalte */
+    display: none !important;
+    content: "" !important;
 }
 
-
-/* Leichte Animation beim Hovern auf dem Dropdown-Trigger */
+/***********************************************
+ * DROPDOWN-TRIGGER & -MENÜ
+ ***********************************************/
 .navDropdown {
     transition: transform 0.3s ease;
     font-weight: 500;
 }
-
 .navDropdown:hover {
     transform: scale(1.02);
 }
 
-/* Dropdown-Menü selbst – animierter Eintritt */
 .dropdown-menu {
-    /* Abgerundete Ecken */
     border-radius: 8px;
-    /* Schattierung */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    /* Ausgangszustand für Animation */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
-
-/* Wenn das Dropdown geöffnet ist */
 .show > .dropdown-menu {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
-/* Keyframes für die einzelnen Dropdown-Items */
 @keyframes dropdownItemFadeIn {
-    0% {
-        opacity: 0;
-        transform: translateX(-10px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    0%   { opacity: 0; transform: translateX(-10px); }
+    100% { opacity: 1; transform: translateX(0); }
 }
-
-/* Einzelne Elemente im Dropdown – animiert & Hover-Effekt */
 .dropdownItem {
     transition: background-color 0.3s ease, transform 0.3s ease;
     border-radius: 4px;
-    /* Ausgangszustand der Animation */
     opacity: 0;
     animation: dropdownItemFadeIn 0.3s forwards;
 }
-
-/* Stufenweise Animation für jedes Item */
-.dropdown-menu .dropdownItem:nth-child(1) {
-    animation-delay: 0.1s;
-}
-.dropdown-menu .dropdownItem:nth-child(2) {
-    animation-delay: 0.2s;
-}
-.dropdown-menu .dropdownItem:nth-child(3) {
-    animation-delay: 0.3s;
-}
-.dropdown-menu .dropdownItem:nth-child(4) {
-    animation-delay: 0.4s;
-}
-.dropdown-menu .dropdownItem:nth-child(5) {
-    animation-delay: 0.5s;
-}
-
+.dropdown-menu .dropdownItem:nth-child(1) { animation-delay: 0.1s; }
+.dropdown-menu .dropdownItem:nth-child(2) { animation-delay: 0.2s; }
+.dropdown-menu .dropdownItem:nth-child(3) { animation-delay: 0.3s; }
+.dropdown-menu .dropdownItem:nth-child(4) { animation-delay: 0.4s; }
+.dropdown-menu .dropdownItem:nth-child(5) { animation-delay: 0.5s; }
 .dropdownItem:hover {
     background-color: #f0f0f0;
     transform: translateX(5px);
@@ -158,14 +131,26 @@
     align-items: center;
     justify-content: center;
 }
-
 .icon {
     font-size: 1.6rem;
     color: #007bff;
     transition: color 0.3s ease, transform 0.3s ease;
 }
-
 .icon:hover {
     color: #0056b3;
     transform: rotate(10deg);
+}
+
+/***********************************************
+ * RESPONSIVE – Mobile Anpassungen
+ ***********************************************/
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;   /* auf kleinen Displays etwas weniger Rand */
+    }
+    .langSelector {
+        margin-left: 0;
+    }
 }

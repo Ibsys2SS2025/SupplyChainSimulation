@@ -4,14 +4,12 @@ import React from "react";
 import { Navbar, Nav, NavDropdown, Container } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import '../language/i18n';
-// Wir nutzen das "MdLanguage"-Icon als universelles Sprache-Icon
 import { MdLanguage } from "react-icons/md";
 import styles from "./Header.module.css";
 
 const Header: React.FC = () => {
     const { t, i18n } = useTranslation();
 
-    // Definierte Sprachen
     const languages = [
         { code: "en", name: "🇬🇧 English" },
         { code: "de", name: "🇩🇪 Deutsch" },
@@ -20,15 +18,14 @@ const Header: React.FC = () => {
         { code: "zh", name: "🇨🇳 中文 (Mandarin)" },
     ];
 
-    // Funktion zum Sprachwechsel
     const handleLanguageChange = (lang: string) => {
         i18n.changeLanguage(lang);
     };
 
     return (
         <Navbar expand="lg" className={styles.navbar}>
-            <Container>
-                {/* Logo / Brand */}
+            {/* Hier fluid + px-0 */}
+            <Container fluid className="px-0">
                 <Navbar.Brand href="/" className={styles.brand}>
                     <img
                         src="/Logo.png"
@@ -37,11 +34,8 @@ const Header: React.FC = () => {
                         className={styles.logo}
                         alt="Logo"
                     />
-                    {/* Falls du daneben noch Text möchtest, kannst du hier z. B.
-               <span className={styles.brandText}>{t("Planspiel")}</span> einfügen */}
                 </Navbar.Brand>
 
-                {/* Toggle-Button für kleine Screens */}
                 <Navbar.Toggle
                     aria-controls="basic-navbar-nav"
                     className={styles.navbarToggle}
@@ -49,12 +43,11 @@ const Header: React.FC = () => {
 
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="ms-auto">
-                        {/* Sprachen-Dropdown */}
                         <NavDropdown
                             title={
                                 <span className={styles.iconWrapper}>
-      <MdLanguage className={styles.icon} />
-    </span>
+                                    <MdLanguage className={styles.icon} />
+                                </span>
                             }
                             id="language-dropdown"
                             align="end"
@@ -72,7 +65,6 @@ const Header: React.FC = () => {
                                 </NavDropdown.Item>
                             ))}
                         </NavDropdown>
-
                     </Nav>
                 </Navbar.Collapse>
             </Container>
