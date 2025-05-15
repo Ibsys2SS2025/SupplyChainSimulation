@@ -14,7 +14,9 @@
     "disposition": "Disposición",
     "capacityplan": "Plan de capacidad",
     "orders": "Abastecimiento",
-    "export": "Exportar"
+    "export": "Exportar",
+    "directsell": "Venta directa",
+    "stock": "Inventario"
   },
   "setup": {
     "title": "Subir datos XML",
@@ -57,5 +59,46 @@
     "sum": "Total",
     "lager": "Depósito"
 
+  },
+  "columns": {
+    "partNumber": "Número de parte",
+    "deliveryTime": "Plazo de entrega",
+    "deviation": "Desviación",
+    "p1": "P1",
+    "p2": "P2",
+    "p3": "P3",
+    "initialStock": "Stock inicial n",
+    "n": "n",
+    "n1": "n+1",
+    "n2": "n+2",
+    "n3": "n+3",
+    "orderAmount": "Cantidad de pedido",
+    "orderType": "Tipo de pedido",
+    "storageCost": "Coste de almacenamiento"
+  },
+  "extra": {
+    "button_save": "Calcular recomendación de pedido",
+    "totalOrderValue": "Valor total del pedido"
+  },
+  "orderTypes": {
+    "normal": "Normal",
+    "rush": "Urgente",
+    "justinTime": "Justo a tiempo",
+    "none": "Ninguno"
+  },
+  "warehouse": {
+    "title": "Inventario",
+    "articleId": "ID del artículo",
+    "amount": "Cantidad",
+    "unitPrice": "Precio unitario (€)",
+    "stockValue": "Valor del stock (€)",
+    "totalStockValue": "Valor total del stock"
+  },
+  "directsale": {
+    "title": "Venta directa",
+    "article": "Artículo",
+    "quantity": "Cantidad",
+    "price": "Precio (€)",
+    "penalty": "Penalización (€)"
   }
 }

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './direktverkauf.module.css';
 import Sidebar from '@/components/Sidebar';
 import { useXmlData } from '@/context/XmlDataContext';
+import { useTranslation } from 'react-i18next';
 
 interface DirectSaleItem {
     article: number;
@@ -21,6 +22,7 @@ const initialItems: DirectSaleItem[] = [
 export default function DirectSalePage() {
     const { xmlData, setXmlData } = useXmlData();
     const [items, setItems] = useState<DirectSaleItem[]>(initialItems);
+    const { t } = useTranslation();
 
     const handleChange = (article: number, field: keyof DirectSaleItem, value: string) => {
         const updated = items.map(item =>
@@ -52,14 +54,14 @@ export default function DirectSalePage() {
         <div className={styles.pageContainer}>
             <Sidebar />
             <div className={styles.content}>
-                <h2 className={styles.sectionTitle}>Direktverkauf</h2>
+                <h2 className={styles.sectionTitle}>{t("directsale.title")}</h2>
                 <table className={styles.table}>
                     <thead>
                     <tr>
-                        <th>Artikel</th>
-                        <th>Menge</th>
-                        <th>Preis (€)</th>
-                        <th>Konventionalstrafe (€)</th>
+                        <th>{t("directsale.article")}</th>
+                        <th>{t("directsale.quantity")}</th>
+                        <th>{t("directsale.price")}</th>
+                        <th>{t("directsale.penalty")}</th>
                     </tr>
                     </thead>
                     <tbody>

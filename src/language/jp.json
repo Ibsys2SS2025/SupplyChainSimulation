@@ -14,7 +14,9 @@
     "disposition": "配分",
     "capacityplan": "能力計画",
     "orders": "部品調達",
-    "export": "エクスポート"
+    "export": "エクスポート",
+    "directsell": "直接販売",
+    "stock": "在庫"
   },
   "setup": {
     "title": "XMLデータをアップロード",
@@ -57,5 +59,46 @@
     "sum": "合計",
     "lager": "倉庫"
 
+  },
+  "columns": {
+    "partNumber": "部品番号",
+    "deliveryTime": "納期",
+    "deviation": "偏差",
+    "p1": "P1",
+    "p2": "P2",
+    "p3": "P3",
+    "initialStock": "初期在庫 n",
+    "n": "n",
+    "n1": "n+1",
+    "n2": "n+2",
+    "n3": "n+3",
+    "orderAmount": "注文数量",
+    "orderType": "注文タイプ",
+    "storageCost": "保管コスト"
+  },
+  "extra": {
+    "button_save": "注文提案を計算する",
+    "totalOrderValue": "総注文額"
+  },
+  "orderTypes": {
+    "normal": "通常",
+    "rush": "特急",
+    "justinTime": "ジャストインタイム",
+    "none": "なし"
+  },
+  "warehouse": {
+    "title": "在庫",
+    "articleId": "商品ID",
+    "amount": "数量",
+    "unitPrice": "単価 (€)",
+    "stockValue": "在庫価値 (€)",
+    "totalStockValue": "総在庫価値"
+  },
+  "directsale": {
+    "title": "直接販売",
+    "article": "製品",
+    "quantity": "数量",
+    "price": "価格 (€)",
+    "penalty": "違約金 (€)"
   }
 }

@@ -14,7 +14,9 @@
     "disposition": "调度",
     "capacityplan": "产能计划",
     "orders": "采购订单",
-    "export": "导出"
+    "export": "导出",
+    "directsell": "直接销售",
+    "stock": "库存"
   },
   "setup": {
     "title": "上传XML数据",
@@ -57,5 +59,46 @@
     "sum": "总计",
     "lager": "倉庫"
 
+  },
+  "columns": {
+    "partNumber": "零件编号",
+    "deliveryTime": "交货时间",
+    "deviation": "偏差",
+    "p1": "P1",
+    "p2": "P2",
+    "p3": "P3",
+    "initialStock": "初始库存 n",
+    "n": "n",
+    "n1": "n+1",
+    "n2": "n+2",
+    "n3": "n+3",
+    "orderAmount": "订购数量",
+    "orderType": "订单类型",
+    "storageCost": "库存成本"
+  },
+  "extra": {
+    "button_save": "计算订购建议",
+    "totalOrderValue": "总订单价值"
+  },
+  "orderTypes": {
+    "normal": "正常",
+    "rush": "加急",
+    "justinTime": "准时制",
+    "none": "无"
+  },
+  "warehouse": {
+    "title": "库存",
+    "articleId": "物品编号",
+    "amount": "数量",
+    "unitPrice": "单价 (€)",
+    "stockValue": "库存价值 (€)",
+    "totalStockValue": "总库存价值"
+  },
+  "directsale": {
+    "title": "直接销售",
+    "article": "产品",
+    "quantity": "数量",
+    "price": "价格 (€)",
+    "penalty": "罚金 (€)"
   }
 }

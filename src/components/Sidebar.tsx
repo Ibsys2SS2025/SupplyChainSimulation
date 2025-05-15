@@ -12,13 +12,13 @@ const Sidebar: React.FC = () => {
 
     // Navigationseinträge mit Pfad
     const navItems = [
+        { label: t("nav.directsell"), path: "/direktverkauf" },
         { label: t("nav.input"), path: "/prognose" },
         { label: t("nav.disposition"), path: "/disposition" },
         { label: t("nav.capacityplan"), path: "/kapazitaetsplan" },
         { label: t("nav.orders"), path: "/kaufteildisposition" },
         { label: t("nav.export"), path: "/export" },
-        { label: "Direktverkauf", path: "/direktverkauf" },
-        { label: "Lagerbestand", path: "/lagerbestand" },
+        { label: t("nav.stock"), path: "/lagerbestand" },
     ];
 
     return (

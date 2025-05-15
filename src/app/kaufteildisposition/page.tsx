@@ -292,27 +292,28 @@ export default function Data() {
         <div className={styles.pageContainer}>
             <Sidebar />
             <div className={styles.content}>
-                <h2 className={styles.sectionTitle}>Kaufteildisposition</h2>
-                <button onClick={applyDecisionLogic} className={styles.calculateButton}>Bestellempfehlung berechnen
+                <h2 className={styles.sectionTitle}>{t("nav.orders")}</h2>
+                <button onClick={applyDecisionLogic} className={styles.calculateButton}>
+                    {t("extra.button_save")}
                 </button>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
                         <thead>
                         <tr>
-                            <th>Kaufteilnummer</th>
-                            <th>Lieferfrist</th>
-                            <th>Abweichung</th>
-                            <th>P1</th>
-                            <th>P2</th>
-                            <th>P3</th>
-                            <th>Anfangsbestand n</th>
-                            <th>n</th>
-                            <th>n+1</th>
-                            <th>n+2</th>
-                            <th>n+3</th>
-                            <th>Bestellmenge</th>
-                            <th>Bestellart</th>
-                            <th>Lagerkosten</th>
+                            <th>{t("columns.partNumber")}</th>
+                            <th>{t("columns.deliveryTime")}</th>
+                            <th>{t("columns.deviation")}</th>
+                            <th>{t("columns.p1")}</th>
+                            <th>{t("columns.p2")}</th>
+                            <th>{t("columns.p3")}</th>
+                            <th>{t("columns.initialStock")}</th>
+                            <th>{t("columns.n")}</th>
+                            <th>{t("columns.n1")}</th>
+                            <th>{t("columns.n2")}</th>
+                            <th>{t("columns.n3")}</th>
+                            <th>{t("columns.orderAmount")}</th>
+                            <th>{t("columns.orderType")}</th>
+                            <th>{t("columns.storageCost")}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -343,10 +344,10 @@ export default function Data() {
                                         onChange={e => handleInputChange(row.kaufteilId, 'bestellungArt', e.target.value)}
                                         className={styles.inputCell}
                                     >
-                                        <option value="N">N</option>
-                                        <option value="E">E</option>
-                                        <option value="JIT">JIT</option>
-                                        <option value="kein"></option>
+                                        <option value="N">{t("orderTypes.normal")} </option>
+                                        <option value="E">{t("orderTypes.rush")} </option>
+                                        <option value="JIT">{t("orderTypes.justinTime")} </option>
+                                        <option value="kein">{t("orderTypes.none")} </option>
                                     </select>
                                 </td>
                                 <td>{row.lagerkosten}</td>
@@ -356,7 +357,7 @@ export default function Data() {
                     </table>
                 </div>
                 <div className={styles.totalCost}>
-                    <strong>Gesamtlagerwert:</strong> {gesamtBestellwert.toFixed(2)} €
+                    <strong>{t("extra.totalOrderValue")}:</strong> {gesamtBestellwert.toFixed(2)} €
                 </div>
             </div>
         </div>
