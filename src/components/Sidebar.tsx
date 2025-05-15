@@ -17,6 +17,8 @@ const Sidebar: React.FC = () => {
         { label: t("nav.capacityplan"), path: "/kapazitaetsplan" },
         { label: t("nav.orders"), path: "/kaufteildisposition" },
         { label: t("nav.export"), path: "/export" },
+        { label: "Direktverkauf", path: "/direktverkauf" },
+        { label: "Lagerbestand", path: "/lagerbestand" },
     ];
 
     return (

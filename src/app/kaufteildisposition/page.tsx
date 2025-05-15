@@ -37,35 +37,35 @@ export default function Data() {
 
 
         const initialRows = [
-        { kaufteilId: 21, lieferfrist: 1.8, abweichung: 0.4,P1: 1, P2: 0, P3: 0 , diskontmenge: 300,bestellungMenge:300,bestellungArt:'E',lagerkosten:5.00},
-        { kaufteilId: 22, lieferfrist: 1.7, abweichung: 0.4,P1: 0, P2: 1, P3: 0 , diskontmenge: 300 ,bestellungMenge:300,bestellungArt:'E',lagerkosten:6.50},
-        { kaufteilId: 23, lieferfrist: 1.2, abweichung: 0.2,P1: 0, P2: 0, P3: 1 , diskontmenge: 300 ,bestellungMenge:300,bestellungArt:'E',lagerkosten:6.50},
-        { kaufteilId: 24, lieferfrist: 3.2, abweichung: 0.3,P1: 7, P2: 7, P3: 0 ,diskontmenge: 6100 ,bestellungMenge:6100,bestellungArt:'E',lagerkosten:0.06},
-        { kaufteilId: 25, lieferfrist: 0.9, abweichung: 0.2,P1: 4, P2: 4, P3: 4, diskontmenge: 3600 ,bestellungMenge:3600,bestellungArt:'E',lagerkosten:0.06},
-        { kaufteilId: 27, lieferfrist: 0.9, abweichung: 0.2,P1: 2, P2: 2, P3: 0 , diskontmenge: 4500 ,bestellungMenge:4500,bestellungArt:'E',lagerkosten:1.20},
-        { kaufteilId: 28, lieferfrist: 1.7, abweichung: 0.4,P1: 3, P2: 3, P3: 3 , diskontmenge: 2700 ,bestellungMenge:2700,bestellungArt:'E',lagerkosten:0.75},
-        { kaufteilId: 32, lieferfrist: 2.1, abweichung: 0.5,P1: 2, P2: 2, P3: 0 , diskontmenge: 1900 ,bestellungMenge:1900,bestellungArt:'E',lagerkosten:22.00},
-        { kaufteilId: 33, lieferfrist: 1.9, abweichung: 0.5,P1: 0, P2: 0, P3: 2 , diskontmenge: 22000 ,bestellungMenge:22000 ,bestellungArt:'E',lagerkosten:0.10},
-        { kaufteilId: 34, lieferfrist: 1.6, abweichung: 0.3,P1: 4, P2: 4, P3: 4 , diskontmenge: 3600 ,bestellungMenge:3600 ,bestellungArt:'E',lagerkosten:1.00},
-        { kaufteilId: 35, lieferfrist: 2.2, abweichung: 0.4,P1: 1, P2: 1, P3: 1 , diskontmenge: 300 ,bestellungMenge:300 ,bestellungArt:'E',lagerkosten:8.00},
-        { kaufteilId: 36, lieferfrist: 1.2, abweichung: 0.1,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:1.50},
-        { kaufteilId: 37, lieferfrist: 1.5, abweichung: 0.3,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:1.50},
-        { kaufteilId: 38, lieferfrist: 1.7, abweichung: 0.4,P1: 2, P2: 2, P3: 2 , diskontmenge: 1800 ,bestellungMenge:1800 ,bestellungArt:'E',lagerkosten:2.50},
-        { kaufteilId: 39, lieferfrist: 1.5, abweichung: 0.3,P1: 2, P2: 2, P3: 2 , diskontmenge: 1800 ,bestellungMenge:1800 ,bestellungArt:'E',lagerkosten:0.06},
-        { kaufteilId: 40, lieferfrist: 1.7, abweichung: 0.2,P1: 1, P2: 1, P3: 1 , diskontmenge: 300 ,bestellungMenge:300 ,bestellungArt:'E',lagerkosten:0.10},
-        { kaufteilId: 41, lieferfrist: 0.9, abweichung: 0.2,P1: 1, P2: 1, P3: 1 , diskontmenge: 1800 ,bestellungMenge:1800 ,bestellungArt:'E',lagerkosten:5.00},
-        { kaufteilId: 42, lieferfrist: 1.2, abweichung: 0.3,P1: 3, P2: 3, P3: 3 , diskontmenge: 2700 ,bestellungMenge:2700 ,bestellungArt:'E',lagerkosten:0.50},
-        { kaufteilId: 43, lieferfrist: 2.0, abweichung: 0.5,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:0.06},
-        { kaufteilId: 44, lieferfrist: 1.0, abweichung: 0.2,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:0.10},
-        { kaufteilId: 45, lieferfrist: 1.7, abweichung: 0.3,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:0.10},
-        { kaufteilId: 46, lieferfrist: 0.9, abweichung: 0.3, P1: 1, P2: 1, P3: 1, diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:3.50},
-        { kaufteilId: 47, lieferfrist: 1.1, abweichung: 0.1,P1: 1, P2: 1, P3: 1, diskontmenge: 1800 ,bestellungMenge:1800,bestellungArt:'E',lagerkosten:1.50},
-        { kaufteilId: 48, lieferfrist: 1.0, abweichung: 0.2,P1: 2, P2: 2, P3: 2, diskontmenge: 2200 ,bestellungMenge:2200,bestellungArt:'E',lagerkosten:22.00},
-        { kaufteilId: 52, lieferfrist: 1.6, abweichung: 0.4,P1: 2, P2: 0, P3: 0, diskontmenge: 2200,bestellungMenge:2200,bestellungArt:'E',lagerkosten:0.10},
-        { kaufteilId: 53, lieferfrist: 1.6, abweichung: 0.2,P1: 0, P2: 0, P3: 72, diskontmenge: 2200,bestellungMenge:2200,bestellungArt:'E',lagerkosten:0.10},
-        { kaufteilId: 57, lieferfrist: 1.7, abweichung: 0.3,P1: 2, P2: 2, P3: 2, diskontmenge: 2200 ,bestellungMenge:2200,bestellungArt:'E',lagerkosten:22.00},
-        { kaufteilId: 58, lieferfrist: 1.6, abweichung: 0.5,P1: 0, P2: 0, P3: 72,diskontmenge: 2200 ,bestellungMenge:2200,bestellungArt:'E',lagerkosten:0.10},
-        { kaufteilId: 59, lieferfrist: 0.7, abweichung: 0.2,P1: 2, P2: 2, P3: 2, diskontmenge: 2200 ,bestellungMenge:2200,bestellungArt:'E',lagerkosten:0.15}
+        { kaufteilId: 21, lieferfrist: 1.8, abweichung: 0.4,P1: 1, P2: 0, P3: 0 , diskontmenge: 300,bestellungMenge:300,bestellungArt:'E',lagerkosten:4.61},
+        { kaufteilId: 22, lieferfrist: 1.7, abweichung: 0.4,P1: 0, P2: 1, P3: 0 , diskontmenge: 300 ,bestellungMenge:300,bestellungArt:'E',lagerkosten:6.02},
+        { kaufteilId: 23, lieferfrist: 1.2, abweichung: 0.2,P1: 0, P2: 0, P3: 1 , diskontmenge: 300 ,bestellungMenge:300,bestellungArt:'E',lagerkosten:7.00},
+        { kaufteilId: 24, lieferfrist: 3.2, abweichung: 0.3,P1: 7, P2: 7, P3: 7 ,diskontmenge: 6100 ,bestellungMenge:6100,bestellungArt:'E',lagerkosten:0.13},
+        { kaufteilId: 25, lieferfrist: 0.9, abweichung: 0.2,P1: 4, P2: 4, P3: 4, diskontmenge: 3600 ,bestellungMenge:3600,bestellungArt:'E',lagerkosten:0.08},
+        { kaufteilId: 27, lieferfrist: 0.9, abweichung: 0.2,P1: 2, P2: 2, P3: 2 , diskontmenge: 1800 ,bestellungMenge:1800,bestellungArt:'E',lagerkosten:0.11},
+        { kaufteilId: 28, lieferfrist: 1.7, abweichung: 0.4,P1: 4, P2: 5, P3: 6 , diskontmenge: 4500 ,bestellungMenge:4500,bestellungArt:'E',lagerkosten:1.10},
+        { kaufteilId: 32, lieferfrist: 2.1, abweichung: 0.5,P1: 3, P2: 3, P3: 3, diskontmenge: 2700 ,bestellungMenge:2700,bestellungArt:'E',lagerkosten:0.73},
+        { kaufteilId: 33, lieferfrist: 1.9, abweichung: 0.5,P1: 0, P2: 0, P3: 2 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:22.12},
+        { kaufteilId: 34, lieferfrist: 1.6, abweichung: 0.3,P1: 0, P2: 0, P3: 72 , diskontmenge: 22000 ,bestellungMenge:22000 ,bestellungArt:'E',lagerkosten:0.10},
+        { kaufteilId: 35, lieferfrist: 2.2, abweichung: 0.4,P1: 4, P2: 4, P3: 4 , diskontmenge: 3600 ,bestellungMenge:3600 ,bestellungArt:'E',lagerkosten:0.92},
+        { kaufteilId: 36, lieferfrist: 1.2, abweichung: 0.1,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:8.20},
+        { kaufteilId: 37, lieferfrist: 1.5, abweichung: 0.3,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:1.40},
+        { kaufteilId: 38, lieferfrist: 1.7, abweichung: 0.4,P1: 1, P2: 1, P3: 1, diskontmenge: 300 ,bestellungMenge:300 ,bestellungArt:'E',lagerkosten:1.45},
+        { kaufteilId: 39, lieferfrist: 1.5, abweichung: 0.3,P1: 2, P2: 2, P3: 2 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:1.54},
+        { kaufteilId: 40, lieferfrist: 1.7, abweichung: 0.2,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:2.30},
+        { kaufteilId: 41, lieferfrist: 0.9, abweichung: 0.2,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:0.58},
+        { kaufteilId: 42, lieferfrist: 1.2, abweichung: 0.3,P1: 2, P2: 2, P3: 2 , diskontmenge: 1800 ,bestellungMenge:1800 ,bestellungArt:'E',lagerkosten:0.28},
+        { kaufteilId: 43, lieferfrist: 2.0, abweichung: 0.5,P1: 1, P2: 1, P3: 1 , diskontmenge: 1900 ,bestellungMenge:1900 ,bestellungArt:'E',lagerkosten:5.10},
+        { kaufteilId: 44, lieferfrist: 1.0, abweichung: 0.2,P1: 3, P2: 3, P3: 3 , diskontmenge: 2700 ,bestellungMenge:2700 ,bestellungArt:'E',lagerkosten:0.89},
+        { kaufteilId: 45, lieferfrist: 1.7, abweichung: 0.3,P1: 1, P2: 1, P3: 1 , diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:0.11},
+        { kaufteilId: 46, lieferfrist: 0.9, abweichung: 0.3, P1: 1, P2: 1, P3: 1, diskontmenge: 900 ,bestellungMenge:900 ,bestellungArt:'E',lagerkosten:0.18},
+        { kaufteilId: 47, lieferfrist: 1.1, abweichung: 0.1,P1: 1, P2: 1, P3: 1, diskontmenge: 900 ,bestellungMenge:900,bestellungArt:'E',lagerkosten:3.62},
+        { kaufteilId: 48, lieferfrist: 1.0, abweichung: 0.2,P1: 2, P2: 2, P3: 2, diskontmenge: 1800 ,bestellungMenge:1800,bestellungArt:'E',lagerkosten:1.58},
+        { kaufteilId: 52, lieferfrist: 1.6, abweichung: 0.4,P1: 2, P2: 0, P3: 0, diskontmenge: 600,bestellungMenge:600,bestellungArt:'E',lagerkosten:21.06},
+        { kaufteilId: 53, lieferfrist: 1.6, abweichung: 0.2,P1: 72, P2: 0, P3: 0, diskontmenge: 22000,bestellungMenge:22000,bestellungArt:'E',lagerkosten:0.09},
+        { kaufteilId: 57, lieferfrist: 1.7, abweichung: 0.3,P1: 0, P2: 2, P3: 0, diskontmenge: 600 ,bestellungMenge:600,bestellungArt:'E',lagerkosten:22.67},
+        { kaufteilId: 58, lieferfrist: 1.6, abweichung: 0.5,P1: 0, P2: 0, P3: 72,diskontmenge: 22000 ,bestellungMenge:22000,bestellungArt:'E',lagerkosten:0.13},
+        { kaufteilId: 59, lieferfrist: 0.7, abweichung: 0.2,P1: 2, P2: 2, P3: 2, diskontmenge: 1800 ,bestellungMenge:1800,bestellungArt:'E',lagerkosten:0.22}
     ];
     const getArtFromModus = (modus: string | number): string => {
         switch (Number(modus)) {
@@ -79,6 +79,7 @@ export default function Data() {
 
 
     const [tableData, setTableData] = useState(() => {
+
         return initialRows.map(row => {
             const existing = bestellungen.find((b: any) => Number(b.article) === row.kaufteilId);
             const { P1, P2, P3 } = row;
@@ -121,6 +122,24 @@ export default function Data() {
         setTableData(newData);
     };
 
+    const getDeliveryPeriod = (lieferfrist: number, abweichung: number, modus: number): number => {
+        let result;
+        switch (modus) {
+            case 3: // JIT
+                result = Math.round(lieferfrist * 0.2);
+                break;
+            case 4: // Eil
+                result = Math.round(lieferfrist * 0.5);
+                break;
+            case 5: // Normal
+                result = Math.round(lieferfrist + abweichung);
+                break;
+            default:
+                result = 3;
+        }
+        return Math.min(3, Math.max(0, result));
+    };
+
     const applyDecisionLogic = () => {
         const newData = initialRows.map(row => {
             const { P1, P2, P3 } = row;
@@ -146,25 +165,57 @@ export default function Data() {
             const bruttobedarfN2    = P1 * p1n2 + P2 * p2n2 + P3 * p3n2;
             const bruttobedarfN3    = P1 * p1n3 + P2 * p2n3 + P3 * p3n3;
 
-            const bedarfNtoN2 = bruttobedarfN + bruttobedarfN1 + bruttobedarfN2;
-            const bedarfNtoN3 = bedarfNtoN2 + bruttobedarfN3;
+            const totalBruttobedarf = bruttobedarfN + bruttobedarfN1 + bruttobedarfN2 + bruttobedarfN3;
 
-            const futureStock = getFutureInwardStock(row.kaufteilId);
-            const hasFutureOrders = futureStock.length > 0;
+            // bestellungen aus XML
+            // @ts-ignore
+            const futureOrders = (xmlData.results?.futureinwardstockmovement?.order || [])
+                .filter((o) => Number(o.$.article) === row.kaufteilId);
+
+            let futureAmounts = [0, 0, 0, 0]; // n, n+1, n+2, n+3
+
+            // @ts-ignore
+            futureOrders.forEach((order) => {
+                const modus = Number(order.$.mode);
+                const amount = Number(order.$.amount);
+                const arrival = Math.floor(
+                    modus === 3
+                        ? row.lieferfrist * 0.2
+                        : modus === 4
+                            ? row.lieferfrist * 0.5
+                            : row.lieferfrist + row.abweichung
+                );
+                if (arrival >= 0 && arrival <= 3) {
+                    futureAmounts[arrival] += amount;
+                }
+            });
+
+            // Periodenweise verfügbarer Bestand
+            const verfügbareBestände = [
+                anfangsbestand + futureAmounts[0],
+                futureAmounts[1],
+                futureAmounts[2],
+                futureAmounts[3]
+            ];
+
+            const gesamterVerfügbarerBestand = verfügbareBestände.reduce((sum, x) => sum + x, 0);
 
             let bestellArt: string;
             let bestellMenge: number;
-            if (anfangsbestand > bedarfNtoN3) {
+
+            // ✅ NEUE REGEL
+            if (gesamterVerfügbarerBestand >= totalBruttobedarf) {
                 bestellArt = 'kein';
                 bestellMenge = 0;
-            } else if (anfangsbestand > bedarfNtoN2 && anfangsbestand <= bedarfNtoN3) {
-                bestellArt = 'N';
-                bestellMenge = row.diskontmenge;
-            } else if (anfangsbestand < bruttobedarfN) {
-                bestellArt = 'JIT';
-                bestellMenge = row.diskontmenge;
             } else {
-                bestellArt = 'E';
+                // alte Entscheidungslogik bei Engpässen
+                const lagerBisAnkunft = anfangsbestand - (bruttobedarfN + bruttobedarfN1);
+
+                if (lagerBisAnkunft < 0) {
+                    bestellArt = anfangsbestand < bruttobedarfN ? 'JIT' : 'E';
+                } else {
+                    bestellArt = 'N';
+                }
                 bestellMenge = row.diskontmenge;
             }
 
@@ -181,8 +232,9 @@ export default function Data() {
         });
 
         setTableData(newData);
-
     };
+
+
 
     const getRowClass = (art: string) => {
         switch (art) {
@@ -193,6 +245,7 @@ export default function Data() {
             default: return '';
         }
     };
+    const [gesamtBestellwert, setGesamtBestellwert] = useState(0);
     useEffect(() => {
         const getModus = (art: string): number => {
             switch (art) {
@@ -210,6 +263,17 @@ export default function Data() {
                 menge: row.bestellungMenge.toString(),
                 modus: getModus(row.bestellungArt).toString()
             }));
+
+
+
+        const summe = tableData.reduce((sum, row) => {
+            if (row.bestellungArt !== 'kein' && row.bestellungMenge > 0) {
+                return sum + row.bestellungMenge * row.lagerkosten;
+            }
+            return sum;
+        }, 0);
+
+        setGesamtBestellwert(summe);
 
         const newXml = {
             ...xmlData,
@@ -229,7 +293,8 @@ export default function Data() {
             <Sidebar />
             <div className={styles.content}>
                 <h2 className={styles.sectionTitle}>Kaufteildisposition</h2>
-                <button onClick={applyDecisionLogic} className={styles.calculateButton}>Bestellempfehlung berechnen</button>
+                <button onClick={applyDecisionLogic} className={styles.calculateButton}>Bestellempfehlung berechnen
+                </button>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
                         <thead>
@@ -281,7 +346,7 @@ export default function Data() {
                                         <option value="N">N</option>
                                         <option value="E">E</option>
                                         <option value="JIT">JIT</option>
-                                        <option value="kein"> </option>
+                                        <option value="kein"></option>
                                     </select>
                                 </td>
                                 <td>{row.lagerkosten}</td>
@@ -289,6 +354,9 @@ export default function Data() {
                         ))}
                         </tbody>
                     </table>
+                </div>
+                <div className={styles.totalCost}>
+                    <strong>Gesamtlagerwert:</strong> {gesamtBestellwert.toFixed(2)} €
                 </div>
             </div>
         </div>
