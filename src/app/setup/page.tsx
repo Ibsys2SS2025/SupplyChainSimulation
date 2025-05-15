@@ -103,7 +103,7 @@ const InputPage: React.FC = () => {
                     <p>{t('setup.msgNextPage')}</p>
                     <Button
                         variant="info"
-                        onClick={() => router.push('/prognose')}
+                        onClick={() => router.push('/direktverkauf')}
                     >
                         {t('setup.nextPageButton')}
                     </Button>
