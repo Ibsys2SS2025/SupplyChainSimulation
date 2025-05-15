@@ -89,5 +89,12 @@
     "overtime": "每日加班时间",
     "customInputs": "带缓冲的加班时间",
     "shiftCount": "班次数"
+  },
+  "inputtable": {
+    "split": "拆分生产订单",
+    "inputtable": "输入表格",
+    "productionMessage": "➔ 可以完全从库存生产！",
+    "waitinglistmessageInWork": "(进行中)",
+    "waitinglistmessageWait": "(等待中)"
   }
 }

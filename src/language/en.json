@@ -89,6 +89,13 @@
     "overtime": "Overtime per Day",
     "customInputs": "Overtime with Buffer",
     "shiftCount": "Number of Shifts"
-  }
+  },
+  "inputtable": {
+    "split": "Split production order",
+    "inputtable": "Input table",
+    "productionMessage": "➔ Can be fully produced from stock!",
+    "waitinglistmessageInWork": "(in progress)",
+    "waitinglistmessageWait": "(waiting)"
 
+  }
 }

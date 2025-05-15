@@ -89,5 +89,12 @@
     "overtime": "Horas extra por día",
     "customInputs": "Horas extra con margen",
     "shiftCount": "Número de turnos"
+  },
+  "inputtable": {
+    "split": "Dividir orden de producción",
+    "inputtable": "Tabla de entrada",
+    "productionMessage": "➔ ¡Puede producirse completamente desde el almacén!",
+    "waitinglistmessageInWork": "(en progreso)",
+    "waitinglistmessageWait": "(en espera)"
   }
 }
