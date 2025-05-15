@@ -62,7 +62,6 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
 
   useEffect(() => {
     const allIds = [productId, ...dynamicIds];
-    const productionP1 = getProductionP1(productId);
 
     allIds.forEach(id => {
       if (!inputs[id]) {
@@ -72,16 +71,16 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
           const match = stockNList.find((item: any) => item.article === productId);
           sicherheitsbestand = match ? Number(match.stockN ?? 100) : 100;
         }
+
         const warteschlange = getInitialWaitingAmount(id);
         const inBearbeitung = getInitialInProgressAmount(id);
         updateInput(productId, id, 0, sicherheitsbestand);
         updateInput(productId, id, 1, warteschlange);
         updateInput(productId, id, 2, inBearbeitung);
-      } else if (id === productId) {
-        updateInput(productId, id, 0, productionP1);
       }
     });
-  }, [productId, dynamicIds, xmlData?.internaldata?.planning]);
+  }, [productId, dynamicIds, xmlData?.internaldata?.stockN]);
+
 
   const handleInput = (id: string, idx: number, val: number) => {
     updateInput(productId, id, idx, val);
