@@ -34,29 +34,38 @@ export default function PrognosePlanungPage() {
         return <p>Keine Daten geladen. Bitte lade zuerst deine XML-Datei hoch.</p>;
     }
 
-    // Initialwerte für den Fall, dass noch nichts im Context steht
-    const initialPrognoseData: PrognoseRow[] = products.map(prod => ({
-        article:    prod,
-        thisPeriod: 0,
-        periodN1:   0,
-        periodN2:   0,
-        periodN3:   0,
-    }));
-    const initialPlanungData: PlanungRow[] = products.map(prod => ({
-        article:      prod,
-        productionP1: 0,
-        productionP2: 0,
-        productionP3: 0,
-        productionP4: 0,
-    }));
+    // --- 1) Initialwerte für Prognose aus xmlData.results.forecast.$ ---
+    const computedInitialPrognoseData: PrognoseRow[] = useMemo(() => {
+        // xmlData.results.forecast.$ liefert z.B. { p1: "100", p2: "200", p3: "100" }
+        const fc = xmlData.results?.forecast?.$ as Record<string, string> | undefined;
+        return products.map((prod, idx) => ({
+            article:    prod,
+            thisPeriod: fc ? Number(fc[`p${idx + 1}`]) || 0 : 0,
+            periodN1:   0,
+            periodN2:   0,
+            periodN3:   0,
+        }));
+    }, [xmlData.results]);
 
-    // Prognose- und Planungsdaten direkt aus dem Context (oder Fallback auf Initialwerte)
+    // --- 2) Initialwerte für Planung ---
+    const initialPlanungData: PlanungRow[] = useMemo(() => {
+        return products.map(prod => ({
+            article:      prod,
+            productionP1: 0,
+            productionP2: 0,
+            productionP3: 0,
+            productionP4: 0,
+        }));
+    }, []);
+
+    // --- 3) Prognose- und Planungsdaten aus Context oder Fallback ---
     const prognoseData: PrognoseRow[] = useMemo(() => {
-        return (xmlData.internaldata?.sellwish as PrognoseRow[]) ?? initialPrognoseData;
-    }, [xmlData.internaldata]);
+        return (xmlData.internaldata?.sellwish as PrognoseRow[]) ?? computedInitialPrognoseData;
+    }, [xmlData.internaldata?.sellwish, computedInitialPrognoseData]);
+
     const planungData: PlanungRow[] = useMemo(() => {
         return (xmlData.internaldata?.planning as PlanungRow[]) ?? initialPlanungData;
-    }, [xmlData.internaldata]);
+    }, [xmlData.internaldata?.planning, initialPlanungData]);
 
     // Funktion, um den Context upzudaten (ohne lokalen State)
     const updateXmlInternaldata = (
@@ -66,7 +75,7 @@ export default function PrognosePlanungPage() {
         const newInternal = {
             ...(xmlData.internaldata || {}),
             ...(updatedPrognose && { sellwish: updatedPrognose }),
-            ...(updatedPlanung  && { planning: updatedPlanung   }),
+            ...(updatedPlanung  && { planning:   updatedPlanung   }),
         };
         setXmlData({ ...xmlData, internaldata: newInternal });
     };
@@ -126,6 +135,8 @@ export default function PrognosePlanungPage() {
 
         const prod = planungData[rowIdx][prodKey] || 0;
         const fore = prognoseData[rowIdx][foreKey]  || 0;
+
+        // Lager = Vorheriger Bestand + Produktion – Prognose
 
         // @ts-ignore
         return prev + prod - fore;
@@ -201,7 +212,6 @@ export default function PrognosePlanungPage() {
                         {planungData.map((row, idx) => (
                             <tr key={row.article}>
                                 <td>{row.article}</td>
-
                                 {/* Produktion m */}
                                 <td>
                                     <input
@@ -221,7 +231,6 @@ export default function PrognosePlanungPage() {
                                         tabIndex={-1}
                                     />
                                 </td>
-
                                 {/* Produktion m+1 */}
                                 <td>
                                     <input
@@ -241,7 +250,6 @@ export default function PrognosePlanungPage() {
                                         tabIndex={-1}
                                     />
                                 </td>
-
                                 {/* Produktion m+2 */}
                                 <td>
                                     <input
@@ -261,7 +269,6 @@ export default function PrognosePlanungPage() {
                                         tabIndex={-1}
                                     />
                                 </td>
-
                                 {/* Produktion m+3 */}
                                 <td>
                                     <input
