@@ -16,7 +16,11 @@ const ExportXMLPage: React.FC = () => {
             const xmlData = JSON.parse(xmlDataRaw);
             const forecastData = xmlData?.results.forecast?.$ || {};
             const inputTableData = xmlData?.internaldata?.inputtable || [];
-            const capacityData = xmlData?.internaldata?.capacity || {};
+            const capacityData = xmlData?.internaldata?.capacity as Record<string, { input: number; shift: number }> || {};
+            const selldirectData = xmlData?.selldirect?.item || [];
+            const orderListData = xmlData?.internaldata?.orderlist || [];
+
+            console.log(selldirectData);
 
             const sellWishXml = `
     <sellwish>
@@ -25,36 +29,17 @@ const ExportXMLPage: React.FC = () => {
         <item article="3" quantity="${forecastData.p3 || 0}"/>
     </sellwish>`;
 
-            const sellDirectXml = `
+            const selldirectXml = `
     <selldirect>
-        <item article="1" quantity="0" price="0.0" penalty="0.0"/>
-        <item article="2" quantity="0" price="0.0" penalty="0.0"/>
-        <item article="3" quantity="0" price="0.0" penalty="0.0"/>
+        ${selldirectData.map((item: { $: { article: string; quantity: string; price: string; penalty: string } }) =>
+                `    <item article="${item.$.article}" quantity="${item.$.quantity}" price="${item.$.price}" penalty="${item.$.penalty}"/>`).join('\n')}
     </selldirect>`;
 
             const orderListXml = `
     <orderlist>
-        <order article="21" quantity="0" modus="5"/>
-        <order article="22" quantity="0" modus="5"/>
-        <order article="25" quantity="0" modus="5"/>
-        <order article="28" quantity="0" modus="5"/>
-        <order article="32" quantity="0" modus="4"/>
-        <order article="33" quantity="0" modus="5"/>
-        <order article="34" quantity="0" modus="5"/>
-        <order article="36" quantity="0" modus="5"/>
-        <order article="37" quantity="0" modus="5"/>
-        <order article="38" quantity="0" modus="5"/>
-        <order article="40" quantity="0" modus="5"/>
-        <order article="41" quantity="0" modus="5"/>
-        <order article="42" quantity="0" modus="5"/>
-        <order article="43" quantity="0" modus="5"/>
-        <order article="44" quantity="0" modus="5"/>
-        <order article="46" quantity="0" modus="5"/>
-        <order article="47" quantity="0" modus="5"/>
-        <order article="52" quantity="0" modus="5"/>
-        <order article="53" quantity="0" modus="5"/>
-        <order article="57" quantity="0" modus="5"/>
-        <order article="58" quantity="0" modus="5"/>
+    ${orderListData.map((order: { article: string; menge: string; modus: string }) =>
+                    `    <order article="${order.article}" quantity="${order.menge}" modus="${order.modus}"/>`
+                ).join('\n')}
     </orderlist>`;
             const productionListXml = `
     <productionlist>
@@ -64,18 +49,18 @@ const ExportXMLPage: React.FC = () => {
     </productionlist>`;
 
             const workingTimeListXml = `
-<workingtimelist>
-${Object.entries(capacityData).map(([station, data]: [string, { input: number; shift: number }]) =>
-                `    <workingtime station="${station}" shift="${data.shift}" overtime="${data.input}"/>`
-            ).join('\n')}
-</workingtimelist>`;
+    <workingtimelist>
+    ${Object.entries(capacityData).map(([station, data]: [string, { input: number; shift: number }]) =>
+                    `    <workingtime station="${station}" shift="${data.shift}" overtime="${data.input}"/>`
+                ).join('\n')}
+    </workingtimelist>`;
 
 
             const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <input>
     <qualitycontrol type="no" losequantity="0" delay="0"/>
     ${sellWishXml}
-    ${sellDirectXml}
+    ${selldirectXml}
     ${orderListXml}
     ${productionListXml}
     ${workingTimeListXml}
