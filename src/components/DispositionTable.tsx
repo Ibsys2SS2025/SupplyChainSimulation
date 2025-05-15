@@ -66,7 +66,12 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
 
     allIds.forEach(id => {
       if (!inputs[id]) {
-        const sicherheitsbestand = id === productId ? productionP1 : 100;
+        let sicherheitsbestand = 100;
+        if (id === productId) {
+          const stockNList = xmlData?.internaldata?.stockN ?? [];
+          const match = stockNList.find((item: any) => item.article === productId);
+          sicherheitsbestand = match ? Number(match.stockN ?? 100) : 100;
+        }
         const warteschlange = getInitialWaitingAmount(id);
         const inBearbeitung = getInitialInProgressAmount(id);
         updateInput(productId, id, 0, sicherheitsbestand);
