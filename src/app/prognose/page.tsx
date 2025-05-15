@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useXmlData } from '@/context/XmlDataContext';
 import { useTranslation } from 'react-i18next';
 import Sidebar from '@/components/Sidebar';
@@ -25,18 +25,22 @@ interface PlanungRow {
     productionP4: number;
 }
 
+// Nur Periode N speichern
+interface StockNRow {
+    article: string;
+    stockN:  number;
+}
+
 export default function PrognosePlanungPage() {
     const { xmlData, setXmlData } = useXmlData();
     const { t } = useTranslation();
 
-    // Abbruch, falls noch keine Daten geladen
     if (!xmlData) {
         return <p>Keine Daten geladen. Bitte lade zuerst deine XML-Datei hoch.</p>;
     }
 
     // --- 1) Initialwerte für Prognose aus xmlData.results.forecast.$ ---
     const computedInitialPrognoseData: PrognoseRow[] = useMemo(() => {
-        // xmlData.results.forecast.$ liefert z.B. { p1: "100", p2: "200", p3: "100" }
         const fc = xmlData.results?.forecast?.$ as Record<string, string> | undefined;
         return products.map((prod, idx) => ({
             article:    prod,
@@ -58,7 +62,7 @@ export default function PrognosePlanungPage() {
         }));
     }, []);
 
-    // --- 3) Prognose- und Planungsdaten aus Context oder Fallback ---
+    // --- 3) Daten aus Context oder Fallback ---
     const prognoseData: PrognoseRow[] = useMemo(() => {
         return (xmlData.internaldata?.sellwish as PrognoseRow[]) ?? computedInitialPrognoseData;
     }, [xmlData.internaldata?.sellwish, computedInitialPrognoseData]);
@@ -67,20 +71,22 @@ export default function PrognosePlanungPage() {
         return (xmlData.internaldata?.planning as PlanungRow[]) ?? initialPlanungData;
     }, [xmlData.internaldata?.planning, initialPlanungData]);
 
-    // Funktion, um den Context upzudaten (ohne lokalen State)
+    // Update-Funktion für Context (jetzt auch mit stockN)
     const updateXmlInternaldata = (
         updatedPrognose?: PrognoseRow[],
-        updatedPlanung?:  PlanungRow[]
+        updatedPlanung?:  PlanungRow[],
+        updatedStockN?:   StockNRow[],
     ) => {
         const newInternal = {
             ...(xmlData.internaldata || {}),
             ...(updatedPrognose && { sellwish: updatedPrognose }),
             ...(updatedPlanung  && { planning:   updatedPlanung   }),
+            ...(updatedStockN  && { stockN:     updatedStockN    }),
         };
         setXmlData({ ...xmlData, internaldata: newInternal });
     };
 
-    // Handler für Prognose-Änderungen
+    // --- Handler ---
     const handlePrognoseChange = (
         idx: number,
         field: keyof Omit<PrognoseRow, 'article'>,
@@ -92,7 +98,6 @@ export default function PrognosePlanungPage() {
         updateXmlInternaldata(updated, undefined);
     };
 
-    // Handler für Planungs-Änderungen
     const handlePlanungChange = (
         idx: number,
         field: keyof PlanungRow,
@@ -105,11 +110,10 @@ export default function PrognosePlanungPage() {
         updateXmlInternaldata(undefined, updated);
     };
 
-    // Hilfsfunktion: Summe über numerische Spalten
+    // --- Hilfsfunktionen ---
     const sum = <T extends Record<string, any>>(arr: T[], key: keyof T) =>
         arr.reduce((s, item) => s + (Number(item[key]) || 0), 0);
 
-    // --- Dynamische Lager-Berechnung über alle Perioden ---
     const stockMap = useMemo(() => {
         const map: Record<string, number> = {};
         // @ts-ignore
@@ -136,8 +140,6 @@ export default function PrognosePlanungPage() {
         const prod = planungData[rowIdx][prodKey] || 0;
         const fore = prognoseData[rowIdx][foreKey]  || 0;
 
-        // Lager = Vorheriger Bestand + Produktion – Prognose
-
         // @ts-ignore
         return prev + prod - fore;
     };
@@ -145,13 +147,26 @@ export default function PrognosePlanungPage() {
     const sumStock = (periodIdx: number) =>
         products.reduce((s, _, idx) => s + calculateStock(idx, periodIdx), 0);
 
+    // --- 4) Nur Periode N speichern ---
+    const computedStockNData: StockNRow[] = useMemo(() => {
+        return products.map((_, rowIdx) => ({
+            article: `P${rowIdx + 1}`,
+            stockN:  calculateStock(rowIdx, 0),
+        }));
+    }, [planungData, prognoseData, stockMap]);
+
+    // Bei jeder Änderung von planungData oder prognoseData aktualisieren
+    useEffect(() => {
+        updateXmlInternaldata(undefined, undefined, computedStockNData);
+    }, [computedStockNData]);
+
     // --- Render ---
     return (
         <div className={styles.pageContainer}>
             <Sidebar />
             <div className={styles.content}>
 
-                {/* Prognose-Tabelle */}
+                {/* Prognose */}
                 <h2 className={styles.sectionTitle}>{t('forecast.title')}</h2>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -191,7 +206,7 @@ export default function PrognosePlanungPage() {
                     </table>
                 </div>
 
-                {/* Planung-Tabelle */}
+                {/* Planung */}
                 <h2 className={styles.sectionTitle}>{t('forecast.planning')}</h2>
                 <div className={styles.tableContainer}>
                     <table className={styles.table}>
@@ -212,6 +227,7 @@ export default function PrognosePlanungPage() {
                         {planungData.map((row, idx) => (
                             <tr key={row.article}>
                                 <td>{row.article}</td>
+
                                 {/* Produktion m */}
                                 <td>
                                     <input
@@ -221,7 +237,7 @@ export default function PrognosePlanungPage() {
                                         className={styles.inputCell}
                                     />
                                 </td>
-                                {/* Lager m */}
+                                {/* Lager m (Periode N) */}
                                 <td>
                                     <input
                                         type="text"
@@ -231,6 +247,7 @@ export default function PrognosePlanungPage() {
                                         tabIndex={-1}
                                     />
                                 </td>
+
                                 {/* Produktion m+1 */}
                                 <td>
                                     <input
@@ -250,6 +267,7 @@ export default function PrognosePlanungPage() {
                                         tabIndex={-1}
                                     />
                                 </td>
+
                                 {/* Produktion m+2 */}
                                 <td>
                                     <input
@@ -269,6 +287,7 @@ export default function PrognosePlanungPage() {
                                         tabIndex={-1}
                                     />
                                 </td>
+
                                 {/* Produktion m+3 */}
                                 <td>
                                     <input
