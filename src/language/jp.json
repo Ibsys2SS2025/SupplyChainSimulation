@@ -69,6 +69,7 @@
     "partNumber": "部品番号",
     "deliveryTime": "納期",
     "deviation": "偏差",
+    "discount quantity": "割引数量",
     "p1": "P1",
     "p2": "P2",
     "p3": "P3",
@@ -79,7 +80,8 @@
     "n3": "n+3",
     "orderAmount": "注文数量",
     "orderType": "注文タイプ",
-    "storageCost": "保管コスト"
+    "storageCost": "保管コスト",
+    "order": "注文"
   },
   "extra": {
     "button_save": "注文提案を計算する",

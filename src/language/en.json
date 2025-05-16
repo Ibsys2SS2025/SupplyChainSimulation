@@ -104,6 +104,7 @@
     "partNumber": "Part Number",
     "deliveryTime": "Delivery Time",
     "deviation": "Deviation",
+    "discount quantity": "Discount quantity",
     "p1": "P1",
     "p2": "P2",
     "p3": "P3",
@@ -114,7 +115,8 @@
     "n3": "n+3",
     "orderAmount": "Order Quantity",
     "orderType": "Order Type",
-    "storageCost": "Storage Cost"
+    "storageCost": "Storage Cost",
+    "order":"Order"
   },
   "extra": {
     "button_save": "Calculate order suggestion",

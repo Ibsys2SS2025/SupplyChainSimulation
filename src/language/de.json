@@ -106,6 +106,7 @@
     "partNumber": "Kaufteilnummer",
     "deliveryTime": "Lieferfrist",
     "deviation": "Abweichung",
+    "discount quantity": "Diskontmenge",
     "p1": "P1",
     "p2": "P2",
     "p3": "P3",
@@ -116,7 +117,8 @@
     "n3": "n+3",
     "orderAmount": "Bestellmenge",
     "orderType": "Bestellart",
-    "storageCost": "Lagerkosten"
+    "storageCost": "Lagerkosten",
+    "order":"Bestellung"
   },
   "extra": {
     "button_save": "Bestellempfehlung berechnen",

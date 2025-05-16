@@ -69,6 +69,7 @@
     "partNumber": "零件编号",
     "deliveryTime": "交货时间",
     "deviation": "偏差",
+    "discount quantity": "折扣数量",
     "p1": "P1",
     "p2": "P2",
     "p3": "P3",
@@ -79,7 +80,8 @@
     "n3": "n+3",
     "orderAmount": "订购数量",
     "orderType": "订单类型",
-    "storageCost": "库存成本"
+    "storageCost": "库存成本",
+    "oder":  "订单"
   },
   "extra": {
     "button_save": "计算订购建议",

@@ -203,7 +203,7 @@ export default function Data() {
             let bestellArt: string;
             let bestellMenge: number;
 
-            // ✅ NEUE REGEL
+
             if (gesamterVerfügbarerBestand >= totalBruttobedarf) {
                 bestellArt = 'kein';
                 bestellMenge = 0;
@@ -303,6 +303,7 @@ export default function Data() {
                             <th>{t("columns.partNumber")}</th>
                             <th>{t("columns.deliveryTime")}</th>
                             <th>{t("columns.deviation")}</th>
+                            <th>{t("columns.discount quantity")}</th>
                             <th>{t("columns.p1")}</th>
                             <th>{t("columns.p2")}</th>
                             <th>{t("columns.p3")}</th>
@@ -314,6 +315,7 @@ export default function Data() {
                             <th>{t("columns.orderAmount")}</th>
                             <th>{t("columns.orderType")}</th>
                             <th>{t("columns.storageCost")}</th>
+                            <th>{t("columns.order")}</th> {/* Neue Spalte */}
                         </tr>
                         </thead>
                         <tbody>
@@ -322,6 +324,7 @@ export default function Data() {
                                 <td>{row.kaufteilId}</td>
                                 <td>{row.lieferfrist}</td>
                                 <td>{row.abweichung}</td>
+                                <td>{row.diskontmenge}</td>
                                 <td>{row.P1}</td>
                                 <td>{row.P2}</td>
                                 <td>{row.P3}</td>
@@ -351,6 +354,14 @@ export default function Data() {
                                     </select>
                                 </td>
                                 <td>{row.lagerkosten}</td>
+                                <td>
+                                    {getFutureInwardStock(row.kaufteilId).length > 0 && (
+                                        <span title={t("extra.hasFutureOrders")}
+                                              style={{color: "orange", fontWeight: "bold"}}>
+                                            📦
+                                        </span>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                         </tbody>

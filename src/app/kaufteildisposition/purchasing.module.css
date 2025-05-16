@@ -1,24 +1,23 @@
 /* Gesamt-Container: Flex-Layout für Sidebar + Inhalt */
 .pageContainer {
     display: flex;
-    background-color: #edf0f3;  /* gedämpftes Grau statt Reinweiß */
+    background-color: #edf0f3;
     min-height: 100vh;
+    flex-direction: row;
 }
 
 /* Hauptinhalt (rechts neben der Sidebar) */
 .content {
     flex: 1;
     padding: 2rem;
-    /* Falls die Sidebar fix sein sollte, kann hier ein margin-left definiert werden,
-       z. B.: margin-left: 260px; */
 }
 
-/* Überschriften für die Abschnitte (Prognose, Planung) */
+/* Überschriften für die Abschnitte */
 .sectionTitle {
     font-size: 1.5rem;
     font-weight: 500;
     color: #2f3e46;
-    margin: 2rem 0 1rem 0;  /* Mehr Abstand nach oben (vom Header) und zwischen den Abschnitten */
+    margin: 2rem 0 1rem 0;
 }
 
 /* Tabellen-Container im "Card"-Stil */
@@ -27,13 +26,15 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
     padding: 1rem;
-    margin-bottom: 2rem;  /* Abstand zwischen den Tabellen */
+    margin-bottom: 2rem;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Basis-Styles für die Tabelle */
 .table {
     width: 100%;
+    min-width: 1000px; /* sinnvoll bei vielen Spalten */
     border-collapse: collapse;
     table-layout: fixed;
 }
@@ -59,11 +60,9 @@
     color: #3f4a54;
 }
 
-/* Letzte Zeile ohne untere Linie */
 .table tbody tr:last-child td {
     border-bottom: none;
 }
-
 
 /* Eingabefelder in der Tabelle */
 .inputCell {
@@ -74,44 +73,64 @@
     text-align: right;
     font-size: 0.95rem;
     background-color: #fafafa;
-    color: #000000
+    color: #000000;
 }
 
-/* Fokus-Effekt für Eingabefelder */
 .inputCell:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25);
 }
 
-/* Responsive Anpassungen */
+/* Bestellartenfarben */
+.nOrder {
+    background-color: #e6f7ff;
+}
+
+.eOrder {
+    background-color: #ffebeb;
+}
+
+.jitOrder {
+    background-color: #EE1111;
+}
+
+.noOrder {
+    background-color: #f5f5f5;
+}
+
+
+.totalCost {
+    margin-top: 2rem;
+    text-align: right;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+
 @media (max-width: 768px) {
     .sectionTitle {
         font-size: 1.3rem;
         margin: 1.5rem 0 0.75rem 0;
     }
-    .table {
-        min-width: 600px;
-    }
+
     .content {
         padding: 1rem;
     }
-}
-.nOrder {
-    background-color: #e6f7ff; /* Rot-Ton für N */
-}
 
-.eOrder {
-    background-color: #ffebeb; /* Blau-Ton für E */
-}
+    .table {
+        min-width: 1000px;
+    }
 
-.jitOrder {
-    background-color: #EE1111; /* Grün-Ton für JIT */
-}
-.totalCost {
-    margin-top: 30px;
-    margin-left:2200px;
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #333;
+    .inputCell {
+        width: 50px;
+        font-size: 0.85rem;
+    }
+
+    .totalCost {
+        text-align: center;
+        font-size: 1rem;
+        margin-left: 0;
+    }
 }
