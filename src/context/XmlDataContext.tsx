@@ -103,20 +103,28 @@ export const XmlDataProvider = ({ children }: { children: ReactNode }) => {
                 const stock2 = getAmountById(id);
                 let total = lastTotal + lastWarteschlange + s2 - stock2 - w2 - i2;
                 if (total < 0) total = 0;
-                total = Math.round(total);
 
                 const key = MULTI_USE_IDS.includes(id) ? id : id.replace('P', '');
 
                 if (MULTI_USE_IDS.includes(id)) {
+                    // Add total (unrounded!) für Mehrfachverwendteile
                     totals[key] = (totals[key] ?? 0) + total;
                 } else if (!(key in totals)) {
-                    totals[key] = total;
+                    totals[key] = Math.round(total);
                 }
 
                 if (rowsWithSpacing.includes(id)) {
                     lastTotal = total;
                     lastWarteschlange = w2;
                 }
+            }
+        }
+
+        const roundInt = (val: number) => Math.round(val + Number.EPSILON);
+
+        for (const id of MULTI_USE_IDS) {
+            if (totals[id] !== undefined) {
+                totals[id] = roundInt(totals[id]);
             }
         }
 
