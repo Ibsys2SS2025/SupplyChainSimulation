@@ -81,7 +81,7 @@
     "orderAmount": "订购数量",
     "orderType": "订单类型",
     "storageCost": "库存成本",
-    "oder":  "订单"
+    "order":  "订单"
   },
   "extra": {
     "button_save": "计算订购建议",
