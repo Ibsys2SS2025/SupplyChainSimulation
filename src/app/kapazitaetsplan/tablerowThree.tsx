@@ -23,7 +23,7 @@ const ProductTableThree: React.FC<ProductTableProps> = ({ t, values, headerText 
         const numericCode = Number(code);
         const total = xmlData.internaldata.totals[numericCode];
         if (total < 0) return 0;
-        return total ?? "";
+        return total !== undefined ? Math.round(total) : "";
     };
 
     const updatedValues = values.map((item) => {

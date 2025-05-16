@@ -17,7 +17,6 @@ const MULTI_USE_IDS = ['16', '17', '26'];
 
 export type TabInputs = Record<string, Record<string, number[]>>;
 
-// rowsWithSpacing muss global bekannt sein
 const TAB_CONFIG = [
     { productId: 'P1', dynamicIds: ['26', '51', '16', '17', '50', '4', '10', '49', '7', '13', '18'], rowsWithSpacing: ['51', '50', '49'] },
     { productId: 'P2', dynamicIds: ['26', '56', '16', '17', '55', '5', '11', '54', '8', '14', '19'], rowsWithSpacing: ['56', '55', '54'] },
@@ -90,7 +89,9 @@ export const XmlDataProvider = ({ children }: { children: ReactNode }) => {
             const [s, w, i] = get(mainId);
             const production = getProductionP1(mainId);
             const stock = getAmountById(mainId.replace('P', ''));
-            const mainTotal = production + s - stock - w - i;
+            let mainTotal = production + s - stock - w - i;
+            if (mainTotal < 0) mainTotal = 0;
+            mainTotal = Math.round(mainTotal);
 
             const key = MULTI_USE_IDS.includes(mainId) ? mainId : mainId.replace('P', '');
             totals[key] = mainTotal;
@@ -100,7 +101,10 @@ export const XmlDataProvider = ({ children }: { children: ReactNode }) => {
             for (const id of dynamicIds) {
                 const [s2, w2, i2] = get(id);
                 const stock2 = getAmountById(id);
-                const total = lastTotal + lastWarteschlange + s2 - stock2 - w2 - i2;
+                let total = lastTotal + lastWarteschlange + s2 - stock2 - w2 - i2;
+                if (total < 0) total = 0;
+                total = Math.round(total);
+
                 const key = MULTI_USE_IDS.includes(id) ? id : id.replace('P', '');
 
                 if (MULTI_USE_IDS.includes(id)) {
