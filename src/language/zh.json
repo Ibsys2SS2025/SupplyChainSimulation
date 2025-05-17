@@ -151,7 +151,7 @@
     "capacity": "生产能力",
     "article": "物料编号",
     "quantity": "数量",
-    "mode": "模式",
+    "mode": "订购类型",
     "production_quantity": "生产数量",
     "workplace": "工作站",
     "shifts": "班次",

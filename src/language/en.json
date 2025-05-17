@@ -151,7 +151,7 @@
     "capacity": "Production Capacity",
     "article": "Article ID",
     "quantity": "Quantity",
-    "mode": "Mode",
+    "mode": "Order Type",
     "production_quantity": "Production Quantity",
     "workplace": "Workplace",
     "shifts": "Shifts",

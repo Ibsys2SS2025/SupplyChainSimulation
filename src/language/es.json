@@ -151,7 +151,7 @@
     "capacity": "Capacidades de producción",
     "article": "ID del artículo",
     "quantity": "Cantidad",
-    "mode": "Modo",
+    "mode": "Tipo de pedido",
     "production_quantity": "Cantidad de producción",
     "workplace": "Puesto de trabajo",
     "shifts": "Turnos",

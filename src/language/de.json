@@ -152,7 +152,7 @@
     "capacity": "Produktionskapazitäten",
     "article": "Artikel-ID",
     "quantity": "Menge",
-    "mode": "Modus",
+    "mode": "Bestellart",
     "production_quantity": "Produktionsmenge",
     "workplace": "Arbeitsplatz",
     "shifts": "Schichten",

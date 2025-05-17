@@ -21,6 +21,15 @@ const ExportXMLPage: React.FC = () => {
         }
     }, []);
 
+    const resolveOrderType = (key: string) => {
+        switch (key) {
+            case '5': return 'N';
+            case '4': return 'E';
+            case '3': return 'JIT';
+            default: return key;
+        }
+    };
+
     const handleExport = () => {
         try {
             const xmlDataRaw = localStorage.getItem('xmlData');
@@ -49,7 +58,6 @@ ${selldirectData.map((item: any) => {
                 return `    <item article="${item.$.article}" quantity="${format(item.$.quantity)}" price="${format(item.$.price)}" penalty="${format(item.$.penalty)}"/>`;
             }).join('\n')}
 </selldirect>`;
-
 
             const orderListXml = `
     <orderlist>
@@ -141,7 +149,7 @@ ${selldirectData.map((item: any) => {
                                         <tr key={i}>
                                             <td>{order.article}</td>
                                             <td>{order.menge}</td>
-                                            <td>{order.modus}</td>
+                                            <td>{resolveOrderType(order.modus)}</td>
                                         </tr>
                                     ))}
                                 </tbody>

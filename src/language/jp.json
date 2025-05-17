@@ -151,7 +151,7 @@
     "capacity": "生産能力",
     "article": "品目ID",
     "quantity": "数量",
-    "mode": "モード",
+    "mode": "注文種別",
     "production_quantity": "生産数量",
     "workplace": "作業場",
     "shifts": "シフト数",
