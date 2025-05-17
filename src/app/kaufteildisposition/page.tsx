@@ -122,23 +122,6 @@ export default function Data() {
         setTableData(newData);
     };
 
-    const getDeliveryPeriod = (lieferfrist: number, abweichung: number, modus: number): number => {
-        let result;
-        switch (modus) {
-            case 3: // JIT
-                result = Math.round(lieferfrist * 0.2);
-                break;
-            case 4: // Eil
-                result = Math.round(lieferfrist * 0.5);
-                break;
-            case 5: // Normal
-                result = Math.round(lieferfrist + abweichung);
-                break;
-            default:
-                result = 3;
-        }
-        return Math.min(3, Math.max(0, result));
-    };
 
     const applyDecisionLogic = () => {
         const newData = initialRows.map(row => {
@@ -170,7 +153,7 @@ export default function Data() {
             // bestellungen aus XML
             // @ts-ignore
             const futureOrders = (xmlData.results?.futureinwardstockmovement?.order || [])
-                .filter((o) => Number(o.$.article) === row.kaufteilId);
+                .filter((o: any ) => Number(o.$.article) === row.kaufteilId);
 
             let futureAmounts = [0, 0, 0, 0]; // n, n+1, n+2, n+3
 
