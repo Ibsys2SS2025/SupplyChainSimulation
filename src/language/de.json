@@ -39,22 +39,22 @@
     "buttonSetup": "Setup starten"
   },
   "disposition": {
-  "title": "Disposition",
-  "sales_request": "Verbindliche Aufträge / Vertriebswunsch",
-  "stock_safety": "Sicherheitsbestand",
-  "stock_old": "Lagerbestand am Ende der Vorperiode",
-  "orders_queued": "Aufträge in der Warteschlange",
-  "orders_active": "Aufträge in Bearbeitung",
-  "orders_prod": "Produktionsaufträge",
-  "button_save": "Speichern",
-  "rowInputErr_negVal": "Der Wert muss größer oder gleich Null sein",
-  "rowInputErr_nonNumeric": "Der Wert muss eine Zahl sein",
-  "tab_p1": "Disposition P1",
-  "tab_p2": "Disposition P2",
-  "tab_p3": "Disposition P3",
-  "no_data": "Keine Daten geladen. Bitte lade zuerst deine XML-Datei hoch.",
-  "multiuse_hint": "* = Mehrfachverwendteile"
-},
+    "title": "Disposition",
+    "sales_request": "Verbindliche Aufträge / Vertriebswunsch",
+    "stock_safety": "Sicherheitsbestand",
+    "stock_old": "Lagerbestand am Ende der Vorperiode",
+    "orders_queued": "Aufträge in der Warteschlange",
+    "orders_active": "Aufträge in Bearbeitung",
+    "orders_prod": "Produktionsaufträge",
+    "button_save": "Speichern",
+    "rowInputErr_negVal": "Der Wert muss größer oder gleich Null sein",
+    "rowInputErr_nonNumeric": "Der Wert muss eine Zahl sein",
+    "tab_p1": "Disposition P1",
+    "tab_p2": "Disposition P2",
+    "tab_p3": "Disposition P3",
+    "no_data": "Keine Daten geladen. Bitte lade zuerst deine XML-Datei hoch.",
+    "multiuse_hint": "* = Mehrfachverwendteile"
+  },
   "forecast": {
     "title": "Prognose",
     "period": "N",
@@ -100,7 +100,6 @@
     "overtime": "Überstunden pro Tag",
     "customInputs": "Überstunden mit Puffer",
     "shiftCount": "Anzahl der Schichten"
-
   },
   "columns": {
     "partNumber": "Kaufteilnummer",
@@ -118,12 +117,11 @@
     "orderAmount": "Bestellmenge",
     "orderType": "Bestellart",
     "storageCost": "Lagerkosten",
-    "order":"Bestellung"
+    "order": "Bestellung"
   },
   "extra": {
     "button_save": "Bestellempfehlung berechnen",
     "totalOrderValue": "Gesamtlagerwert"
-
   },
   "orderTypes": {
     "normal": "Normal",
@@ -145,5 +143,22 @@
     "quantity": "Menge",
     "price": "Preis (€)",
     "penalty": "Konventionalstrafe (€)"
+  },
+  "export": {
+    "title": "XML Export",
+    "description": "Hier können Sie Ihre aktuelle Planung überprüfen und anschließend als XML-Datei exportieren.",
+    "direct_sales": "Direktverkauf",
+    "orders": "Einkaufsaufträge",
+    "production": "Produktionsaufträge",
+    "capacity": "Produktionskapazitäten",
+    "article": "Artikel-ID",
+    "quantity": "Menge",
+    "mode": "Modus",
+    "production_quantity": "Produktionsmenge",
+    "workplace": "Arbeitsplatz",
+    "shifts": "Schichten",
+    "overtime": "Überstunden (Min/Tag)",
+    "export_button": "Exportieren",
+    "download_hint": "Die XML-Datei wird im aktuellen Format generiert und heruntergeladen."
   }
 }

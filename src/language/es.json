@@ -37,22 +37,22 @@
     "buttonSetup": "Iniciar configuración"
   },
   "disposition": {
-  "title": "Disposición",
-  "sales_request": "Solicitud de ventas",
-  "stock_safety": "Stock de seguridad",
-  "stock_old": "Stock del período anterior",
-  "orders_queued": "Pedidos en cola",
-  "orders_active": "Pedidos en proceso",
-  "orders_prod": "Órdenes de producción",
-  "button_save": "Guardar",
-  "rowInputErr_negVal": "El valor debe ser mayor o igual a cero",
-  "rowInputErr_nonNumeric": "El valor debe ser un número",
-  "tab_p1": "Disposición P1",
-  "tab_p2": "Disposición P2",
-  "tab_p3": "Disposición P3",
-  "no_data": "No se han cargado datos. Por favor, sube primero tu archivo XML.",
-  "multiuse_hint": "* = Componentes de uso múltiple"
-},
+    "title": "Disposición",
+    "sales_request": "Solicitud de ventas",
+    "stock_safety": "Stock de seguridad",
+    "stock_old": "Stock del período anterior",
+    "orders_queued": "Pedidos en cola",
+    "orders_active": "Pedidos en proceso",
+    "orders_prod": "Órdenes de producción",
+    "button_save": "Guardar",
+    "rowInputErr_negVal": "El valor debe ser mayor o igual a cero",
+    "rowInputErr_nonNumeric": "El valor debe ser un número",
+    "tab_p1": "Disposición P1",
+    "tab_p2": "Disposición P2",
+    "tab_p3": "Disposición P3",
+    "no_data": "No se han cargado datos. Por favor, sube primero tu archivo XML.",
+    "multiuse_hint": "* = Componentes de uso múltiple"
+  },
   "forecast": {
     "title": "Pronóstico",
     "period": "N",
@@ -63,7 +63,6 @@
     "planning": "Planificación",
     "sum": "Total",
     "lager": "Depósito"
-
   },
   "columns": {
     "partNumber": "Número de parte",
@@ -81,7 +80,7 @@
     "orderAmount": "Cantidad de pedido",
     "orderType": "Tipo de pedido",
     "storageCost": "Coste de almacenamiento",
-    "order":"Pedido"
+    "order": "Pedido"
   },
   "extra": {
     "button_save": "Calcular recomendación de pedido",
@@ -142,5 +141,22 @@
     "productionMessage": "➔ ¡Puede producirse completamente desde el almacén!",
     "waitinglistmessageInWork": "(en progreso)",
     "waitinglistmessageWait": "(en espera)"
+  },
+  "export": {
+    "title": "Exportación XML",
+    "description": "Aquí puedes revisar tu planificación actual y luego exportarla como archivo XML.",
+    "direct_sales": "Ventas directas",
+    "orders": "Órdenes de compra",
+    "production": "Órdenes de producción",
+    "capacity": "Capacidades de producción",
+    "article": "ID del artículo",
+    "quantity": "Cantidad",
+    "mode": "Modo",
+    "production_quantity": "Cantidad de producción",
+    "workplace": "Puesto de trabajo",
+    "shifts": "Turnos",
+    "overtime": "Horas extra (min/día)",
+    "export_button": "Exportar",
+    "download_hint": "El archivo XML se generará y descargará en el formato actual."
   }
 }
