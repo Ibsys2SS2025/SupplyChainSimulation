@@ -21,7 +21,6 @@ const ProductTableOne: React.FC<ProductTableProps> = ({ t, values, headerText })
         if (!xmlData?.internaldata?.totals) return "";
         const numericCode = Number(code);
         const total = xmlData.internaldata.totals[numericCode];
-        console.log('Total: ', total, 'Code', code);
         if (total < 0) return 0;
         return total !== undefined ? Math.round(total) : "";
     };
@@ -29,8 +28,6 @@ const ProductTableOne: React.FC<ProductTableProps> = ({ t, values, headerText })
     const item = values[0];
     const total = getTotalForCode(item.code);
     const updatedValue = typeof total === 'number' ? total : item.value;
-    console.log('Original item.value:', item.value);
-    console.log('Update:', updatedValue);
 
     return (
         <>
