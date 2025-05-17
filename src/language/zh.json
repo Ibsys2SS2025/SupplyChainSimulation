@@ -36,23 +36,23 @@
     "description2": "立即开始设置。",
     "buttonSetup": "开始设置"
   },
- "disposition": {
-  "title": "调度",
-  "sales_request": "销售请求",
-  "stock_safety": "安全库存",
-  "stock_old": "上期库存",
-  "orders_queued": "排队订单",
-  "orders_active": "进行中的订单",
-  "orders_prod": "生产订单",
-  "button_save": "保存",
-  "rowInputErr_negVal": "值必须大于或等于零",
-  "rowInputErr_nonNumeric": "值必须是数字",
-  "tab_p1": "调度 P1",
-  "tab_p2": "调度 P2",
-  "tab_p3": "调度 P3",
-  "no_data": "尚未加载数据。请先上传你的 XML 文件。",
-  "multiuse_hint": "* = 多用途组件"
-},
+  "disposition": {
+    "title": "调度",
+    "sales_request": "销售请求",
+    "stock_safety": "安全库存",
+    "stock_old": "上期库存",
+    "orders_queued": "排队订单",
+    "orders_active": "进行中的订单",
+    "orders_prod": "生产订单",
+    "button_save": "保存",
+    "rowInputErr_negVal": "值必须大于或等于零",
+    "rowInputErr_nonNumeric": "值必须是数字",
+    "tab_p1": "调度 P1",
+    "tab_p2": "调度 P2",
+    "tab_p3": "调度 P3",
+    "no_data": "尚未加载数据。请先上传你的 XML 文件。",
+    "multiuse_hint": "* = 多用途组件"
+  },
   "forecast": {
     "title": "预测",
     "period": "N",
@@ -63,7 +63,6 @@
     "planning": "计划",
     "sum": "总计",
     "lager": "倉庫"
-
   },
   "columns": {
     "partNumber": "零件编号",
@@ -81,7 +80,7 @@
     "orderAmount": "订购数量",
     "orderType": "订单类型",
     "storageCost": "库存成本",
-    "order":  "订单"
+    "order": "订单"
   },
   "extra": {
     "button_save": "计算订购建议",
@@ -142,5 +141,22 @@
     "productionMessage": "➔ 可以完全从库存生产！",
     "waitinglistmessageInWork": "(进行中)",
     "waitinglistmessageWait": "(等待中)"
+  },
+  "export": {
+    "title": "XML导出",
+    "description": "您可以先查看当前计划，然后将其导出为XML文件。",
+    "direct_sales": "直接销售",
+    "orders": "采购订单",
+    "production": "生产订单",
+    "capacity": "生产能力",
+    "article": "物料编号",
+    "quantity": "数量",
+    "mode": "订购类型",
+    "production_quantity": "生产数量",
+    "workplace": "工作站",
+    "shifts": "班次",
+    "overtime": "加班时间（分钟/天）",
+    "export_button": "导出",
+    "download_hint": "XML文件将以当前格式生成并下载。"
   }
 }

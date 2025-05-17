@@ -37,22 +37,22 @@
     "buttonSetup": "Start setup"
   },
   "disposition": {
-  "title": "Disposition",
-  "sales_request": "Sales request",
-  "stock_safety": "Safety stock",
-  "stock_old": "Previous period stock",
-  "orders_queued": "Queued orders",
-  "orders_active": "Orders in progress",
-  "orders_prod": "Production orders",
-  "button_save": "Save",
-  "rowInputErr_negVal": "The value must be greater than or equal to zero",
-  "rowInputErr_nonNumeric": "The value must be a number",
-  "tab_p1": "Disposition P1",
-  "tab_p2": "Disposition P2",
-  "tab_p3": "Disposition P3",
-  "no_data": "No data loaded. Please upload your XML file first.",
-  "multiuse_hint": "* = Multi-use components"
-},
+    "title": "Disposition",
+    "sales_request": "Sales request",
+    "stock_safety": "Safety stock",
+    "stock_old": "Previous period stock",
+    "orders_queued": "Queued orders",
+    "orders_active": "Orders in progress",
+    "orders_prod": "Production orders",
+    "button_save": "Save",
+    "rowInputErr_negVal": "The value must be greater than or equal to zero",
+    "rowInputErr_nonNumeric": "The value must be a number",
+    "tab_p1": "Disposition P1",
+    "tab_p2": "Disposition P2",
+    "tab_p3": "Disposition P3",
+    "no_data": "No data loaded. Please upload your XML file first.",
+    "multiuse_hint": "* = Multi-use components"
+  },
   "forecast": {
     "title": "Forecast",
     "period": "N",
@@ -98,7 +98,6 @@
     "productionMessage": "➔ Can be fully produced from stock!",
     "waitinglistmessageInWork": "(in progress)",
     "waitinglistmessageWait": "(waiting)"
-
   },
   "columns": {
     "partNumber": "Part Number",
@@ -116,7 +115,7 @@
     "orderAmount": "Order Quantity",
     "orderType": "Order Type",
     "storageCost": "Storage Cost",
-    "order":"Order"
+    "order": "Order"
   },
   "extra": {
     "button_save": "Calculate order suggestion",
@@ -142,6 +141,22 @@
     "quantity": "Quantity",
     "price": "Price (€)",
     "penalty": "Penalty (€)"
+  },
+  "export": {
+    "title": "XML Export",
+    "description": "Here you can review your current planning and then export it as an XML file.",
+    "direct_sales": "Direct Sales",
+    "orders": "Purchase Orders",
+    "production": "Production Orders",
+    "capacity": "Production Capacity",
+    "article": "Article ID",
+    "quantity": "Quantity",
+    "mode": "Order Type",
+    "production_quantity": "Production Quantity",
+    "workplace": "Workplace",
+    "shifts": "Shifts",
+    "overtime": "Overtime (min/day)",
+    "export_button": "Export",
+    "download_hint": "The XML file will be generated and downloaded in the current format."
   }
-
 }
