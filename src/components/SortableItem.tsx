@@ -2,12 +2,6 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-type SortableItemProps = {
-    id: string;
-    children: React.ReactNode;
-    className?: string;
-};
-
 export default function SortableItem({
                                          id,
                                          children,
