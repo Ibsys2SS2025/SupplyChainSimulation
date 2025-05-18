@@ -102,60 +102,28 @@ const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
         }
     }
 
-    return totalTimeneed;
-};
-
-
-const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: number]: number } => {
-    if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
-        return {};
-    }
-
-    const workplaces = xmlData.results.waitinglistworkstations.workplace;
-
-    if (!workplaces || workplaces.length === 0) {
-        return {};
-    }
-
-    const workplaceList = Array.isArray(workplaces) ? workplaces : [workplaces];
-
-    const dic: { [key: number]: number } = {};
-
-    for (const workplace of workplaceList) {
-        const workplaceId = parseInt(workplace["$"].id);
-        if (workplaceId === id) {
-
-            const workplaceDetailWaitingList = workplace.waitinglist;
-
-            if (workplaceDetailWaitingList) {
-
-                if (Array.isArray(workplaceDetailWaitingList)) {
-                    for (const workplaceDetail of workplaceDetailWaitingList) {
-
-                        const item = workplaceDetail["$"].item;
-                        const timeneed = workplaceDetail["$"].timeneed;
-
-                        dic[parseInt(item)] = parseInt(timeneed);
-                    }
-                } else if (workplaceDetailWaitingList) {
-                    const item = workplaceDetailWaitingList["$"].item;
-                    const timeneed = workplaceDetailWaitingList["$"].timeneed;
-                    dic[parseInt(item)] = parseInt(timeneed);
-                }
+    const missingPartsList = xmlData?.results?.waitingliststock?.missingpart;
+    if (missingPartsList) {
+        const missingParts = Array.isArray(missingPartsList) ? missingPartsList : [missingPartsList];
+        for (const part of missingParts) {
+            const partDetails = part["$"];
+            const workplaceDetails = part.workplace?.["$"];
+            if (partDetails && parseInt(workplaceDetails.id, 10) === id && workplaceDetails) {
+                totalTimeneed += parseInt(workplaceDetails.timeneed, 10) || 0;
             }
         }
     }
-    return dic;
+    return totalTimeneed;
 };
 
 const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): number[] => {
     const ruestzeit: number[] = [];
     let summe = 0;
-    // Hole alle IDs aus ordersinwork
+
     const ordersInWork = xmlData?.results?.ordersinwork?.workplace;
     const ordersInWorkList = Array.isArray(ordersInWork) ? ordersInWork : [ordersInWork].filter(Boolean);
     const activeOrderIds = new Set<number>();
-    const orderIdMap: { [key: string]: string } = {}; // Dictionary mit id als Key, item als Value
+    const orderIdMap: { [key: string]: string } = {};
 
     for (const w of ordersInWorkList) {
         const id = parseInt(w["$"]?.item, 10);
@@ -170,9 +138,9 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
     }
 
     const waitingListWorkplaces = xmlData?.results?.waitinglistworkstations?.workplace;
+    const missingPartsList = xmlData?.results?.waitingliststock?.missingpart;
 
     for (let i = 1; i <= 15; i++) {
-        console.log("Arbeitsplatz: ", i);
         if (i === 5) {
             ruestzeit[i-1] = 0;
             continue;
@@ -185,8 +153,6 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
             const workplace = waitingListWorkplaces.find(
                 (w: { $?: { id: string } }) => w.$?.id === key
             );
-
-            console.log(workplace);
 
             if (!workplace || !workplace.waitinglist) {
                 continue;
@@ -211,108 +177,66 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
             } else {
             }
         } else {
-            const workplace = waitingListWorkplaces.find(
-                (w: { $?: { id: string } }) => w.$?.id === key
-            );
-            if (!(workplace?.['$']?.timeneed == 0)) {
-                const itemNumbers: number[] = workplace.waitinglist.map(
-                    (entry: { $: { item: string } }) => Number(entry.$.item)
+            if (waitingListWorkplaces && missingPartsList) {
+                const workplace = waitingListWorkplaces.find(
+                    (w: { $?: { id: string } }) => w.$?.id === key
+                );
+                const workplaceMissingPart = missingPartsList.find(
+                    (w: { workplace?: { $?: { id: string } } }) =>
+                        w.workplace?.$?.id === key
                 );
 
-                itemNumbers.forEach(itemNumber => {
-                    const product = valueGroups
-                        .flat()
-                        .find(p => Number(p.code) === itemNumber);
-                    summe += Number(product?.setuptime?.[i - 1] ?? 0);
-                });
+                console.log("Arbeitsplatz", i, "WPM", workplaceMissingPart);
+
+                const timeneed = workplace?.['$']?.timeneed;
+                if (timeneed && Number(timeneed) > 0) {
+                    const itemNumbers: number[] = workplace.waitinglist.map(
+                        (entry: { $: { item: string } }) => Number(entry.$.item)
+                    );
+                    itemNumbers.forEach(itemNumber => {
+                        const product = valueGroups
+                            .flat()
+                            .find(p => Number(p.code) === itemNumber);
+                        summe += Number(product?.setuptime?.[i - 1] ?? 0);
+                    });
+                }
+
+                const missingPartTimeneed = workplaceMissingPart?.workplace?.["$"]?.timeneed;
+                console.log("Arbeitsplatz", i, "WPM1", missingPartTimeneed);
+                if (missingPartTimeneed && Number(missingPartTimeneed) > 0) {
+                    let itemNumbers: number[] = [];
+
+                    const waitinglistData = workplaceMissingPart?.workplace?.waitinglist;
+
+                    if (Array.isArray(waitinglistData)) {
+                        itemNumbers = waitinglistData.map(
+                            (entry: { $: { item: string } }) => Number(entry.$.item)
+                        );
+                    } else if (waitinglistData?.$?.item) {
+                        itemNumbers = [Number(waitinglistData.$.item)];
+                    }
+
+                    console.log("Itemnumbers", itemNumbers);
+
+                    itemNumbers.forEach(itemNumber => {
+                        const product = valueGroups
+                            .flat()
+                            .find(p => Number(p.code) === itemNumber);
+                        summe += Number(product?.setuptime?.[i - 1] ?? 0);
+                    });
+                }
             }
         }
-        ruestzeit[i-1] = summe;
+            ruestzeit[i-1] = summe;
         summe = 0;
     }
     return ruestzeit;
 }
 
-
 const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     let summe: number = 0;
 
-    if(id == 6 || id == 1 || id == 2 || id == 3 || id == 4 || id == 10 || id == 13){
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 15){
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 14){
-        const dic = getWartezeitArbeitsplatzDetail(6, xmlData);
-        if (dic) {
-            for (const index in dic) {
-                if (dic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 16){
-                        summe += dic[index];
-                    }
-                }
-            }
-        }
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 12){
-        const wartezeit = getWartezeitArbeitsplatz(13, xmlData);
-        if (wartezeit) {
-            summe += wartezeit;
-        }
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 11){
-        const wartezeit = getWartezeitArbeitsplatz(10, xmlData);
-        if (wartezeit) {
-            summe += wartezeit;
-        }
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 8){
-        const wartezeitAcht = getWartezeitArbeitsplatz(8, xmlData);
-
-        summe+=wartezeitAcht;
-    }
-
-    if(id == 7){
-        const wartezeitSiebenDic = getWartezeitArbeitsplatzDetail(7, xmlData);
-
-        if (wartezeitSiebenDic) {
-            for (const index in wartezeitSiebenDic) {
-                if (wartezeitSiebenDic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20 || parseInt(index) == 10 || parseInt(index) == 11 || parseInt(index) == 12 || parseInt(index) == 13 || parseInt(index) == 14 || parseInt(index) == 15 || parseInt(index) == 26){
-                        summe += wartezeitSiebenDic[index];
-                    }
-                }
-            }
-        }
-    }
-
-    if(id == 9){
-        const wartezeitNeun = getWartezeitArbeitsplatz(9, xmlData);
-
-        summe+=wartezeitNeun;
-    }
-
-    /**const ordersinwork = xmlData.results.ordersinwork.workplace;
-     if (ordersinwork) {
-     const workplaces = Array.isArray(ordersinwork) ? ordersinwork : [ordersinwork];
-     for (const workplace of workplaces) {
-     const idnew = workplace["$"].id;
-     const timeneed = workplace["$"].timeneed;
-
-     if (parseInt(idnew) == id) {
-     summe += parseInt(timeneed);
-     }
-     }
-     }**/
+    summe += getWartezeitArbeitsplatz(id, xmlData);
 
     return summe;
 }
@@ -445,13 +369,23 @@ export default function Kapazitaetsplanung() {
 
     const overtimeValues = calculateOvertime(totalCapacities);
 
-    const [dropdownValues, setDropdownValues] = useState(
-        overtimeValues.map((value) => {
+    const [dropdownValues, setDropdownValues] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (!overtimeValues.length) return;
+
+        const newDropdowns = overtimeValues.map((value) => {
             if (value > 960) return "3";
             if (value > 480) return "2";
             return "1";
-        })
-    );
+        });
+
+        // Nur setzen, wenn sich die Werte unterscheiden
+        const changed = newDropdowns.some((val, idx) => val !== dropdownValues[idx]);
+        if (changed) {
+            setDropdownValues(newDropdowns);
+        }
+    }, [overtimeValues]);
 
     useEffect(() => {
         if (!xmlData) return;
@@ -582,17 +516,12 @@ export default function Kapazitaetsplanung() {
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.setuptimeNew')}</td>
                                 {setupTimes.map((time, index) => (
-                                    <td key={index}>{time}</td>
-                                ))}
-                            </tr>
-                            <tr className={styles.setupRow}>
-                                <td colSpan={4}>{t('capacity.steuptimevariable')}</td>
-                                {customInputsSetUp.map((value, index) => (
                                     <td key={`input-${index}`}>
                                         <input
                                             type="number"
                                             className={styles.inputCell}
-                                            value={value}
+                                            value={customInputsSetUp[index] ?? ''} // Fallback für undefined
+                                            placeholder={time.toString()}
                                             onChange={(e) => {
                                                 const newValues = [...customInputsSetUp];
                                                 newValues[index] = e.target.value;
