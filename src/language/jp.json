@@ -15,6 +15,7 @@
     "capacityplan": "能力計画",
     "orders": "部品調達",
     "export": "エクスポート",
+    "inputfinal": "生産指示",
     "directsell": "直接販売",
     "stock": "在庫"
   },
@@ -137,10 +138,11 @@
   },
   "inputtable": {
     "split": "生産指示を分割",
-    "inputtable": "入力テーブル",
+    "inputtable": "生産指示",
     "productionMessage": "➔ 在庫から完全に生産可能です！",
     "waitinglistmessageInWork": "(作業中)",
-    "waitinglistmessageWait": "(待機中)"
+    "waitinglistmessageWait": "(待機中)",
+    "waitinglist": "待機リスト"
   },
   "export": {
     "title": "XMLエクスポート",

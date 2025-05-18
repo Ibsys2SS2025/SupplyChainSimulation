@@ -133,15 +133,6 @@
     box-sizing: border-box;
 }
 
-.draggableButton:hover {
-    background-color: #0069d9;
-}
-
-.draggableButton:active {
-    cursor: grabbing;
-    background-color: #0056b3;
-}
-
 /* Unterer Bereich für Sortieranzeige */
 .sortOrder {
     margin-top: 1.5rem;
@@ -231,17 +222,24 @@
 }
 
 .warteschlangeStatus {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
     margin-bottom: 1rem;
 }
 
 .warteschlangeItem {
-    padding: 0.5rem 1rem;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
     border-radius: 8px;
+    display: flex;
     color: white;
     font-weight: bold;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.warteschlangeItems {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Zwei Spalten */
+    gap: 0.5rem 1rem; /* Zeilen- und Spaltenabstand */
 }
 
 .inWork {
@@ -250,6 +248,26 @@
 
 .waiting {
     background-color: #2f3e46; /* oder dein Blau, z.B. #2196f3 */
+}
+
+.productColor-1 {
+    background-color: #f28b82; /* Produkt A */
+}
+
+.productColor-2 {
+    background-color: #aecbfa; /* Produkt B */
+}
+
+.productColor-3 {
+    background-color: #ccff90; /* Produkt C */
+}
+
+.productColor-4 {
+    background-color: #ffd6a5; /* Produkt D – Orange/Peach */
+}
+
+.productColor-default {
+    background-color: #e0e0e0; /* Standardgrau */
 }
 
 /* Responsive Anpassungen */

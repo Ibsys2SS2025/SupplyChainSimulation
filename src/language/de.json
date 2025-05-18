@@ -15,7 +15,7 @@
     "capacityplan": "Kapazitätsplan",
     "orders": "Kaufteildisposition",
     "export": "Export",
-    "inputfinal": "Eingabetabelle",
+    "inputfinal": "Produktionsaufträge",
     "directsell": "Direktverkauf",
     "stock": "Lagerbestand"
   },
@@ -67,10 +67,11 @@
   },
   "inputtable": {
     "split": "Produktionsauftrag splitten",
-    "inputtable": "Eingabetabelle",
+    "inputtable": "Produktionsaufträge",
     "productionMessage": "➔ Kann vollständig aus dem Lager produziert werden!",
     "waitinglistmessageInWork": "(in Arbeit)",
-    "waitinglistmessageWait": "(wartend)"
+    "waitinglistmessageWait": "(wartend)",
+    "waitinglist": "Warteliste"
   },
   "capacity": {
     "title": "Kapazitätsplanung",

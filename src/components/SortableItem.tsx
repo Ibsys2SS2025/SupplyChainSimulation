@@ -2,12 +2,20 @@ import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
+type SortableItemProps = {
+    id: string;
+    children: React.ReactNode;
+    className?: string;
+};
+
 export default function SortableItem({
                                          id,
                                          children,
+                                         className, // <-- hinzufügen
                                      }: {
     id: string;
     children: React.ReactNode;
+    className?: string; // <-- optionales className akzeptieren
 }) {
     const {
         attributes,
@@ -24,8 +32,15 @@ export default function SortableItem({
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div
+            ref={setNodeRef}
+            style={style}
+            className={className} // <-- hier anwenden
+            {...attributes}
+            {...listeners}
+        >
             {children}
         </div>
     );
 }
+

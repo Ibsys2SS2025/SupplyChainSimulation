@@ -413,9 +413,9 @@ export default function Kapazitaetsplanung() {
 
     return (
         <div className={styles.pageContainer}>
-            <Sidebar />
             <div className={styles.content}>
                 <h2 className={styles.sectionTitle}>{t('capacity.title')}</h2>
+                <Sidebar />
                 <div className={styles.tableContainer}>
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>

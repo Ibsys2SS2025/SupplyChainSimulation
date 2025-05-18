@@ -15,6 +15,7 @@
     "capacityplan": "产能计划",
     "orders": "采购订单",
     "export": "导出",
+    "inputfinal": "生产订单",
     "directsell": "直接销售",
     "stock": "库存"
   },
@@ -137,10 +138,11 @@
   },
   "inputtable": {
     "split": "拆分生产订单",
-    "inputtable": "输入表格",
+    "inputtable": "生产订单",
     "productionMessage": "➔ 可以完全从库存生产！",
     "waitinglistmessageInWork": "(进行中)",
-    "waitinglistmessageWait": "(等待中)"
+    "waitinglistmessageWait": "(等待中)",
+    "waitinglist": "等待列表"
   },
   "export": {
     "title": "XML导出",
