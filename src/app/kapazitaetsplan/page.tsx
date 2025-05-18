@@ -30,6 +30,17 @@ interface ProductComponent {
     setuptime: (string | number)[];
 }
 
+type WaitinglistEntry = {
+    $: {
+        period: string;
+        order: string;
+        firstbatch: string;
+        lastbatch: string;
+        item: string;
+        [key: string]: string; // falls noch mehr Properties vorkommen
+    };
+};
+
 const calculateColumnSums = (productComponents: ProductComponent[]) => {
     const sums = Array(15).fill(0);
 
@@ -49,12 +60,14 @@ function calculateSetupTimePerWorkplace(...valueGroups: ProductComponent[][]): n
 
     for (const group of valueGroups) {
         for (const item of group) {
-            item.setuptime.forEach((value, index) => {
-                const numericValue = typeof value === "string" ? parseFloat(value) : value;
-                if (!isNaN(numericValue)) {
-                    result[index] += numericValue;
-                }
-            });
+            if (item.value > 0) {
+                item.setuptime.forEach((value, index) => {
+                    const numericValue = typeof value === "string" ? parseFloat(value) : value;
+                    if (!isNaN(numericValue)) {
+                        result[index] += numericValue;
+                    }
+                });
+            }
         }
     }
 
@@ -65,29 +78,33 @@ const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
     if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
         return 0;
     }
+    let totalTimeneed = 0;
 
-    const workplaces = xmlData.results.waitinglistworkstations.workplace;
-
-    if (!workplaces || workplaces.length === 0) {
-        return 0;
-    }
-
-    const workplaceList = Array.isArray(workplaces) ? workplaces : [workplaces];
-
-    for (const workplace of workplaceList) {
-        const workplaceDetails = workplace["$"];
-        if (workplaceDetails) {
-            const workplaceId = parseInt(workplaceDetails.id, 10); // ID als Zahl
-            const timeneed = parseInt(workplaceDetails.timeneed, 10); // timeneed als Zahl
-
-            if (workplaceId === id) {
-                return timeneed || 0; // Rückgabe von timeneed, oder 0, falls nicht vorhanden
+    const waitingList = xmlData?.results?.waitinglistworkstations?.workplace;
+    if (waitingList) {
+        const workplaces = Array.isArray(waitingList) ? waitingList : [waitingList];
+        for (const workplace of workplaces) {
+            const details = workplace["$"];
+            if (details && parseInt(details.id, 10) === id) {
+                totalTimeneed += parseInt(details.timeneed, 10) || 0;
             }
         }
     }
 
-    return 0;
+    const inWorkList = xmlData?.results?.ordersinwork?.workplace;
+    if (inWorkList) {
+        const workplaces = Array.isArray(inWorkList) ? inWorkList : [inWorkList];
+        for (const workplace of workplaces) {
+            const details = workplace["$"];
+            if (details && parseInt(details.id, 10) === id) {
+                totalTimeneed += parseInt(details.timeneed, 10) || 0;
+            }
+        }
+    }
+
+    return totalTimeneed;
 };
+
 
 const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: number]: number } => {
     if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
@@ -131,31 +148,91 @@ const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: numbe
     return dic;
 };
 
-const getRuestzeitOld=(xmlData: any, ...valueGroups: ProductComponent[][]):number[] => {
+const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): number[] => {
     const ruestzeit: number[] = [];
-    let summe: number = 0;
-    for (let i = 1; i < 16; i++) {
-        const dic = getWartezeitArbeitsplatzDetail(i, xmlData);
-        Object.entries(dic).forEach(([key]) => {
-            for (const group of valueGroups) {
-                for (const item of group) {
-                    if(item.code == key){
-                        if (typeof item.setuptime[i-1] === "string") {
-                            summe += parseInt(String(item.setuptime[i - 1]));
-                        }
-                        else{
-                            summe += Number(item.setuptime[i-1]);
-                        }
-                    }
-                }
+    let summe = 0;
+    // Hole alle IDs aus ordersinwork
+    const ordersInWork = xmlData?.results?.ordersinwork?.workplace;
+    const ordersInWorkList = Array.isArray(ordersInWork) ? ordersInWork : [ordersInWork].filter(Boolean);
+    const activeOrderIds = new Set<number>();
+    const orderIdMap: { [key: string]: string } = {}; // Dictionary mit id als Key, item als Value
+
+    for (const w of ordersInWorkList) {
+        const id = parseInt(w["$"]?.item, 10);
+        if (!isNaN(id)) {
+            activeOrderIds.add(id);
+            const key = w["$"]?.id;
+            const value = w["$"]?.item;
+            if (key && value) {
+                orderIdMap[key] = value;
             }
-        })
-        ruestzeit.splice(i-1, 0, summe);
-        summe = 0;
+        }
     }
 
+    const waitingListWorkplaces = xmlData?.results?.waitinglistworkstations?.workplace;
+
+    for (let i = 1; i <= 15; i++) {
+        console.log("Arbeitsplatz: ", i);
+        if (i === 5) {
+            ruestzeit[i-1] = 0;
+            continue;
+        }
+        const key = String(i);
+
+        if (orderIdMap && Object.prototype.hasOwnProperty.call(orderIdMap, key)) {
+
+            const productId = orderIdMap[key];
+            const workplace = waitingListWorkplaces.find(
+                (w: { $?: { id: string } }) => w.$?.id === key
+            );
+
+            console.log(workplace);
+
+            if (!workplace || !workplace.waitinglist) {
+                continue;
+            }
+
+            const waitingListArray = Array.isArray(workplace.waitinglist)
+                ? workplace.waitinglist
+                : [workplace.waitinglist];
+
+            const otherItems = waitingListArray.filter(
+                (entry: any) => entry?.$?.item !== productId
+            );
+
+            if (otherItems.length > 0) {
+                otherItems.forEach((item: WaitinglistEntry) => {
+                    const product = valueGroups
+                        .flat()
+                        .find(p => p.code === item.$.item);
+                    summe += Number(product?.setuptime?.[i - 1] ?? 0);
+                });
+
+            } else {
+            }
+        } else {
+            const workplace = waitingListWorkplaces.find(
+                (w: { $?: { id: string } }) => w.$?.id === key
+            );
+            if (!(workplace?.['$']?.timeneed == 0)) {
+                const itemNumbers: number[] = workplace.waitinglist.map(
+                    (entry: { $: { item: string } }) => Number(entry.$.item)
+                );
+
+                itemNumbers.forEach(itemNumber => {
+                    const product = valueGroups
+                        .flat()
+                        .find(p => Number(p.code) === itemNumber);
+                    summe += Number(product?.setuptime?.[i - 1] ?? 0);
+                });
+            }
+        }
+        ruestzeit[i-1] = summe;
+        summe = 0;
+    }
     return ruestzeit;
 }
+
 
 const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     let summe: number = 0;
@@ -165,18 +242,7 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     }
 
     if(id == 15){
-        const dic = getWartezeitArbeitsplatzDetail(7, xmlData);
-
-         if (dic) {
-            for (const index in dic) {
-                if (dic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 26){
-                        summe += dic[index];
-                    }
-                }
-            }
-        }
-         summe += getWartezeitArbeitsplatz(id, xmlData);
+        summe += getWartezeitArbeitsplatz(id, xmlData);
     }
 
     if(id == 14){
@@ -210,46 +276,18 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     }
 
     if(id == 8){
-        const wartezeitSechsDic = getWartezeitArbeitsplatzDetail(6, xmlData);
-        const wartezeitDreizehn = getWartezeitArbeitsplatz(13, xmlData);
-        const wartezeitZwoelf = getWartezeitArbeitsplatz(12, xmlData);
+        const wartezeitAcht = getWartezeitArbeitsplatz(8, xmlData);
 
-        summe+= wartezeitZwoelf + wartezeitDreizehn;
-
-        if (wartezeitSechsDic) {
-            for (const index in wartezeitSechsDic) {
-                if (wartezeitSechsDic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20){
-                        summe += wartezeitSechsDic[index];
-                    }
-                }
-            }
-        }
+        summe+=wartezeitAcht;
     }
 
     if(id == 7){
-        const wartezeitSechsDic = getWartezeitArbeitsplatzDetail(6, xmlData);
-        const wartezeitDreizehn = getWartezeitArbeitsplatz(13, xmlData);
-        const wartezeitZwoelf = getWartezeitArbeitsplatz(12, xmlData);
-        const wartezeitAcht = getWartezeitArbeitsplatz(8, xmlData);
         const wartezeitSiebenDic = getWartezeitArbeitsplatzDetail(7, xmlData);
-
-        summe+= wartezeitZwoelf + wartezeitDreizehn + wartezeitAcht;
-
-        if (wartezeitSechsDic) {
-            for (const index in wartezeitSechsDic) {
-                if (wartezeitSechsDic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20){
-                        summe += wartezeitSechsDic[index];
-                    }
-                }
-            }
-        }
 
         if (wartezeitSiebenDic) {
             for (const index in wartezeitSiebenDic) {
                 if (wartezeitSiebenDic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20 || parseInt(index) == 10 || parseInt(index) == 11 || parseInt(index) == 12 || parseInt(index) == 13 || parseInt(index) == 14 || parseInt(index) == 15){
+                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20 || parseInt(index) == 10 || parseInt(index) == 11 || parseInt(index) == 12 || parseInt(index) == 13 || parseInt(index) == 14 || parseInt(index) == 15 || parseInt(index) == 26){
                         summe += wartezeitSiebenDic[index];
                     }
                 }
@@ -258,49 +296,23 @@ const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     }
 
     if(id == 9){
-        const wartezeitSechsDic = getWartezeitArbeitsplatzDetail(6, xmlData);
-        const wartezeitDreizehn = getWartezeitArbeitsplatz(13, xmlData);
-        const wartezeitZwoelf = getWartezeitArbeitsplatz(12, xmlData);
-        const wartezeitAcht = getWartezeitArbeitsplatz(8, xmlData);
-        const wartezeitSiebenDic = getWartezeitArbeitsplatzDetail(7, xmlData);
         const wartezeitNeun = getWartezeitArbeitsplatz(9, xmlData);
 
-        summe+= wartezeitZwoelf + wartezeitDreizehn + wartezeitAcht;
-
-        if (wartezeitSechsDic) {
-            for (const index in wartezeitSechsDic) {
-                if (wartezeitSechsDic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20){
-                        summe += wartezeitSechsDic[index];
-                    }
-                }
-            }
-        }
-
-        if (wartezeitSiebenDic) {
-            for (const index in wartezeitSiebenDic) {
-                if (wartezeitSiebenDic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20 || parseInt(index) == 10 || parseInt(index) == 11 || parseInt(index) == 12 || parseInt(index) == 13 || parseInt(index) == 14 || parseInt(index) == 15){
-                        summe += wartezeitSiebenDic[index];
-                    }
-                }
-            }
-        }
         summe+=wartezeitNeun;
     }
 
-    const ordersinwork = xmlData.results.ordersinwork.workplace;
-    if (ordersinwork) {
-        const workplaces = Array.isArray(ordersinwork) ? ordersinwork : [ordersinwork];
-        for (const workplace of workplaces) {
-            const idnew = workplace["$"].id;
-            const timeneed = workplace["$"].timeneed;
+    /**const ordersinwork = xmlData.results.ordersinwork.workplace;
+     if (ordersinwork) {
+     const workplaces = Array.isArray(ordersinwork) ? ordersinwork : [ordersinwork];
+     for (const workplace of workplaces) {
+     const idnew = workplace["$"].id;
+     const timeneed = workplace["$"].timeneed;
 
-            if (parseInt(idnew) == id) {
-                summe += parseInt(timeneed);
-            }
-        }
-    }
+     if (parseInt(idnew) == id) {
+     summe += parseInt(timeneed);
+     }
+     }
+     }**/
 
     return summe;
 }
@@ -310,7 +322,7 @@ const calculateTotalCapacity = (
     setupTimes: number[],
     wartezeiten: number[],
     ruestzeitold: number[]
-    ): number[] => {
+): number[] => {
     return columnSums.map((_, index) => {
         return (
             (columnSums[index] || 0) +
@@ -392,7 +404,7 @@ export default function Kapazitaetsplanung() {
         ...bikecompleteValues
     ].flat();
 
-    const setupTimes = calculateSetupTimePerWorkplace(
+    const allGroups = [
         backWheelValues,
         frontWheelValues,
         mudguardbackValues,
@@ -405,15 +417,32 @@ export default function Kapazitaetsplanung() {
         framewheelsValues,
         bikewithoutpedalsvalues,
         bikecompleteValues
-    );
+    ];
 
-    const [customInputs, setCustomInputs] = useState(Array(15).fill(''));
+    const enrichedGroups = allGroups.map(group => useEnrichedProductComponents(group, xmlData));
+
+    const setupTimes = calculateSetupTimePerWorkplace(...enrichedGroups);
+
+
+    const [customInputs] = useState(Array(15).fill(''));
 
     const enrichedComponents = useEnrichedProductComponents(allProductComponents, xmlData);
 
     const columnSums = calculateColumnSums(enrichedComponents);
 
-    const totalCapacities = calculateTotalCapacity(columnSums, setupTimes, wartezeiten, ruestzeitold);
+    const [customInputsSetUp, setCustomInputsSetUp] = useState<string[]>([]);
+
+    const [customInputsOvertime, setCustomInputsOvertime] = useState(Array(15).fill(0));
+
+    useEffect(() => {
+        if (setupTimes.length > 0 && customInputsSetUp.length === 0) {
+            setCustomInputsSetUp(setupTimes.map(time => time.toString()));
+        }
+    }, [setupTimes.length, customInputsSetUp.length]);
+
+    const numericCustomInputs = customInputsSetUp.map((val) => Number(val) || 0); // Fallback zu 0 bei NaN
+    const totalCapacities = calculateTotalCapacity(columnSums, numericCustomInputs, wartezeiten, ruestzeitold);
+
     const overtimeValues = calculateOvertime(totalCapacities);
 
     const [dropdownValues, setDropdownValues] = useState(
@@ -557,6 +586,24 @@ export default function Kapazitaetsplanung() {
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
+                                <td colSpan={4}>{t('capacity.steuptimevariable')}</td>
+                                {customInputsSetUp.map((value, index) => (
+                                    <td key={`input-${index}`}>
+                                        <input
+                                            type="number"
+                                            className={styles.inputCell}
+                                            value={value}
+                                            onChange={(e) => {
+                                                const newValues = [...customInputsSetUp];
+                                                newValues[index] = e.target.value;
+                                                setCustomInputsSetUp(newValues);
+                                            }}
+                                            name={`customInput-${index}`}
+                                        />
+                                    </td>
+                                ))}
+                            </tr>
+                            <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.capacityrequirementOld')}</td>
                                 {wartezeiten.map((wartezeit, index) => (
                                     <td key={`wartezeit-${index}`}>{wartezeit}</td> // Jeder Wert als <td>
@@ -582,16 +629,16 @@ export default function Kapazitaetsplanung() {
                             </tr>
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.customInputs')}</td>
-                                {customInputs.map((value, index) => (
+                                {customInputsOvertime.map((value, index) => (
                                     <td key={`input-${index}`}>
                                         <input
                                             type="number"
                                             className={styles.inputCell}
                                             value={value}
                                             onChange={(e) => {
-                                                const newValues = [...customInputs];
+                                                const newValues = [...customInputsOvertime];
                                                 newValues[index] = e.target.value;
-                                                setCustomInputs(newValues);
+                                                setCustomInputsOvertime(newValues);
                                             }}
                                             name={`customInput-${index}`}
                                         />

@@ -1,7 +1,7 @@
 export const backWheelValues = [
     { label: 'K', code: '4', value: 0, extraValues: ["", "", "", "", "", "", "", "", "", 4, 3, "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 10, 0, 0, 0, 0] },
     { label: 'D', code: '5', value: 0, extraValues: ["", "", "", "", "", "", "", "", "", 4, 3, "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 10, 0, 0, 0, 0] },
-    { label: 'H', code: '6', value: 0, extraValues: ["", "", "", "", "", "", "", "", "", 4, 3, "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 10, 0, 0, 0, 0] },
+    { label: 'H', code: '6', value: 0, extraValues: ["", "", "", "", "", "", "", "", "", 4, 3, "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 20, 0, 0, 0, 0] },
 ];
 
 export const frontWheelValues = [
@@ -32,7 +32,7 @@ export const saddleValues = [
 
 export const frameValues = [
     { label: 'K', code: '18', value: 0, extraValues: ["", "", "", "", "", 3, 2, 3, 2, "", "", "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 15, 20, 20, 15, 0, 0, 0, 0, 0, 0] },
-    { label: 'D', code: '19', value: 0, extraValues: ["", "", "", "", "", 3, 2, 3, 2, "", "", "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 15, 20, 25, 15, 0, 0, 0, 0, 0, 0] },
+    { label: 'D', code: '19', value: 0, extraValues: ["", "", "", "", "", 3, 2, 3, 2, "", "", "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 15, 20, 25, 20, 0, 0, 0, 0, 0, 0] },
     { label: 'H', code: '20', value: 0, extraValues: ["", "", "", "", "", 3, 2, 3, 2, "", "", "", "", "", ""], setuptime: [0, 0, 0, 0, 0, 15, 20, 20, 15, 0, 0, 0, 0, 0, 0] },
 ];
 
