@@ -37,7 +37,7 @@ type WaitinglistEntry = {
         firstbatch: string;
         lastbatch: string;
         item: string;
-        [key: string]: string; // falls noch mehr Properties vorkommen
+        [key: string]: string;
     };
 };
 
@@ -364,7 +364,7 @@ export default function Kapazitaetsplanung() {
         }
     }, [setupTimes.length, customInputsSetUp.length]);
 
-    const numericCustomInputs = customInputsSetUp.map((val) => Number(val) || 0); // Fallback zu 0 bei NaN
+    const numericCustomInputs = customInputsSetUp.map((val) => Number(val) || 0);
     const totalCapacities = calculateTotalCapacity(columnSums, numericCustomInputs, wartezeiten, ruestzeitold);
 
     const overtimeValues = calculateOvertime(totalCapacities);
@@ -523,7 +523,7 @@ export default function Kapazitaetsplanung() {
                                         <input
                                             type="number"
                                             className={styles.inputCell}
-                                            value={customInputsSetUp[index] ?? ''} // Fallback für undefined
+                                            value={customInputsSetUp[index] ?? ''}
                                             placeholder={time.toString()}
                                             onChange={(e) => {
                                                 const newValues = [...customInputsSetUp];
@@ -538,7 +538,7 @@ export default function Kapazitaetsplanung() {
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.capacityrequirementOld')}</td>
                                 {wartezeiten.map((wartezeit, index) => (
-                                    <td key={`wartezeit-${index}`}>{wartezeit}</td> // Jeder Wert als <td>
+                                    <td key={`wartezeit-${index}`}>{wartezeit}</td>
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>

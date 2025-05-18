@@ -112,7 +112,7 @@ export default function Inputtable() {
                 console.error('Error parsing sortedIds from localStorage:', error);
             }
         }
-        return initialData.flatMap((heading: Heading) => heading.subItems.map((item: SubItem) => item.id)); // Wenn keine gespeicherten Daten vorhanden sind
+        return initialData.flatMap((heading: Heading) => heading.subItems.map((item: SubItem) => item.id));
     });
 
     const { xmlData, setXmlData } = useXmlData();
