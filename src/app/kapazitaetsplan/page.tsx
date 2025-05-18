@@ -369,10 +369,12 @@ export default function Kapazitaetsplanung() {
 
     const overtimeValues = calculateOvertime(totalCapacities);
 
+
     const [dropdownValues, setDropdownValues] = useState<string[]>([]);
+    const [initialized, setInitialized] = useState(false);
 
     useEffect(() => {
-        if (!overtimeValues.length) return;
+        if (!overtimeValues.length || initialized) return;
 
         const newDropdowns = overtimeValues.map((value) => {
             if (value > 960) return "3";
@@ -380,33 +382,34 @@ export default function Kapazitaetsplanung() {
             return "1";
         });
 
-        // Nur setzen, wenn sich die Werte unterscheiden
-        const changed = newDropdowns.some((val, idx) => val !== dropdownValues[idx]);
-        if (changed) {
-            setDropdownValues(newDropdowns);
-        }
-    }, [overtimeValues]);
+        setDropdownValues(newDropdowns);
+        setInitialized(true);
+    }, [overtimeValues, initialized]);
 
     useEffect(() => {
-        if (!xmlData) return;
+        const capacityData: Record<string, { input: number; shift: number }> = {};
 
-        const capacityData: Record<string, { input: number, shift: number }> = {};
-
-        customInputs.forEach((value, index) => {
+        customInputsOvertime.forEach((value, index) => {
             capacityData[(index + 1).toString()] = {
                 input: Number(value),
                 shift: Number(dropdownValues[index] ?? '1'),
             };
         });
 
-        setXmlData((prev: XmlDataType) => ({
-            ...prev,
-            internaldata: {
-                ...prev.internaldata,
-                capacity: capacityData
-            }
-        }));
-    }, [customInputs, dropdownValues]);
+        setXmlData((prev: XmlDataType) => {
+            const prevCapacity = prev.internaldata?.capacity;
+            const isSame = JSON.stringify(prevCapacity) === JSON.stringify(capacityData);
+            if (isSame) return prev;
+
+            return {
+                ...prev,
+                internaldata: {
+                    ...prev.internaldata,
+                    capacity: capacityData,
+                },
+            };
+        });
+    }, [JSON.stringify(customInputsOvertime), JSON.stringify(dropdownValues)]);
 
     return (
         <div className={styles.pageContainer}>
