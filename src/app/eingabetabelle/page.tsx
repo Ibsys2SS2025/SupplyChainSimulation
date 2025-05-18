@@ -41,53 +41,79 @@ type WarteschlangeDict = {
     };
 };
 
-const getWarteschlange = (xmlData: any): WarteschlangeDict | null => {
-    if (
-        !xmlData?.results?.waitinglistworkstations?.workplace ||
-        !xmlData?.results?.ordersinwork?.workplace
-    ) {
-        return null;
-    }
-
-    const warteschlange: WarteschlangeDict = {};
-
-    const inWorkItems = new Set<string>();
-    const ordersInWork = Array.isArray(xmlData.results.ordersinwork.workplace)
-        ? xmlData.results.ordersinwork.workplace
-        : [xmlData.results.ordersinwork.workplace];
-
-    ordersInWork.forEach((wp: any) => {
-        const item = wp?.$?.item;
-        if (item) {
-            inWorkItems.add(item);
+    const getWarteschlange = (xmlData: any): WarteschlangeDict | null => {
+        if (
+            !xmlData?.results?.waitinglistworkstations?.workplace ||
+            !xmlData?.results?.ordersinwork?.workplace
+        ) {
+            return null;
         }
-    });
 
-    const workplaces = Array.isArray(xmlData.results.waitinglistworkstations.workplace)
-        ? xmlData.results.waitinglistworkstations.workplace
-        : [xmlData.results.waitinglistworkstations.workplace];
+        const warteschlange: WarteschlangeDict = {};
 
-    workplaces.forEach((wp: any) => {
-        const waitingLists = wp.waitinglist;
-        if (waitingLists) {
-            const waitingArray = Array.isArray(waitingLists) ? waitingLists : [waitingLists];
-            waitingArray.forEach((wl: any) => {
-                const item = wl?.$?.item;
-                const amount = wl?.$?.amount;
-                if (item && amount) {
+        const inWorkItems = new Set<string>();
+        const ordersInWork = Array.isArray(xmlData.results.ordersinwork.workplace)
+            ? xmlData.results.ordersinwork.workplace
+            : [xmlData.results.ordersinwork.workplace];
+
+        ordersInWork.forEach((wp: any) => {
+            const item = wp?.$?.item;
+            if (item) {
+                inWorkItems.add(item);
+            }
+        });
+
+        const workplaces = Array.isArray(xmlData.results.waitinglistworkstations.workplace)
+            ? xmlData.results.waitinglistworkstations.workplace
+            : [xmlData.results.waitinglistworkstations.workplace];
+
+        workplaces.forEach((wp: any) => {
+            const waitingLists = wp.waitinglist;
+            if (waitingLists) {
+                const waitingArray = Array.isArray(waitingLists) ? waitingLists : [waitingLists];
+                waitingArray.forEach((wl: any) => {
+                    const item = wl?.$?.item;
+                    const amount = wl?.$?.amount;
+                    if (item && amount) {
+                        const keyPrefix = ['1', '2', '3'].includes(item) ? 'P' : 'E';
+                        const formattedKey = `${keyPrefix}${item}`;
+                        warteschlange[formattedKey] = {
+                            anzahl: amount,
+                            inwork: inWorkItems.has(item),
+                        };
+                    }
+                });
+            }
+        });
+
+        const missingParts = xmlData.results?.waitingliststock?.missingpart;
+        console.log(missingParts)
+        if (missingParts) {
+            const partsArray = Array.isArray(missingParts) ? missingParts : [missingParts];
+            partsArray.forEach((part: any) => {
+                const item = part?.workplace?.waitinglist['$'].item;
+                console.log(item);
+                const amount = part?.workplace?.waitinglist['$'].amount ?? '1';
+                console.log(amount)
+                if (item) {
                     const keyPrefix = ['1', '2', '3'].includes(item) ? 'P' : 'E';
                     const formattedKey = `${keyPrefix}${item}`;
-                    warteschlange[formattedKey] = {
-                        anzahl: amount,
-                        inwork: inWorkItems.has(item),
-                    };
+                    if (warteschlange[formattedKey]) {
+                        warteschlange[formattedKey].anzahl = (
+                            parseInt(warteschlange[formattedKey].anzahl) + parseInt(amount)
+                        ).toString();
+                    } else {
+                        warteschlange[formattedKey] = {
+                            anzahl: amount,
+                            inwork: false,
+                        };
+                    }
                 }
             });
         }
-    });
 
-    return warteschlange;
-};
+        return warteschlange;
+    };
 
 export default function Inputtable() {
 
@@ -413,11 +439,7 @@ export default function Inputtable() {
                         <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
                             <div className={styles.dropZone}>
                                 {sortedIds.map((id) => {
-                                    console.log("A", sortedIds);
-                                    console.log("B", headings);
                                     const item = headings.flatMap((h) => h.subItems).find((i) => i.id === id);
-                                    console.log(item);
-                                    console.log(item?.workstations);
                                     return item ? (
                                         <SortableItem
                                             id={item.id}

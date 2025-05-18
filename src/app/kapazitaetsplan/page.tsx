@@ -341,7 +341,6 @@ export default function Kapazitaetsplanung() {
 
     const setupTimes = calculateSetupTimePerWorkplace(...enrichedGroups);
 
-
     const [customInputs] = useState(Array(15).fill(''));
 
     const enrichedComponents = useEnrichedProductComponents(allProductComponents, xmlData);
@@ -362,7 +361,6 @@ export default function Kapazitaetsplanung() {
     const totalCapacities = calculateTotalCapacity(columnSums, numericCustomInputs, wartezeiten, ruestzeitold);
 
     const overtimeValues = calculateOvertime(totalCapacities);
-
 
     const [dropdownValues, setDropdownValues] = useState<string[]>([]);
 
