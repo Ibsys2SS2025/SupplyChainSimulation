@@ -91,7 +91,8 @@
     "totalcapacityreq": "Total Capacity Requirement",
     "overtime": "Overtime per Day",
     "customInputs": "Overtime with Buffer",
-    "shiftCount": "Number of Shifts"
+    "shiftCount": "Number of Shifts",
+    "apply": "Calculate"
   },
   "inputtable": {
     "split": "Split production order",

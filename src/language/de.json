@@ -99,7 +99,8 @@
     "totalcapacityreq": "Gesamter Kapazitätsbedarf",
     "overtime": "Überstunden pro Tag",
     "customInputs": "Überstunden mit Puffer",
-    "shiftCount": "Anzahl der Schichten"
+    "shiftCount": "Anzahl der Schichten",
+    "apply": "Berechnen"
   },
   "columns": {
     "partNumber": "Kaufteilnummer",

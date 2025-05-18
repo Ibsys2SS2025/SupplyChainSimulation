@@ -134,7 +134,8 @@
     "totalcapacityreq": "总产能需求",
     "overtime": "每日加班时间",
     "customInputs": "带缓冲的加班时间",
-    "shiftCount": "班次数"
+    "shiftCount": "班次数",
+    "apply": "計算する"
   },
   "inputtable": {
     "split": "拆分生产订单",

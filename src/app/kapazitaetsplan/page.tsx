@@ -185,9 +185,6 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
                     (w: { workplace?: { $?: { id: string } } }) =>
                         w.workplace?.$?.id === key
                 );
-
-                console.log("Arbeitsplatz", i, "WPM", workplaceMissingPart);
-
                 const timeneed = workplace?.['$']?.timeneed;
                 if (timeneed && Number(timeneed) > 0) {
                     const itemNumbers: number[] = workplace.waitinglist.map(
@@ -202,7 +199,6 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
                 }
 
                 const missingPartTimeneed = workplaceMissingPart?.workplace?.["$"]?.timeneed;
-                console.log("Arbeitsplatz", i, "WPM1", missingPartTimeneed);
                 if (missingPartTimeneed && Number(missingPartTimeneed) > 0) {
                     let itemNumbers: number[] = [];
 
@@ -215,8 +211,6 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
                     } else if (waitinglistData?.$?.item) {
                         itemNumbers = [Number(waitinglistData.$.item)];
                     }
-
-                    console.log("Itemnumbers", itemNumbers);
 
                     itemNumbers.forEach(itemNumber => {
                         const product = valueGroups
@@ -371,20 +365,34 @@ export default function Kapazitaetsplanung() {
 
 
     const [dropdownValues, setDropdownValues] = useState<string[]>([]);
-    const [initialized, setInitialized] = useState(false);
 
-    useEffect(() => {
-        if (!overtimeValues.length || initialized) return;
+    const calculateOvertimeSettings = () => {
+        const newDropdowns: string[] = [];
+        const newCustomInputs: number[] = [];
 
-        const newDropdowns = overtimeValues.map((value) => {
-            if (value > 960) return "3";
-            if (value > 480) return "2";
-            return "1";
+        overtimeValues.forEach((value, index) => {
+
+            if (value >= 0 && value <= 240) {
+                newDropdowns[index] = "1";
+                newCustomInputs[index] = Math.ceil(value);
+            } else if (value <= 480 && value > 240) {
+                newDropdowns[index] = "2";
+                newCustomInputs[index] = 0;
+            } else if (value > 480 && value <= 720) {
+                newDropdowns[index] = "2";
+                newCustomInputs[index] = Math.ceil((value*5-2400)/5);
+            } else if (value > 480 && value <= 960) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = 0;
+            } else if (value > 960) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = Math.ceil((value*5-4800) / 5);
+            }
         });
 
         setDropdownValues(newDropdowns);
-        setInitialized(true);
-    }, [overtimeValues, initialized]);
+        setCustomInputsOvertime(newCustomInputs);
+    };
 
     useEffect(() => {
         const capacityData: Record<string, { input: number; shift: number }> = {};
@@ -560,7 +568,14 @@ export default function Kapazitaetsplanung() {
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
-                                <td colSpan={4}>{t('capacity.customInputs')}</td>
+                                <td colSpan={4}>{t('capacity.customInputs')}
+                                    <button
+                                    onClick={calculateOvertimeSettings}
+                                    className={styles.applyButton}
+                                    style={{ marginLeft: '1rem' }}
+                                    >
+                                    {t('capacity.apply')}
+                                </button></td>
                                 {customInputsOvertime.map((value, index) => (
                                     <td key={`input-${index}`}>
                                         <input
@@ -569,7 +584,7 @@ export default function Kapazitaetsplanung() {
                                             value={value}
                                             onChange={(e) => {
                                                 const newValues = [...customInputsOvertime];
-                                                newValues[index] = e.target.value;
+                                                newValues[index] = Number(e.target.value);
                                                 setCustomInputsOvertime(newValues);
                                             }}
                                             name={`customInput-${index}`}

@@ -134,7 +134,8 @@
     "totalcapacityreq": "総能力要件",
     "overtime": "1日あたりの残業時間",
     "customInputs": "バッファ付き残業時間",
-    "shiftCount": "シフト数"
+    "shiftCount": "シフト数",
+    "apply": "計算する"
   },
   "inputtable": {
     "split": "生産指示を分割",
