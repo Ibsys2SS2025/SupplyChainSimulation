@@ -87,14 +87,11 @@ type WarteschlangeDict = {
         });
 
         const missingParts = xmlData.results?.waitingliststock?.missingpart;
-        console.log(missingParts)
         if (missingParts) {
             const partsArray = Array.isArray(missingParts) ? missingParts : [missingParts];
             partsArray.forEach((part: any) => {
                 const item = part?.workplace?.waitinglist['$'].item;
-                console.log(item);
                 const amount = part?.workplace?.waitinglist['$'].amount ?? '1';
-                console.log(amount)
                 if (item) {
                     const keyPrefix = ['1', '2', '3'].includes(item) ? 'P' : 'E';
                     const formattedKey = `${keyPrefix}${item}`;
@@ -117,29 +114,50 @@ type WarteschlangeDict = {
 
 export default function Inputtable() {
 
-    const [headings, setHeadings] = useState<Heading[]>(() => {
-        const savedHeadings = localStorage.getItem('inputtable_headings');
-        if (savedHeadings) {
-            try {
-                return JSON.parse(savedHeadings);
-            } catch (error) {
-                console.error('Error parsing headings from localStorage:', error);
-            }
-        }
-        return initialData;
-    });
+    const [headings, setHeadings] = useState<Heading[]>(initialData);
 
-    const [sortedIds, setSortedIds] = useState<string[]>(() => {
-        const savedSortedIds = localStorage.getItem('inputtable_sortedIds');
-        if (savedSortedIds) {
-            try {
-                return JSON.parse(savedSortedIds);
-            } catch (error) {
-                console.error('Error parsing sortedIds from localStorage:', error);
+    useEffect(() => {
+        if (typeof window === 'undefined') return; // Nur im Browser
+
+        const savedXmlData = localStorage.getItem('xmlData');
+        if (!savedXmlData) return;
+
+        try {
+            const parsed = JSON.parse(savedXmlData);
+            const loadedHeadings = parsed?.internaldata?.headings;
+
+            if (Array.isArray(loadedHeadings)) {
+                setHeadings(loadedHeadings);
             }
+        } catch (error) {
+            console.error('Error parsing xmlData from localStorage:', error);
         }
-        return initialData.flatMap((heading: Heading) => heading.subItems.map((item: SubItem) => item.id));
-    });
+    }, []);
+
+
+    const [sortedIds, setSortedIds] = useState<string[]>(
+        initialData.flatMap((heading: Heading) =>
+            heading.subItems.map((item: SubItem) => item.id)
+        )
+    );
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+
+        const savedXmlData = localStorage.getItem('xmlData');
+        if (!savedXmlData) return;
+
+        try {
+            const parsed = JSON.parse(savedXmlData);
+            const loadedSortedIds: string[] = parsed?.internaldata?.sortedIds;
+
+            if (Array.isArray(loadedSortedIds)) {
+                setSortedIds(loadedSortedIds);
+            }
+        } catch (error) {
+            console.error('Error parsing sortedIds from localStorage:', error);
+        }
+    }, []);
 
     const { xmlData, setXmlData } = useXmlData();
     const totals = xmlData?.internaldata?.totals || {};
@@ -187,8 +205,7 @@ export default function Inputtable() {
                 };
             })
         );
-    }, [headings.map((h) => h.subItems.map((s) => s.value).join(',')).join('|'), totals]);
-
+    }, [(headings ?? []).map((h) => h.subItems.map((s) => s.value).join(',')).join('|'), totals]);
 
     useEffect(() => {
         if (!xmlData) return;
@@ -304,15 +321,28 @@ export default function Inputtable() {
     };
 
     useEffect(() => {
-        if (headings) {
-            localStorage.setItem('inputtable_headings', JSON.stringify(headings));
-        }
+        if (!headings) return;
+
+        setXmlData((prev: XmlDataType) => ({
+            ...prev,
+            internaldata: {
+                ...prev.internaldata,
+                headings: headings,
+            },
+        }));
     }, [headings]);
 
+
     useEffect(() => {
-        if (sortedIds) {
-            localStorage.setItem('inputtable_sortedIds', JSON.stringify(sortedIds));
-        }
+        if (!sortedIds) return;
+
+        setXmlData((prev: XmlDataType) => ({
+            ...prev,
+            internaldata: {
+                ...prev.internaldata,
+                sortedIds: sortedIds,
+            },
+        }));
     }, [sortedIds]);
 
     const getArticleValueById = (id: string): number => {
@@ -357,7 +387,7 @@ export default function Inputtable() {
             <h2 className={styles.sectionTitle}>{t('inputtable.inputtable')}</h2>
             <div className={styles.mainContent}>
                 <div className={styles.itemList}>
-                    {headings.map((heading) => (
+                    {headings?.map((heading) => (
                         <div key={heading.id} className={styles.headingSection}>
                             <div className={styles.headingRow}>
                                 <span className={styles.headingLabel}>
@@ -439,7 +469,7 @@ export default function Inputtable() {
                         <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
                             <div className={styles.dropZone}>
                                 {sortedIds.map((id) => {
-                                    const item = headings.flatMap((h) => h.subItems).find((i) => i.id === id);
+                                    const item = headings?.flatMap((h) => h.subItems).find((i) => i.id === id);
                                     return item ? (
                                         <SortableItem
                                             id={item.id}
