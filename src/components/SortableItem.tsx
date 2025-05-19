@@ -5,9 +5,11 @@ import { CSS } from '@dnd-kit/utilities';
 export default function SortableItem({
                                          id,
                                          children,
+                                         className,
                                      }: {
     id: string;
     children: React.ReactNode;
+    className?: string;
 }) {
     const {
         attributes,
@@ -24,8 +26,15 @@ export default function SortableItem({
     };
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div
+            ref={setNodeRef}
+            style={style}
+            className={className}
+            {...attributes}
+            {...listeners}
+        >
             {children}
         </div>
     );
 }
+

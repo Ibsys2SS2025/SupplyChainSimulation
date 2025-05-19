@@ -22,11 +22,15 @@ interface SubItem {
     id: string;
     parentId: string;
     value: number;
+    workstations: string;
+    product: string;
 }
 
 interface Heading {
     id: string;
     title: string;
+    workstations: string;
+    product: string;
     subItems: SubItem[];
 }
 
@@ -37,53 +41,79 @@ type WarteschlangeDict = {
     };
 };
 
-const getWarteschlange = (xmlData: any): WarteschlangeDict | null => {
-    if (
-        !xmlData?.results?.waitinglistworkstations?.workplace ||
-        !xmlData?.results?.ordersinwork?.workplace
-    ) {
-        return null;
-    }
-
-    const warteschlange: WarteschlangeDict = {};
-
-    const inWorkItems = new Set<string>();
-    const ordersInWork = Array.isArray(xmlData.results.ordersinwork.workplace)
-        ? xmlData.results.ordersinwork.workplace
-        : [xmlData.results.ordersinwork.workplace];
-
-    ordersInWork.forEach((wp: any) => {
-        const item = wp?.$?.item;
-        if (item) {
-            inWorkItems.add(item);
+    const getWarteschlange = (xmlData: any): WarteschlangeDict | null => {
+        if (
+            !xmlData?.results?.waitinglistworkstations?.workplace ||
+            !xmlData?.results?.ordersinwork?.workplace
+        ) {
+            return null;
         }
-    });
 
-    const workplaces = Array.isArray(xmlData.results.waitinglistworkstations.workplace)
-        ? xmlData.results.waitinglistworkstations.workplace
-        : [xmlData.results.waitinglistworkstations.workplace];
+        const warteschlange: WarteschlangeDict = {};
 
-    workplaces.forEach((wp: any) => {
-        const waitingLists = wp.waitinglist;
-        if (waitingLists) {
-            const waitingArray = Array.isArray(waitingLists) ? waitingLists : [waitingLists];
-            waitingArray.forEach((wl: any) => {
-                const item = wl?.$?.item;
-                const amount = wl?.$?.amount;
-                if (item && amount) {
+        const inWorkItems = new Set<string>();
+        const ordersInWork = Array.isArray(xmlData.results.ordersinwork.workplace)
+            ? xmlData.results.ordersinwork.workplace
+            : [xmlData.results.ordersinwork.workplace];
+
+        ordersInWork.forEach((wp: any) => {
+            const item = wp?.$?.item;
+            if (item) {
+                inWorkItems.add(item);
+            }
+        });
+
+        const workplaces = Array.isArray(xmlData.results.waitinglistworkstations.workplace)
+            ? xmlData.results.waitinglistworkstations.workplace
+            : [xmlData.results.waitinglistworkstations.workplace];
+
+        workplaces.forEach((wp: any) => {
+            const waitingLists = wp.waitinglist;
+            if (waitingLists) {
+                const waitingArray = Array.isArray(waitingLists) ? waitingLists : [waitingLists];
+                waitingArray.forEach((wl: any) => {
+                    const item = wl?.$?.item;
+                    const amount = wl?.$?.amount;
+                    if (item && amount) {
+                        const keyPrefix = ['1', '2', '3'].includes(item) ? 'P' : 'E';
+                        const formattedKey = `${keyPrefix}${item}`;
+                        warteschlange[formattedKey] = {
+                            anzahl: amount,
+                            inwork: inWorkItems.has(item),
+                        };
+                    }
+                });
+            }
+        });
+
+        const missingParts = xmlData.results?.waitingliststock?.missingpart;
+        console.log(missingParts)
+        if (missingParts) {
+            const partsArray = Array.isArray(missingParts) ? missingParts : [missingParts];
+            partsArray.forEach((part: any) => {
+                const item = part?.workplace?.waitinglist['$'].item;
+                console.log(item);
+                const amount = part?.workplace?.waitinglist['$'].amount ?? '1';
+                console.log(amount)
+                if (item) {
                     const keyPrefix = ['1', '2', '3'].includes(item) ? 'P' : 'E';
                     const formattedKey = `${keyPrefix}${item}`;
-                    warteschlange[formattedKey] = {
-                        anzahl: amount,
-                        inwork: inWorkItems.has(item),
-                    };
+                    if (warteschlange[formattedKey]) {
+                        warteschlange[formattedKey].anzahl = (
+                            parseInt(warteschlange[formattedKey].anzahl) + parseInt(amount)
+                        ).toString();
+                    } else {
+                        warteschlange[formattedKey] = {
+                            anzahl: amount,
+                            inwork: false,
+                        };
+                    }
                 }
             });
         }
-    });
 
-    return warteschlange;
-};
+        return warteschlange;
+    };
 
 export default function Inputtable() {
 
@@ -108,7 +138,7 @@ export default function Inputtable() {
                 console.error('Error parsing sortedIds from localStorage:', error);
             }
         }
-        return initialData.flatMap((heading: Heading) => heading.subItems.map((item: SubItem) => item.id)); // Wenn keine gespeicherten Daten vorhanden sind
+        return initialData.flatMap((heading: Heading) => heading.subItems.map((item: SubItem) => item.id));
     });
 
     const { xmlData, setXmlData } = useXmlData();
@@ -132,19 +162,33 @@ export default function Inputtable() {
         setHeadings((prev) =>
             prev.map((heading) => {
                 if (heading.subItems.length === 0) return heading;
-                const sumOtherItems = heading.subItems.slice(1).reduce((sum: number, item: SubItem) => sum + item.value, 0);
+
+                const sumOtherItems = heading.subItems.slice(1).reduce(
+                    (sum: number, item: SubItem) => sum + item.value,
+                    0
+                );
+
                 const newFirstItemValue = getHeadingValueFromTotals(heading.title) - sumOtherItems;
+
                 if (heading.subItems[0].value === newFirstItemValue) return heading;
+
+                const firstSubItem = heading.subItems[0] || { workstations: 'unbekannt', id: '', parentId: '', value: 0 };
+
                 return {
                     ...heading,
                     subItems: [
-                        { ...heading.subItems[0], value: newFirstItemValue },
+                        {
+                            ...firstSubItem,
+                            value: newFirstItemValue,
+                            workstations: firstSubItem.workstations ?? 'unbekannt',
+                        },
                         ...heading.subItems.slice(1),
                     ],
                 };
             })
         );
     }, [headings.map((h) => h.subItems.map((s) => s.value).join(',')).join('|'), totals]);
+
 
     useEffect(() => {
         if (!xmlData) return;
@@ -183,13 +227,24 @@ export default function Inputtable() {
     const addNewItem = (headingId: string) => {
         const heading = headings.find((h) => h.id === headingId);
         if (!heading) return;
+
+        const baseWorkstations = heading.subItems[0]?.workstations || '';
+
         const newItemId = `item-${headingId.split('-')[1]}-${crypto.randomUUID?.() ?? Math.random().toString(36).substring(2, 10)}`;
-        const newItem = { id: newItemId, parentId: headingId, value: 0 };
+        const newItem: SubItem = {
+            id: newItemId,
+            parentId: headingId,
+            value: 0,
+            workstations: baseWorkstations,
+            product: heading.product,
+        };
+
         setHeadings((prev) =>
             prev.map((h) =>
                 h.id === headingId ? { ...h, subItems: [...h.subItems, newItem] } : h
             )
         );
+
         setSortedIds((prev) => {
             const lastSubItem = heading.subItems[heading.subItems.length - 1];
             const lastIndex = prev.findIndex((id) => id === lastSubItem.id);
@@ -364,15 +419,20 @@ export default function Inputtable() {
                 <div className={styles.dropZoneContainer}>
                     {warteschlange && (
                         <div className={styles.warteschlangeStatus}>
-                            {Object.entries(warteschlange).map(([itemId, info]) => (
-                                <div
-                                    key={itemId}
-                                    className={`${styles.warteschlangeItem} ${info.inwork ? styles.inWork : styles.waiting}`}
-                                >
-                                    {itemId}: {info.anzahl} {info.inwork ? t('inputtable.waitinglistmessageInWork') : t('inputtable.waitinglistmessageWait')}
-
-                                </div>
-                            ))}
+                            <h5>{t('inputtable.waitinglist')}</h5>
+                            <div className={styles.warteschlangeItems}>
+                                {Object.entries(warteschlange).map(([itemId, info]) => (
+                                    <div
+                                        key={itemId}
+                                        className={`${styles.warteschlangeItem} ${info.inwork ? styles.inWork : styles.waiting}`}
+                                    >
+                                        {itemId}: {info.anzahl}{' '}
+                                        {info.inwork
+                                            ? t('inputtable.waitinglistmessageInWork')
+                                            : t('inputtable.waitinglistmessageWait')}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     )}
                     <DndContext sensors={sensors} onDragEnd={handleDragEnd} collisionDetection={closestCenter}>
@@ -381,11 +441,22 @@ export default function Inputtable() {
                                 {sortedIds.map((id) => {
                                     const item = headings.flatMap((h) => h.subItems).find((i) => i.id === id);
                                     return item ? (
-                                        <SortableItem key={item.id} id={item.id}>
-                                            <div className={styles.draggableButton}>
-                                                {headings.find((h) => h.id === item.parentId)?.title} ({item.value})
+                                        <SortableItem
+                                            id={item.id}
+                                            key={item.id}
+                                            className={`${styles.draggableButton} ${styles[`productColor-${item.product}`] || styles['productColor-default']}`}
+                                        >
+                                            <div>
+                                                <div>
+                                                    {headings.find((h) => h.id === item.parentId)?.title} ({item.value})
+                                                </div>
+                                                <div>{item.workstations}</div>
+                                                <div>
+                                                    {item.product === "4" ? 'P1/P2/P3' : `P${item.product}`}
+                                                </div>
                                             </div>
                                         </SortableItem>
+
                                     ) : null;
                                 })}
                             </div>

@@ -15,6 +15,7 @@
     "capacityplan": "Plan de capacidad",
     "orders": "Abastecimiento",
     "export": "Exportar",
+    "inputfinal": "Órdenes de producción",
     "directsell": "Venta directa",
     "stock": "Inventario"
   },
@@ -133,14 +134,16 @@
     "totalcapacityreq": "Requisito total de capacidad",
     "overtime": "Horas extra por día",
     "customInputs": "Horas extra con margen",
-    "shiftCount": "Número de turnos"
+    "shiftCount": "Número de turnos",
+    "apply": "Calcular"
   },
   "inputtable": {
     "split": "Dividir orden de producción",
-    "inputtable": "Tabla de entrada",
+    "inputtable": "Órdenes de producción",
     "productionMessage": "➔ ¡Puede producirse completamente desde el almacén!",
     "waitinglistmessageInWork": "(en progreso)",
-    "waitinglistmessageWait": "(en espera)"
+    "waitinglistmessageWait": "(en espera)",
+    "waitinglist": "Lista de espera"
   },
   "export": {
     "title": "Exportación XML",

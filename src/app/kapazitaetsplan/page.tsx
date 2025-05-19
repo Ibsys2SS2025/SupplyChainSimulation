@@ -37,7 +37,7 @@ type WaitinglistEntry = {
         firstbatch: string;
         lastbatch: string;
         item: string;
-        [key: string]: string; // falls noch mehr Properties vorkommen
+        [key: string]: string;
     };
 };
 
@@ -102,60 +102,28 @@ const getWartezeitArbeitsplatz = (id: number, xmlData: any): number => {
         }
     }
 
-    return totalTimeneed;
-};
-
-
-const getWartezeitArbeitsplatzDetail = (id: number, xmlData: any): { [key: number]: number } => {
-    if (!xmlData || !xmlData.results || !xmlData.results.waitinglistworkstations) {
-        return {};
-    }
-
-    const workplaces = xmlData.results.waitinglistworkstations.workplace;
-
-    if (!workplaces || workplaces.length === 0) {
-        return {};
-    }
-
-    const workplaceList = Array.isArray(workplaces) ? workplaces : [workplaces];
-
-    const dic: { [key: number]: number } = {};
-
-    for (const workplace of workplaceList) {
-        const workplaceId = parseInt(workplace["$"].id);
-        if (workplaceId === id) {
-
-            const workplaceDetailWaitingList = workplace.waitinglist;
-
-            if (workplaceDetailWaitingList) {
-
-                if (Array.isArray(workplaceDetailWaitingList)) {
-                    for (const workplaceDetail of workplaceDetailWaitingList) {
-
-                        const item = workplaceDetail["$"].item;
-                        const timeneed = workplaceDetail["$"].timeneed;
-
-                        dic[parseInt(item)] = parseInt(timeneed);
-                    }
-                } else if (workplaceDetailWaitingList) {
-                    const item = workplaceDetailWaitingList["$"].item;
-                    const timeneed = workplaceDetailWaitingList["$"].timeneed;
-                    dic[parseInt(item)] = parseInt(timeneed);
-                }
+    const missingPartsList = xmlData?.results?.waitingliststock?.missingpart;
+    if (missingPartsList) {
+        const missingParts = Array.isArray(missingPartsList) ? missingPartsList : [missingPartsList];
+        for (const part of missingParts) {
+            const partDetails = part["$"];
+            const workplaceDetails = part.workplace?.["$"];
+            if (partDetails && parseInt(workplaceDetails.id, 10) === id && workplaceDetails) {
+                totalTimeneed += parseInt(workplaceDetails.timeneed, 10) || 0;
             }
         }
     }
-    return dic;
+    return totalTimeneed;
 };
 
 const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): number[] => {
     const ruestzeit: number[] = [];
     let summe = 0;
-    // Hole alle IDs aus ordersinwork
+
     const ordersInWork = xmlData?.results?.ordersinwork?.workplace;
     const ordersInWorkList = Array.isArray(ordersInWork) ? ordersInWork : [ordersInWork].filter(Boolean);
     const activeOrderIds = new Set<number>();
-    const orderIdMap: { [key: string]: string } = {}; // Dictionary mit id als Key, item als Value
+    const orderIdMap: { [key: string]: string } = {};
 
     for (const w of ordersInWorkList) {
         const id = parseInt(w["$"]?.item, 10);
@@ -170,9 +138,9 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
     }
 
     const waitingListWorkplaces = xmlData?.results?.waitinglistworkstations?.workplace;
+    const missingPartsList = xmlData?.results?.waitingliststock?.missingpart;
 
     for (let i = 1; i <= 15; i++) {
-        console.log("Arbeitsplatz: ", i);
         if (i === 5) {
             ruestzeit[i-1] = 0;
             continue;
@@ -185,8 +153,6 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
             const workplace = waitingListWorkplaces.find(
                 (w: { $?: { id: string } }) => w.$?.id === key
             );
-
-            console.log(workplace);
 
             if (!workplace || !workplace.waitinglist) {
                 continue;
@@ -211,108 +177,60 @@ const getRuestzeitOld = (xmlData: any, ...valueGroups: ProductComponent[][]): nu
             } else {
             }
         } else {
-            const workplace = waitingListWorkplaces.find(
-                (w: { $?: { id: string } }) => w.$?.id === key
-            );
-            if (!(workplace?.['$']?.timeneed == 0)) {
-                const itemNumbers: number[] = workplace.waitinglist.map(
-                    (entry: { $: { item: string } }) => Number(entry.$.item)
+            if (waitingListWorkplaces && missingPartsList) {
+                const workplace = waitingListWorkplaces.find(
+                    (w: { $?: { id: string } }) => w.$?.id === key
                 );
+                const workplaceMissingPart = missingPartsList.find(
+                    (w: { workplace?: { $?: { id: string } } }) =>
+                        w.workplace?.$?.id === key
+                );
+                const timeneed = workplace?.['$']?.timeneed;
+                if (timeneed && Number(timeneed) > 0) {
+                    const itemNumbers: number[] = workplace.waitinglist.map(
+                        (entry: { $: { item: string } }) => Number(entry.$.item)
+                    );
+                    itemNumbers.forEach(itemNumber => {
+                        const product = valueGroups
+                            .flat()
+                            .find(p => Number(p.code) === itemNumber);
+                        summe += Number(product?.setuptime?.[i - 1] ?? 0);
+                    });
+                }
 
-                itemNumbers.forEach(itemNumber => {
-                    const product = valueGroups
-                        .flat()
-                        .find(p => Number(p.code) === itemNumber);
-                    summe += Number(product?.setuptime?.[i - 1] ?? 0);
-                });
+                const missingPartTimeneed = workplaceMissingPart?.workplace?.["$"]?.timeneed;
+                if (missingPartTimeneed && Number(missingPartTimeneed) > 0) {
+                    let itemNumbers: number[] = [];
+
+                    const waitinglistData = workplaceMissingPart?.workplace?.waitinglist;
+
+                    if (Array.isArray(waitinglistData)) {
+                        itemNumbers = waitinglistData.map(
+                            (entry: { $: { item: string } }) => Number(entry.$.item)
+                        );
+                    } else if (waitinglistData?.$?.item) {
+                        itemNumbers = [Number(waitinglistData.$.item)];
+                    }
+
+                    itemNumbers.forEach(itemNumber => {
+                        const product = valueGroups
+                            .flat()
+                            .find(p => Number(p.code) === itemNumber);
+                        summe += Number(product?.setuptime?.[i - 1] ?? 0);
+                    });
+                }
             }
         }
-        ruestzeit[i-1] = summe;
+            ruestzeit[i-1] = summe;
         summe = 0;
     }
     return ruestzeit;
 }
 
-
 const getWartezeitArbeitsplatzGesamt=(xmlData: any, id: number):number => {
     let summe: number = 0;
 
-    if(id == 6 || id == 1 || id == 2 || id == 3 || id == 4 || id == 10 || id == 13){
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 15){
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 14){
-        const dic = getWartezeitArbeitsplatzDetail(6, xmlData);
-        if (dic) {
-            for (const index in dic) {
-                if (dic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 16){
-                        summe += dic[index];
-                    }
-                }
-            }
-        }
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 12){
-        const wartezeit = getWartezeitArbeitsplatz(13, xmlData);
-        if (wartezeit) {
-            summe += wartezeit;
-        }
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 11){
-        const wartezeit = getWartezeitArbeitsplatz(10, xmlData);
-        if (wartezeit) {
-            summe += wartezeit;
-        }
-        summe += getWartezeitArbeitsplatz(id, xmlData);
-    }
-
-    if(id == 8){
-        const wartezeitAcht = getWartezeitArbeitsplatz(8, xmlData);
-
-        summe+=wartezeitAcht;
-    }
-
-    if(id == 7){
-        const wartezeitSiebenDic = getWartezeitArbeitsplatzDetail(7, xmlData);
-
-        if (wartezeitSiebenDic) {
-            for (const index in wartezeitSiebenDic) {
-                if (wartezeitSiebenDic.hasOwnProperty(index)) {
-                    if(parseInt(index) == 18 || parseInt(index) == 19 || parseInt(index) == 20 || parseInt(index) == 10 || parseInt(index) == 11 || parseInt(index) == 12 || parseInt(index) == 13 || parseInt(index) == 14 || parseInt(index) == 15 || parseInt(index) == 26){
-                        summe += wartezeitSiebenDic[index];
-                    }
-                }
-            }
-        }
-    }
-
-    if(id == 9){
-        const wartezeitNeun = getWartezeitArbeitsplatz(9, xmlData);
-
-        summe+=wartezeitNeun;
-    }
-
-    /**const ordersinwork = xmlData.results.ordersinwork.workplace;
-     if (ordersinwork) {
-     const workplaces = Array.isArray(ordersinwork) ? ordersinwork : [ordersinwork];
-     for (const workplace of workplaces) {
-     const idnew = workplace["$"].id;
-     const timeneed = workplace["$"].timeneed;
-
-     if (parseInt(idnew) == id) {
-     summe += parseInt(timeneed);
-     }
-     }
-     }**/
+    summe += getWartezeitArbeitsplatz(id, xmlData);
 
     return summe;
 }
@@ -423,7 +341,6 @@ export default function Kapazitaetsplanung() {
 
     const setupTimes = calculateSetupTimePerWorkplace(...enrichedGroups);
 
-
     const [customInputs] = useState(Array(15).fill(''));
 
     const enrichedComponents = useEnrichedProductComponents(allProductComponents, xmlData);
@@ -440,45 +357,71 @@ export default function Kapazitaetsplanung() {
         }
     }, [setupTimes.length, customInputsSetUp.length]);
 
-    const numericCustomInputs = customInputsSetUp.map((val) => Number(val) || 0); // Fallback zu 0 bei NaN
+    const numericCustomInputs = customInputsSetUp.map((val) => Number(val) || 0);
     const totalCapacities = calculateTotalCapacity(columnSums, numericCustomInputs, wartezeiten, ruestzeitold);
 
     const overtimeValues = calculateOvertime(totalCapacities);
 
-    const [dropdownValues, setDropdownValues] = useState(
-        overtimeValues.map((value) => {
-            if (value > 960) return "3";
-            if (value > 480) return "2";
-            return "1";
-        })
-    );
+    const [dropdownValues, setDropdownValues] = useState<string[]>([]);
+
+    const calculateOvertimeSettings = () => {
+        const newDropdowns: string[] = [];
+        const newCustomInputs: number[] = [];
+
+        overtimeValues.forEach((value, index) => {
+
+            if (value >= 0 && value <= 240) {
+                newDropdowns[index] = "1";
+                newCustomInputs[index] = Math.ceil(value);
+            } else if (value <= 480 && value > 240) {
+                newDropdowns[index] = "2";
+                newCustomInputs[index] = 0;
+            } else if (value > 480 && value <= 720) {
+                newDropdowns[index] = "2";
+                newCustomInputs[index] = Math.ceil((value*5-2400)/5);
+            } else if (value > 480 && value <= 960) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = 0;
+            } else if (value > 960) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = Math.ceil((value*5-4800) / 5);
+            }
+        });
+
+        setDropdownValues(newDropdowns);
+        setCustomInputsOvertime(newCustomInputs);
+    };
 
     useEffect(() => {
-        if (!xmlData) return;
+        const capacityData: Record<string, { input: number; shift: number }> = {};
 
-        const capacityData: Record<string, { input: number, shift: number }> = {};
-
-        customInputs.forEach((value, index) => {
+        customInputsOvertime.forEach((value, index) => {
             capacityData[(index + 1).toString()] = {
                 input: Number(value),
                 shift: Number(dropdownValues[index] ?? '1'),
             };
         });
 
-        setXmlData((prev: XmlDataType) => ({
-            ...prev,
-            internaldata: {
-                ...prev.internaldata,
-                capacity: capacityData
-            }
-        }));
-    }, [customInputs, dropdownValues]);
+        setXmlData((prev: XmlDataType) => {
+            const prevCapacity = prev.internaldata?.capacity;
+            const isSame = JSON.stringify(prevCapacity) === JSON.stringify(capacityData);
+            if (isSame) return prev;
+
+            return {
+                ...prev,
+                internaldata: {
+                    ...prev.internaldata,
+                    capacity: capacityData,
+                },
+            };
+        });
+    }, [JSON.stringify(customInputsOvertime), JSON.stringify(dropdownValues)]);
 
     return (
         <div className={styles.pageContainer}>
-            <Sidebar />
             <div className={styles.content}>
                 <h2 className={styles.sectionTitle}>{t('capacity.title')}</h2>
+                <Sidebar />
                 <div className={styles.tableContainer}>
                     <div className={styles.tableWrapper}>
                         <table className={styles.table}>
@@ -582,17 +525,12 @@ export default function Kapazitaetsplanung() {
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.setuptimeNew')}</td>
                                 {setupTimes.map((time, index) => (
-                                    <td key={index}>{time}</td>
-                                ))}
-                            </tr>
-                            <tr className={styles.setupRow}>
-                                <td colSpan={4}>{t('capacity.steuptimevariable')}</td>
-                                {customInputsSetUp.map((value, index) => (
                                     <td key={`input-${index}`}>
                                         <input
                                             type="number"
                                             className={styles.inputCell}
-                                            value={value}
+                                            value={customInputsSetUp[index] ?? ''}
+                                            placeholder={time.toString()}
                                             onChange={(e) => {
                                                 const newValues = [...customInputsSetUp];
                                                 newValues[index] = e.target.value;
@@ -606,7 +544,7 @@ export default function Kapazitaetsplanung() {
                             <tr className={styles.setupRow}>
                                 <td colSpan={4}>{t('capacity.capacityrequirementOld')}</td>
                                 {wartezeiten.map((wartezeit, index) => (
-                                    <td key={`wartezeit-${index}`}>{wartezeit}</td> // Jeder Wert als <td>
+                                    <td key={`wartezeit-${index}`}>{wartezeit}</td>
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
@@ -628,7 +566,14 @@ export default function Kapazitaetsplanung() {
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
-                                <td colSpan={4}>{t('capacity.customInputs')}</td>
+                                <td colSpan={4}>{t('capacity.customInputs')}
+                                    <button
+                                    onClick={calculateOvertimeSettings}
+                                    className={styles.applyButton}
+                                    style={{ marginLeft: '1rem' }}
+                                    >
+                                    {t('capacity.apply')}
+                                </button></td>
                                 {customInputsOvertime.map((value, index) => (
                                     <td key={`input-${index}`}>
                                         <input
@@ -637,7 +582,7 @@ export default function Kapazitaetsplanung() {
                                             value={value}
                                             onChange={(e) => {
                                                 const newValues = [...customInputsOvertime];
-                                                newValues[index] = e.target.value;
+                                                newValues[index] = Number(e.target.value);
                                                 setCustomInputsOvertime(newValues);
                                             }}
                                             name={`customInput-${index}`}

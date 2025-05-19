@@ -15,6 +15,7 @@
     "capacityplan": "Capacity plan",
     "orders": "Procurement",
     "export": "Export",
+    "inputfinal": "Production Orders",
     "directsell": "Direct Sale",
     "stock": "Stock"
   },
@@ -90,14 +91,16 @@
     "totalcapacityreq": "Total Capacity Requirement",
     "overtime": "Overtime per Day",
     "customInputs": "Overtime with Buffer",
-    "shiftCount": "Number of Shifts"
+    "shiftCount": "Number of Shifts",
+    "apply": "Calculate"
   },
   "inputtable": {
     "split": "Split production order",
-    "inputtable": "Input table",
+    "inputtable": "Production Orders",
     "productionMessage": "➔ Can be fully produced from stock!",
     "waitinglistmessageInWork": "(in progress)",
-    "waitinglistmessageWait": "(waiting)"
+    "waitinglistmessageWait": "(waiting)",
+    "waitinglist": "Waiting List"
   },
   "columns": {
     "partNumber": "Part Number",
