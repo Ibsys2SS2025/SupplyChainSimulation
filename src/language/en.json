@@ -90,7 +90,7 @@
     "setuptimeOld": "Setup Time (Previous Period Backlog)",
     "totalcapacityreq": "Total Capacity Requirement",
     "overtime": "Overtime per Day",
-    "customInputs": "Overtime with Buffer",
+    "customInputs": "Overtime",
     "shiftCount": "Number of Shifts",
     "apply": "Calculate"
   },

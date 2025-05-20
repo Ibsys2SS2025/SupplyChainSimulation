@@ -98,7 +98,7 @@
     "setuptimeOld": "Rüstzeit (Rückstand Vorperiode)",
     "totalcapacityreq": "Gesamter Kapazitätsbedarf",
     "overtime": "Überstunden pro Tag",
-    "customInputs": "Überstunden mit Puffer",
+    "customInputs": "Überstunden",
     "shiftCount": "Anzahl der Schichten",
     "apply": "Berechnen"
   },

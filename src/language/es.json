@@ -133,7 +133,7 @@
     "setuptimeOld": "Tiempo de configuración (pendiente del período anterior)",
     "totalcapacityreq": "Requisito total de capacidad",
     "overtime": "Horas extra por día",
-    "customInputs": "Horas extra con margen",
+    "customInputs": "Horas extra",
     "shiftCount": "Número de turnos",
     "apply": "Calcular"
   },

@@ -376,18 +376,16 @@ export default function Kapazitaetsplanung() {
             } else if (value <= 480 && value > 240) {
                 newDropdowns[index] = "2";
                 newCustomInputs[index] = 0;
-            } else if (value > 480 && value <= 720) {
-                newDropdowns[index] = "2";
-                newCustomInputs[index] = Math.ceil((value*5-2400)/5);
             } else if (value > 480 && value <= 960) {
-                newDropdowns[index] = "3";
-                newCustomInputs[index] = 0;
-            } else if (value > 960) {
-                newDropdowns[index] = "3";
-                newCustomInputs[index] = Math.ceil((value*5-4800) / 5);
+                if (value * 5 + 2400 <= 6666.667) {
+                    newDropdowns[index] = "2";
+                    newCustomInputs[index] = Math.ceil((value * 5 - 2400) / 5);
+                } else {
+                    newDropdowns[index] = "3";
+                    newCustomInputs[index] = 0;
+                }
             }
         });
-
         setDropdownValues(newDropdowns);
         setCustomInputsOvertime(newCustomInputs);
     };
@@ -557,12 +555,6 @@ export default function Kapazitaetsplanung() {
                                 <td colSpan={4}>{t('capacity.totalcapacityreq')}</td>
                                 {totalCapacities.map((total, index) => (
                                     <td key={`total-${index}`}>{total}</td>
-                                ))}
-                            </tr>
-                            <tr className={styles.setupRow}>
-                                <td colSpan={4}>{t('capacity.overtime')}</td>
-                                {overtimeValues.map((value, index) => (
-                                    <td key={`overtime-${index}`}>{value}</td>
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
