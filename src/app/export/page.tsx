@@ -101,7 +101,7 @@ ${selldirectData.map((item: any) => {
 
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'export.xml';
+            link.download = 'input.xml';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
