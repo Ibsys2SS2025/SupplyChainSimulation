@@ -54,10 +54,13 @@ const ExportXMLPage: React.FC = () => {
             const selldirectXml = `
 <selldirect>
 ${selldirectData.map((item: any) => {
-                const format = (val: string) => Number(val).toFixed(1);
-                return `    <item article="${item.$.article}" quantity="${format(item.$.quantity)}" price="${format(item.$.price)}" penalty="${format(item.$.penalty)}"/>`;
+                const formatDecimal = (val: string) => Number(val).toFixed(1);
+                const formatInt = (val: string) => Math.round(Number(val)).toString();
+
+                return `    <item article="${item.$.article}" quantity="${formatInt(item.$.quantity)}" price="${formatDecimal(item.$.price)}" penalty="${formatDecimal(item.$.penalty)}"/>`;
             }).join('\n')}
-</selldirect>`;
+</selldirect>
+`;
 
             const orderListXml = `
     <orderlist>
