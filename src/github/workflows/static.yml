@@ -48,7 +48,7 @@ jobs:
         working-directory: ./
         run: npx rollup --version
 
-      - name: Build Vite app
+      - name: Build NextJS app
         working-directory: ./
         run: npm run build
 
