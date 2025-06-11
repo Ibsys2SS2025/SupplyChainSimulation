@@ -20,25 +20,6 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
   const { t } = useTranslation();
   const columns = 14;
 
-  const [sellDirectQuantity, setSellDirectQuantity] = useState(0);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    try {
-      const raw = localStorage.getItem('xmlData');
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      const items = parsed?.selldirect?.item;
-      if (!Array.isArray(items)) return;
-      const articleId = productId.replace('P', '');
-      const entry = items.find((e: any) => e?.$?.article === articleId);
-      const quantity = entry ? Number(entry.$.quantity ?? 0) : 0;
-      setSellDirectQuantity(quantity > 0 ? quantity : 0);
-    } catch {
-      setSellDirectQuantity(0);
-    }
-  }, [productId]);
-
   const getAmountById = (id: string): number => {
     const whs = xmlData.results?.warehousestock;
     const articles = Array.isArray(whs?.article) ? whs.article : [whs?.article];
@@ -50,7 +31,6 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
  const getInitialWaitingAmount = (id: string): number => {
   let sum = 0;
 
-  // 1. waitinglistworkstations
   const workstations = xmlData.results?.waitinglistworkstations?.workplace || [];
   const entries1 = Array.isArray(workstations) ? workstations : [workstations];
   for (const wp of entries1) {
@@ -61,7 +41,6 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     }
   }
 
-  // 2. waitingliststock
   const missingParts = xmlData.results?.waitingliststock?.missingpart || [];
   const entries2 = Array.isArray(missingParts) ? missingParts : [missingParts];
   for (const part of entries2) {
@@ -147,7 +126,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
   ): number => {
     const [sicherheitsbestand, warteschlange, inBearbeitung] = inputs[id] ?? [0, 0, 0];
     let result = isMainProduct
-      ? (getProductionP1(id) + (id === productId ? sellDirectQuantity : 0)) + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung
+      ? getProductionP1(id) + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung
       : prevTotal + prevWarteschlange + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
     return result < 0 ? 0 : result;
   };
@@ -181,14 +160,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
           <tbody>
             <tr>
               <th scope="row">{productId}</th>
-              <td className={styles.productionCell}>
-                {getProductionP1(productId) + sellDirectQuantity}
-                {sellDirectQuantity > 0 && (
-                  <div className={styles.sellDirectHint}>
-                    (+{sellDirectQuantity} durch Direktverkauf)
-                  </div>
-                )}
-              </td>
+              <td className={styles.productionCell}>{getProductionP1(productId)}</td>
               <td></td>
               <td>+</td>
               <td></td>
