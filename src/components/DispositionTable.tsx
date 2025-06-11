@@ -28,34 +28,34 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     return MULTI_USE_IDS.includes(id) ? raw / 3 : raw;
   };
 
- const getInitialWaitingAmount = (id: string): number => {
-  let sum = 0;
+  const getInitialWaitingAmount = (id: string): number => {
+    let sum = 0;
 
-  const workstations = xmlData.results?.waitinglistworkstations?.workplace || [];
-  const entries1 = Array.isArray(workstations) ? workstations : [workstations];
-  for (const wp of entries1) {
-    const waiting = wp.waitinglist;
-    const items = Array.isArray(waiting) ? waiting : (waiting ? [waiting] : []);
-    for (const w of items) {
-      if (w?.$?.item === id) sum += Number(w?.$?.amount ?? 0);
-    }
-  }
-
-  const missingParts = xmlData.results?.waitingliststock?.missingpart || [];
-  const entries2 = Array.isArray(missingParts) ? missingParts : [missingParts];
-  for (const part of entries2) {
-    const workplaces = part.workplace ? (Array.isArray(part.workplace) ? part.workplace : [part.workplace]) : [];
-    for (const wp of workplaces) {
+    const workstations = xmlData.results?.waitinglistworkstations?.workplace || [];
+    const entries1 = Array.isArray(workstations) ? workstations : [workstations];
+    for (const wp of entries1) {
       const waiting = wp.waitinglist;
       const items = Array.isArray(waiting) ? waiting : (waiting ? [waiting] : []);
       for (const w of items) {
         if (w?.$?.item === id) sum += Number(w?.$?.amount ?? 0);
       }
     }
-  }
 
-  return MULTI_USE_IDS.includes(id) ? sum / 3 : sum;
-};
+    const missingParts = xmlData.results?.waitingliststock?.missingpart || [];
+    const entries2 = Array.isArray(missingParts) ? missingParts : [missingParts];
+    for (const part of entries2) {
+      const workplaces = part.workplace ? (Array.isArray(part.workplace) ? part.workplace : [part.workplace]) : [];
+      for (const wp of workplaces) {
+        const waiting = wp.waitinglist;
+        const items = Array.isArray(waiting) ? waiting : (waiting ? [waiting] : []);
+        for (const w of items) {
+          if (w?.$?.item === id) sum += Number(w?.$?.amount ?? 0);
+        }
+      }
+    }
+
+    return MULTI_USE_IDS.includes(id) ? sum / 3 : sum;
+  };
 
   const getInitialInProgressAmount = (id: string): number => {
     const orders = xmlData.results?.ordersinwork?.workplace || [];
@@ -88,9 +88,8 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
           const match = stockNList.find((item: any) => item.article === productId);
           sicherheitsbestand = match ? Number(match.stockN ?? 100) : 100;
         }
-
-        const warteschlange = getInitialWaitingAmount(id);
-        const inBearbeitung = getInitialInProgressAmount(id);
+        const warteschlange = getInitialWaitingAmount(id === productId ? productId.replace('P', '') : id);
+        const inBearbeitung = getInitialInProgressAmount(id === productId ? productId.replace('P', '') : id);
         updateInput(productId, id, 0, sicherheitsbestand);
         updateInput(productId, id, 1, warteschlange);
         updateInput(productId, id, 2, inBearbeitung);
