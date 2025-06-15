@@ -78,16 +78,22 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     const allIds = [productId, ...dynamicIds];
 
     allIds.forEach(id => {
+      let sicherheitsbestand = 100;
+
+      if (id === productId) {
+        const stockNList = xmlData?.internaldata?.stockN ?? [];
+        const match = stockNList.find((item: any) => item.article === productId);
+        sicherheitsbestand = match ? Number(match.stockN ?? 100) : 100;
+
+        // Sicherheitsbestand für Hauptprodukt immer aktualisieren
+        updateInput(productId, id, 0, sicherheitsbestand);
+      }
+
+      // Nur initial ausfüllen, falls kein Input vorhanden ist
       if (!inputs[id]) {
-        let sicherheitsbestand = 100;
-        if (id === productId) {
-          const stockNList = xmlData?.internaldata?.stockN ?? [];
-          const match = stockNList.find((item: any) => item.article === productId);
-          sicherheitsbestand = match ? Number(match.stockN ?? 100) : 100;
-        }
         const warteschlange = getInitialWaitingAmount(id === productId ? productId.replace('P', '') : id);
         const inBearbeitung = getInitialInProgressAmount(id === productId ? productId.replace('P', '') : id);
-        updateInput(productId, id, 0, sicherheitsbestand);
+
         updateInput(productId, id, 1, warteschlange);
         updateInput(productId, id, 2, inBearbeitung);
       }
@@ -160,7 +166,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
               <td></td>
               <td>+</td>
               <td></td>
-              <td>{renderInput(productId, 0)}</td>
+              <td>{formatValue(inputs?.[productId]?.[0] ?? 0)}</td>
               <td>-</td>
               <td>{getAmountById(productId.replace('P', ''))}</td>
               <td>-</td>
@@ -188,7 +194,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
                     <td>+</td>
                     <td>{renderInput(id, 0)}</td>
                     <td>-</td>
-                    <td>{getAmountById(id)}</td>
+                    <td>{MULTI_USE_IDS.includes(id) ? getAmountById(id).toFixed(2) : getAmountById(id)}</td>
                     <td>-</td>
                     <td>{formatValue(inputs?.[id]?.[1] ?? 0)}</td>
                     <td>-</td>
