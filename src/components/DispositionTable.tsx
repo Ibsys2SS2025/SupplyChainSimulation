@@ -64,16 +64,13 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
     return MULTI_USE_IDS.includes(id) ? sum / 3 : sum;
   };
 
-  const getProductionP1 = (productId: string): number => {
-    const planning = xmlData?.internaldata?.planning ?? [];
-    const rows = Array.isArray(planning) ? planning : [planning];
-    for (const p of rows) {
-      const article = Array.isArray(p.article) ? p.article[0] : p.article;
-      const prod = Array.isArray(p.productionP1) ? p.productionP1[0] : p.productionP1;
-      if (article === productId) return Number(prod ?? 0);
-    }
-    return 0;
+  const getForecastValue = (productId: string): number => {
+    const forecast = xmlData?.results?.forecast?.$;
+    if (!forecast) return 0;
+    const key = productId.toLowerCase(); // "p1", "p2", "p3"
+    return Number(forecast[key]) || 0;
   };
+
 
   const inputs = tabInputs[productId] || {};
 
@@ -125,7 +122,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
   ): number => {
     const [sicherheitsbestand, warteschlange, inBearbeitung] = inputs[id] ?? [0, 0, 0];
     let result = isMainProduct
-      ? getProductionP1(id) + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung
+      ? getForecastValue(id) + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung
       : prevTotal + prevWarteschlange + sicherheitsbestand - lagerbestand - warteschlange - inBearbeitung;
     return result < 0 ? 0 : result;
   };
@@ -159,7 +156,7 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
           <tbody>
             <tr>
               <th scope="row">{productId}</th>
-              <td className={styles.productionCell}>{getProductionP1(productId)}</td>
+              <td className={styles.productionCell}>{getForecastValue(productId)}</td>
               <td></td>
               <td>+</td>
               <td></td>
