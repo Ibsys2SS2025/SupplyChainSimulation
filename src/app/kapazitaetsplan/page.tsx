@@ -579,14 +579,21 @@ export default function Kapazitaetsplanung() {
                                     <td key={`input-${index}`}>
                                         <input
                                             type="number"
-                                            className={`${styles.inputCell}`}
+                                            className={styles.inputCell}
                                             value={value}
                                             onChange={(e) => {
+                                                let parsed = Number(e.target.value);
+
+                                                if (parsed > 240) parsed = 240;
+                                                if (parsed < 0) parsed = 0;
+
                                                 const newValues = [...customInputsOvertime];
-                                                newValues[index] = Number(e.target.value);
+                                                newValues[index] = parsed;
                                                 setCustomInputsOvertime(newValues);
                                             }}
                                             name={`customInput-${index}`}
+                                            min={0}
+                                            max={240}
                                         />
                                     </td>
                                 ))}
