@@ -366,24 +366,25 @@ export default function Kapazitaetsplanung() {
 
     const calculateOvertimeSettings = () => {
         const newDropdowns: string[] = [];
+
         const newCustomInputs: number[] = [];
 
         overtimeValues.forEach((value, index) => {
-
             if (value >= 0 && value <= 240) {
                 newDropdowns[index] = "1";
                 newCustomInputs[index] = Math.ceil(value);
             } else if (value <= 480 && value > 240) {
                 newDropdowns[index] = "2";
                 newCustomInputs[index] = 0;
-            } else if (value > 480 && value <= 960) {
-                if (value * 5 + 2400 <= 6666.667) {
-                    newDropdowns[index] = "2";
-                    newCustomInputs[index] = Math.ceil((value * 5 - 2400) / 5);
-                } else {
-                    newDropdowns[index] = "3";
-                    newCustomInputs[index] = 0;
-                }
+            } else if (value > 480 && value <= 720) {
+                newDropdowns[index] = "2";
+                newCustomInputs[index] = Math.ceil((value * 5 - 2400) / 5);
+            } else if (value > 960) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = 0;
+            } else if (value > 720) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = 0;
             }
         });
         setDropdownValues(newDropdowns);
@@ -554,7 +555,15 @@ export default function Kapazitaetsplanung() {
                             <tr className={styles.sumRow}>
                                 <td colSpan={4}>{t('capacity.totalcapacityreq')}</td>
                                 {totalCapacities.map((total, index) => (
-                                    <td key={`total-${index}`}>{total}</td>
+                                    <td key={`total-${index}`}>
+                                        {total}
+                                        {total > 7200 && (
+                                            <span className={styles.redExclamation}>
+                                             ⚠
+                                            </span>
+                                        )}
+
+                                    </td>
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
@@ -570,7 +579,7 @@ export default function Kapazitaetsplanung() {
                                     <td key={`input-${index}`}>
                                         <input
                                             type="number"
-                                            className={styles.inputCell}
+                                            className={`${styles.inputCell}`}
                                             value={value}
                                             onChange={(e) => {
                                                 const newValues = [...customInputsOvertime];
@@ -605,6 +614,11 @@ export default function Kapazitaetsplanung() {
                             </tr>
                             </tfoot>
                         </table>
+                        {totalCapacities.some(total => total > 7200) && (
+                            <div className={styles.legend}>
+                                {t('capacity.warning')}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

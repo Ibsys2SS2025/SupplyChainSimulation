@@ -135,7 +135,8 @@
     "overtime": "每日加班时间",
     "customInputs": "带缓冲的加班时间",
     "shiftCount": "班次数",
-    "apply": "計算する"
+    "apply": "計算する",
+    "warning": "⚠ = 容量需求过高"
   },
   "inputtable": {
     "split": "拆分生产订单",

@@ -61,6 +61,49 @@
     transition: background-color 0.3s ease;
 }
 
+.warnBox {
+    margin-top: 5px;
+    padding: 5px;
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.inputWarning {
+    border: 2px solid red;
+    border-radius: 4px;
+}
+
+.redExclamation {
+    color: #ffcc00;
+    marginLeft: 0.5rem;
+    fontSize: 1.2em;
+}
+
+.legend {
+    font-weight: 500;       /* wie .setupRow td */
+    font-size: 1rem;        /* optional, anpassen falls nötig */
+    color: #000000;         /* schwarz */
+    text-align: center;     /* zentriert */
+    padding: 0.75rem;       /* wie .setupRow td */
+    vertical-align: middle; /* wie .setupRow td */
+    border-radius: 4px;     /* etwas abgerundet, optional */
+}
+
+.warnBox::before {
+    content:'';
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    background: #fff3cd;
+    transform: rotate(45deg);
+    border-bottom: 1px solid #ffeeba;
+    border-right: 1px solid #ffeeba;
+}
 
 .table thead th {
     text-align: center;
