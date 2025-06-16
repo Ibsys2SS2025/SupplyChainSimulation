@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from '@/app/disposition/disposition.module.css';
 import { useXmlData } from '@/context/XmlDataContext';
 import { useTranslation } from 'react-i18next';
@@ -30,7 +30,6 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
 
   const getInitialWaitingAmount = (id: string): number => {
     let sum = 0;
-
     const workstations = xmlData.results?.waitinglistworkstations?.workplace || [];
     const entries1 = Array.isArray(workstations) ? workstations : [workstations];
     for (const wp of entries1) {
@@ -40,7 +39,6 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
         if (w?.$?.item === id) sum += Number(w?.$?.amount ?? 0);
       }
     }
-
     const missingParts = xmlData.results?.waitingliststock?.missingpart || [];
     const entries2 = Array.isArray(missingParts) ? missingParts : [missingParts];
     for (const part of entries2) {
@@ -53,7 +51,6 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
         }
       }
     }
-
     return MULTI_USE_IDS.includes(id) ? sum / 3 : sum;
   };
 
@@ -67,38 +64,46 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
   const getForecastValue = (productId: string): number => {
     const forecast = xmlData?.results?.forecast?.$;
     if (!forecast) return 0;
-    const key = productId.toLowerCase(); // "p1", "p2", "p3"
+    const key = productId.toLowerCase();
     return Number(forecast[key]) || 0;
   };
 
+  const getPlannedProductionP1 = (productId: string): number => {
+    const planning = xmlData?.internaldata?.planning ?? [];
+    const row = planning.find((p: any) => p.article === productId);
+    return row ? Number(row.productionP1 ?? 0) : 0;
+  };
 
   const inputs = tabInputs[productId] || {};
 
   useEffect(() => {
     const allIds = [productId, ...dynamicIds];
 
-    allIds.forEach(id => {
-      let sicherheitsbestand = 100;
+    allIds.forEach((id) => {
+      const isMainProduct = id === productId;
 
-      if (id === productId) {
-        const stockNList = xmlData?.internaldata?.stockN ?? [];
-        const match = stockNList.find((item: any) => item.article === productId);
-        sicherheitsbestand = match ? Number(match.stockN ?? 100) : 100;
+      const warteschlange = getInitialWaitingAmount(isMainProduct ? productId.replace('P', '') : id);
+      const inBearbeitung = getInitialInProgressAmount(isMainProduct ? productId.replace('P', '') : id);
+      const lagerbestand = getAmountById(isMainProduct ? productId.replace('P', '') : id);
 
-        // Sicherheitsbestand für Hauptprodukt immer aktualisieren
-        updateInput(productId, id, 0, sicherheitsbestand);
-      }
-
-      // Nur initial ausfüllen, falls kein Input vorhanden ist
       if (!inputs[id]) {
-        const warteschlange = getInitialWaitingAmount(id === productId ? productId.replace('P', '') : id);
-        const inBearbeitung = getInitialInProgressAmount(id === productId ? productId.replace('P', '') : id);
+        if (!isMainProduct) {
+          updateInput(productId, id, 0, 100); // default Sicherheitsbestand
+        }
 
         updateInput(productId, id, 1, warteschlange);
         updateInput(productId, id, 2, inBearbeitung);
       }
+
+      if (isMainProduct) {
+        const vertriebswunsch = getForecastValue(productId);
+        const zielProduktion = getPlannedProductionP1(productId);
+        const sicherheitsbestand = zielProduktion - vertriebswunsch + lagerbestand + warteschlange + inBearbeitung;
+        updateInput(productId, productId, 0, sicherheitsbestand);
+      }
     });
-  }, [productId, dynamicIds, xmlData?.internaldata?.stockN]);
+  }, [productId, dynamicIds, xmlData?.internaldata?.planning]);
+
 
   const handleInput = (id: string, idx: number, val: number) => {
     updateInput(productId, id, idx, val);
@@ -160,39 +165,32 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">{productId}</th>
-              <td className={styles.productionCell}>{getForecastValue(productId)}</td>
-              <td></td>
-              <td>+</td>
-              <td></td>
-              <td>{formatValue(inputs?.[productId]?.[0] ?? 0)}</td>
-              <td>-</td>
-              <td>{getAmountById(productId.replace('P', ''))}</td>
-              <td>-</td>
-              <td>{formatValue(inputs?.[productId]?.[1] ?? 0)}</td>
-              <td>-</td>
-              <td>{formatValue(inputs?.[productId]?.[2] ?? 0)}</td>
-              <td>=</td>
-              <td>{(() => {
-                const total = calculateRowTotal(productId, inputs, true, 0, 0, getAmountById(productId.replace('P', '')));
-                lastGroupTotal = total;
-                return Number.isInteger(total) ? total : total.toFixed(2);
-              })()}</td>
-            </tr>
-            <tr><td colSpan={columns}></td></tr>
-            {dynamicIds.map((id) => {
-              const total = calculateRowTotal(id, inputs, false, lastGroupTotal, lastGroupWarteschlange, getAmountById(id));
+            {[productId, ...dynamicIds].map((id, index, arr) => {
+              const isMain = id === productId;
+              const total = calculateRowTotal(
+                id,
+                inputs,
+                isMain,
+                lastGroupTotal,
+                lastGroupWarteschlange,
+                getAmountById(isMain ? productId.replace('P', '') : id)
+              );
               const warteschlange = inputs?.[id]?.[1] ?? 0;
               const row = (
                 <React.Fragment key={id}>
                   <tr>
                     <th scope="row">{rowNames[id] || id}</th>
-                    <td>{Number.isInteger(lastGroupTotal) ? lastGroupTotal : lastGroupTotal.toFixed(2)}</td>
+                    <td>
+                      {index === 0
+                        ? getForecastValue(productId)
+                        : Number.isInteger(lastGroupTotal)
+                          ? lastGroupTotal
+                          : lastGroupTotal.toFixed(2)}
+                    </td>
                     <td>+</td>
                     <td>{Number.isInteger(lastGroupWarteschlange) ? lastGroupWarteschlange : lastGroupWarteschlange.toFixed(2)}</td>
                     <td>+</td>
-                    <td>{renderInput(id, 0)}</td>
+                    <td>{isMain ? formatValue(inputs?.[id]?.[0] ?? 0) : renderInput(id, 0)}</td>
                     <td>-</td>
                     <td>{MULTI_USE_IDS.includes(id) ? getAmountById(id).toFixed(2) : getAmountById(id)}</td>
                     <td>-</td>
@@ -200,14 +198,12 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
                     <td>-</td>
                     <td>{formatValue(inputs?.[id]?.[2] ?? 0)}</td>
                     <td>=</td>
-                    <td>{Number.isInteger(total) ? total : total.toFixed(2)}</td>
+                    <td>{isMain ? getPlannedProductionP1(productId) : (Number.isInteger(total) ? total : total.toFixed(2))}</td>
                   </tr>
-                  {rowsWithSpacing.includes(id) && (
-                    <tr><td colSpan={columns}></td></tr>
-                  )}
+                  {index === 0 || rowsWithSpacing.includes(id) ? <tr><td colSpan={columns}></td></tr> : null}
                 </React.Fragment>
               );
-              if (rowsWithSpacing.includes(id)) {
+              if (index === 0 || rowsWithSpacing.includes(id)) {
                 lastGroupTotal = total;
                 lastGroupWarteschlange = warteschlange;
               }
