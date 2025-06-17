@@ -366,24 +366,25 @@ export default function Kapazitaetsplanung() {
 
     const calculateOvertimeSettings = () => {
         const newDropdowns: string[] = [];
+
         const newCustomInputs: number[] = [];
 
         overtimeValues.forEach((value, index) => {
-
             if (value >= 0 && value <= 240) {
                 newDropdowns[index] = "1";
                 newCustomInputs[index] = Math.ceil(value);
             } else if (value <= 480 && value > 240) {
                 newDropdowns[index] = "2";
                 newCustomInputs[index] = 0;
-            } else if (value > 480 && value <= 960) {
-                if (value * 5 + 2400 <= 6666.667) {
-                    newDropdowns[index] = "2";
-                    newCustomInputs[index] = Math.ceil((value * 5 - 2400) / 5);
-                } else {
-                    newDropdowns[index] = "3";
-                    newCustomInputs[index] = 0;
-                }
+            } else if (value > 480 && value <= 720) {
+                newDropdowns[index] = "2";
+                newCustomInputs[index] = Math.ceil((value * 5 - 2400) / 5);
+            } else if (value > 960) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = 0;
+            } else if (value > 720) {
+                newDropdowns[index] = "3";
+                newCustomInputs[index] = 0;
             }
         });
         setDropdownValues(newDropdowns);
@@ -554,7 +555,15 @@ export default function Kapazitaetsplanung() {
                             <tr className={styles.sumRow}>
                                 <td colSpan={4}>{t('capacity.totalcapacityreq')}</td>
                                 {totalCapacities.map((total, index) => (
-                                    <td key={`total-${index}`}>{total}</td>
+                                    <td key={`total-${index}`}>
+                                        {total}
+                                        {total > 7200 && (
+                                            <span className={styles.redExclamation}>
+                                             ⚠
+                                            </span>
+                                        )}
+
+                                    </td>
                                 ))}
                             </tr>
                             <tr className={styles.setupRow}>
@@ -573,11 +582,18 @@ export default function Kapazitaetsplanung() {
                                             className={styles.inputCell}
                                             value={value}
                                             onChange={(e) => {
+                                                let parsed = Number(e.target.value);
+
+                                                if (parsed > 240) parsed = 240;
+                                                if (parsed < 0) parsed = 0;
+
                                                 const newValues = [...customInputsOvertime];
-                                                newValues[index] = Number(e.target.value);
+                                                newValues[index] = parsed;
                                                 setCustomInputsOvertime(newValues);
                                             }}
                                             name={`customInput-${index}`}
+                                            min={0}
+                                            max={240}
                                         />
                                     </td>
                                 ))}
@@ -605,6 +621,11 @@ export default function Kapazitaetsplanung() {
                             </tr>
                             </tfoot>
                         </table>
+                        {totalCapacities.some(total => total > 7200) && (
+                            <div className={styles.legend}>
+                                {t('capacity.warning')}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
