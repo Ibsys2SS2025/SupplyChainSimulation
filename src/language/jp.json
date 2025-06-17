@@ -135,7 +135,8 @@
     "overtime": "1日あたりの残業時間",
     "customInputs": "バッファ付き残業時間",
     "shiftCount": "シフト数",
-    "apply": "計算する"
+    "apply": "計算する",
+    "warning": "⚠ = 容量要件が高すぎます"
   },
   "inputtable": {
     "split": "生産指示を分割",

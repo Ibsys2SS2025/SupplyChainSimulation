@@ -100,7 +100,8 @@
     "overtime": "Überstunden pro Tag",
     "customInputs": "Überstunden",
     "shiftCount": "Anzahl der Schichten",
-    "apply": "Berechnen"
+    "apply": "Berechnen",
+    "warning": "⚠ = Kapazitätsbedarf zu hoch"
   },
   "columns": {
     "partNumber": "Kaufteilnummer",
