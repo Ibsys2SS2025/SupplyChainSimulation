@@ -339,12 +339,21 @@ export default function Data() {
                                 <td>{row.lagerkosten}</td>
                                 <td>
                                     {getFutureInwardStock(row.kaufteilId).length > 0 && (
-                                        <span title={t("extra.hasFutureOrders")}
-                                              style={{color: "orange", fontWeight: "bold"}}>
-                                            📦
-                                        </span>
+                                        <span
+                                            title={
+                                                getFutureInwardStock(row.kaufteilId)
+                                                    .map(order =>
+                                                        `${order.amount}`
+                                                    )
+                                                    .join('\n')
+                                            }
+                                            style={{color: "orange", fontWeight: "bold", cursor: "help"}}
+                                        >
+                                        📦
+                                    </span>
                                     )}
                                 </td>
+
                             </tr>
                         ))}
                         </tbody>
