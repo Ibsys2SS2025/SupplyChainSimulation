@@ -125,7 +125,8 @@ export default function Data() {
 
     const applyDecisionLogic = () => {
         const newData = initialRows.map(row => {
-            const { P1, P2, P3 } = row;
+            const { P1, P2, P3, lieferfrist, abweichung } = row;
+
             const p1n  = getProductionAmount('P1', 'productionP1');
             const p1n1 = getProductionAmount('P1', 'productionP2');
             const p1n2 = getProductionAmount('P1', 'productionP3');
@@ -143,62 +144,69 @@ export default function Data() {
 
             const anfangsbestand = getAmountForPart(row.kaufteilId);
 
-            const bruttobedarfN     = P1 * p1n  + P2 * p2n  + P3 * p3n;
-            const bruttobedarfN1    = P1 * p1n1 + P2 * p2n1 + P3 * p3n1;
-            const bruttobedarfN2    = P1 * p1n2 + P2 * p2n2 + P3 * p3n2;
-            const bruttobedarfN3    = P1 * p1n3 + P2 * p2n3 + P3 * p3n3;
+            const bruttobedarfN  = P1 * p1n  + P2 * p2n  + P3 * p3n;
+            const bruttobedarfN1 = P1 * p1n1 + P2 * p2n1 + P3 * p3n1;
+            const bruttobedarfN2 = P1 * p1n2 + P2 * p2n2 + P3 * p3n2;
+            const bruttobedarfN3 = P1 * p1n3 + P2 * p2n3 + P3 * p3n3;
 
             const totalBruttobedarf = bruttobedarfN + bruttobedarfN1 + bruttobedarfN2 + bruttobedarfN3;
 
-            // bestellungen aus XML
-            // @ts-ignore
             const futureOrders = (xmlData.results?.futureinwardstockmovement?.order || [])
-                .filter((o: any ) => Number(o.$.article) === row.kaufteilId);
+                .filter((o: any) => Number(o.$.article) === row.kaufteilId);
 
             let futureAmounts = [0, 0, 0, 0]; // n, n+1, n+2, n+3
 
             // @ts-ignore
-            futureOrders.forEach((order) => {
+            futureOrders.forEach(order => {
                 const modus = Number(order.$.mode);
                 const amount = Number(order.$.amount);
                 const arrival = Math.floor(
-                    modus === 3
-                        ? row.lieferfrist * 0.2
-                        : modus === 4
-                            ? row.lieferfrist * 0.5
-                            : row.lieferfrist + row.abweichung
+                    modus === 3 ? lieferfrist * 0.2 :
+                        modus === 4 ? lieferfrist * 0.5 :
+                            lieferfrist + abweichung
                 );
                 if (arrival >= 0 && arrival <= 3) {
                     futureAmounts[arrival] += amount;
                 }
             });
 
-            // Periodenweise verfügbarer Bestand
-            const verfügbareBestände = [
-                anfangsbestand + futureAmounts[0],
-                futureAmounts[1],
-                futureAmounts[2],
-                futureAmounts[3]
-            ];
+            // Fenstergrößen berechnen
+            const lieferzeitFenster = Math.min(4, Math.round(lieferfrist + abweichung));
+            const pufferFenster = Math.min(4, lieferzeitFenster + 1);
 
-            const gesamterVerfügbarerBestand = verfügbareBestände.reduce((sum, x) => sum + x, 0);
+            // Bedarf innerhalb Lieferzeit-Fenster
+            const bedarfInFenster =
+                (lieferzeitFenster >= 1 ? bruttobedarfN : 0) +
+                (lieferzeitFenster >= 2 ? bruttobedarfN1 : 0) +
+                (lieferzeitFenster >= 3 ? bruttobedarfN2 : 0) +
+                (lieferzeitFenster >= 4 ? bruttobedarfN3 : 0);
 
-            let bestellArt: string;
-            let bestellMenge: number;
+            // Bedarf inkl. zusätzlicher Puffer-Periode
+            const bedarfMitPuffer =
+                (pufferFenster >= 1 ? bruttobedarfN : 0) +
+                (pufferFenster >= 2 ? bruttobedarfN1 : 0) +
+                (pufferFenster >= 3 ? bruttobedarfN2 : 0) +
+                (pufferFenster >= 4 ? bruttobedarfN3 : 0);
 
+            // Verfügbare Mengen
+            const verfügbareMenge = anfangsbestand + futureAmounts.reduce((sum, x) => sum + x, 0);
+            const verfügbareMengeBisFenster = anfangsbestand + futureAmounts.slice(0, lieferzeitFenster).reduce((sum, x) => sum + x, 0);
 
-            if (gesamterVerfügbarerBestand >= totalBruttobedarf) {
+            let bestellArt = 'kein';
+            let bestellMenge = 0;
+
+            // Erweiterte Entscheidungslogik mit Berücksichtigung vorhandener Bestellungen
+            if (anfangsbestand < bruttobedarfN) {
+                bestellArt = 'JIT';
+                bestellMenge = row.diskontmenge;
+            } else if (anfangsbestand < bedarfInFenster) {
+                bestellArt = 'E';
+                bestellMenge = row.diskontmenge;
+            } else if (verfügbareMenge >= bedarfMitPuffer) {
                 bestellArt = 'kein';
                 bestellMenge = 0;
-            } else {
-                // alte Entscheidungslogik bei Engpässen
-                const lagerBisAnkunft = anfangsbestand - (bruttobedarfN + bruttobedarfN1);
-
-                if (lagerBisAnkunft < 0) {
-                    bestellArt = anfangsbestand < bruttobedarfN ? 'JIT' : 'E';
-                } else {
-                    bestellArt = 'N';
-                }
+            } else if (verfügbareMenge < bedarfMitPuffer) {
+                bestellArt = 'N';
                 bestellMenge = row.diskontmenge;
             }
 
@@ -216,6 +224,10 @@ export default function Data() {
 
         setTableData(newData);
     };
+
+
+
+
 
 
 
