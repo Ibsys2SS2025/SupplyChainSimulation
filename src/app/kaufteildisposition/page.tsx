@@ -347,7 +347,7 @@ export default function Data() {
                                                     )
                                                     .join('\n')
                                             }
-                                            style={{color: "orange", fontWeight: "bold", cursor: "help"}}
+                                            style={{color: "orange", fontWeight: "bold"}}
                                         >
                                         📦
                                     </span>
