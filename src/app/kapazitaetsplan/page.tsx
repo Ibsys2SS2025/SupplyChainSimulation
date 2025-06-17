@@ -609,7 +609,14 @@ export default function Kapazitaetsplanung() {
                                             onChange={(e) => {
                                                 const newDropdowns = [...dropdownValues];
                                                 newDropdowns[index] = e.target.value as "1" | "2" | "3";
+
                                                 setDropdownValues(newDropdowns);
+
+                                                if (e.target.value === '3') {
+                                                    const newValues = [...customInputsOvertime];
+                                                    newValues[index] = 0;
+                                                    setCustomInputsOvertime(newValues);
+                                                }
                                             }}
                                             name={`dropdown-${index}`}
                                         >
