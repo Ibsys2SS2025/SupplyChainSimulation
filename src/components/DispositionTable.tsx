@@ -184,10 +184,10 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
               <td>{(() => {
                 const total = getPlannedProductionP1(productId);
                 lastGroupTotal = total;
+                lastGroupWarteschlange = inputs?.[productId]?.[1] ?? 0;
                 return total;
               })()}</td>
             </tr>
-
             <tr><td colSpan={columns}></td></tr>
 
             {/* Alle dynamischen Zeilen */}
