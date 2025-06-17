@@ -60,15 +60,11 @@ export const XmlDataProvider = ({ children }: { children: ReactNode }) => {
         return MULTI_USE_IDS.includes(id) ? raw / 3 : raw;
     };
 
-    const getProductionP1 = (productId: string): number => {
-        const planning = xmlData?.internaldata?.planning ?? [];
-        const rows = Array.isArray(planning) ? planning : [planning];
-        for (const p of rows) {
-            const article = Array.isArray(p.article) ? p.article[0] : p.article;
-            const prod = Array.isArray(p.productionP1) ? p.productionP1[0] : p.productionP1;
-            if (article === productId) return Number(prod ?? 0);
-        }
-        return 0;
+    const getForecastValue = (productId: string): number => {
+        const forecast = xmlData?.results?.forecast?.$;
+        if (!forecast) return 0;
+        const key = productId.toLowerCase(); // z.B. "p1", "p2", "p3"
+        return Number(forecast[key]) || 0;
     };
 
     useEffect(() => {
@@ -87,7 +83,7 @@ export const XmlDataProvider = ({ children }: { children: ReactNode }) => {
 
             const mainId = productId;
             const [s, w, i] = get(mainId);
-            const production = getProductionP1(mainId);
+            const production = getForecastValue(mainId);
             const stock = getAmountById(mainId.replace('P', ''));
             let mainTotal = production + s - stock - w - i;
             if (mainTotal < 0) mainTotal = 0;
