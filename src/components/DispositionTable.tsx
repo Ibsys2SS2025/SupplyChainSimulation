@@ -164,33 +164,52 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
               <th>{t('disposition.orders_prod')}</th>
             </tr>
           </thead>
+
           <tbody>
-            {[productId, ...dynamicIds].map((id, index, arr) => {
-              const isMain = id === productId;
+            {/* Erste Zeile separat */}
+            <tr>
+              <th scope="row">{productId}</th>
+              <td className={styles.productionCell}>{getForecastValue(productId)}</td>
+              <td></td>
+              <td>+</td>
+              <td></td>
+              <td>{formatValue(inputs?.[productId]?.[0] ?? 0)}</td>
+              <td>-</td>
+              <td>{getAmountById(productId.replace('P', ''))}</td>
+              <td>-</td>
+              <td>{formatValue(inputs?.[productId]?.[1] ?? 0)}</td>
+              <td>-</td>
+              <td>{formatValue(inputs?.[productId]?.[2] ?? 0)}</td>
+              <td>=</td>
+              <td>{(() => {
+                const total = getPlannedProductionP1(productId);
+                lastGroupTotal = total;
+                return total;
+              })()}</td>
+            </tr>
+
+            <tr><td colSpan={columns}></td></tr>
+
+            {/* Alle dynamischen Zeilen */}
+            {dynamicIds.map((id) => {
               const total = calculateRowTotal(
                 id,
                 inputs,
-                isMain,
+                false,
                 lastGroupTotal,
                 lastGroupWarteschlange,
-                getAmountById(isMain ? productId.replace('P', '') : id)
+                getAmountById(id)
               );
               const warteschlange = inputs?.[id]?.[1] ?? 0;
               const row = (
                 <React.Fragment key={id}>
                   <tr>
                     <th scope="row">{rowNames[id] || id}</th>
-                    <td>
-                      {index === 0
-                        ? getForecastValue(productId)
-                        : Number.isInteger(lastGroupTotal)
-                          ? lastGroupTotal
-                          : lastGroupTotal.toFixed(2)}
-                    </td>
+                    <td>{Number.isInteger(lastGroupTotal) ? lastGroupTotal : lastGroupTotal.toFixed(2)}</td>
                     <td>+</td>
                     <td>{Number.isInteger(lastGroupWarteschlange) ? lastGroupWarteschlange : lastGroupWarteschlange.toFixed(2)}</td>
                     <td>+</td>
-                    <td>{isMain ? formatValue(inputs?.[id]?.[0] ?? 0) : renderInput(id, 0)}</td>
+                    <td>{renderInput(id, 0)}</td>
                     <td>-</td>
                     <td>{MULTI_USE_IDS.includes(id) ? getAmountById(id).toFixed(2) : getAmountById(id)}</td>
                     <td>-</td>
@@ -198,12 +217,14 @@ export default function DispositionTable({ productId, dynamicIds, rowsWithSpacin
                     <td>-</td>
                     <td>{formatValue(inputs?.[id]?.[2] ?? 0)}</td>
                     <td>=</td>
-                    <td>{isMain ? getPlannedProductionP1(productId) : (Number.isInteger(total) ? total : total.toFixed(2))}</td>
+                    <td>{Number.isInteger(total) ? total : total.toFixed(2)}</td>
                   </tr>
-                  {index === 0 || rowsWithSpacing.includes(id) ? <tr><td colSpan={columns}></td></tr> : null}
+                  {rowsWithSpacing.includes(id) && (
+                    <tr><td colSpan={columns}></td></tr>
+                  )}
                 </React.Fragment>
               );
-              if (index === 0 || rowsWithSpacing.includes(id)) {
+              if (rowsWithSpacing.includes(id)) {
                 lastGroupTotal = total;
                 lastGroupWarteschlange = warteschlange;
               }
