@@ -92,7 +92,8 @@
     "overtime": "Overtime per Day",
     "customInputs": "Overtime",
     "shiftCount": "Number of Shifts",
-    "apply": "Calculate"
+    "apply": "Calculate",
+    "warning": "⚠ = Capacity requirement too high"
   },
   "inputtable": {
     "split": "Split production order",

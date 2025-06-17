@@ -135,7 +135,8 @@
     "overtime": "Horas extra por día",
     "customInputs": "Horas extra",
     "shiftCount": "Número de turnos",
-    "apply": "Calcular"
+    "apply": "Calcular",
+    "warning": "⚠ = Requisito de capacidad demasiado alto"
   },
   "inputtable": {
     "split": "Dividir orden de producción",
