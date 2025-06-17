@@ -594,6 +594,7 @@ export default function Kapazitaetsplanung() {
                                             name={`customInput-${index}`}
                                             min={0}
                                             max={240}
+                                            disabled={dropdownValues[index] === '3'}
                                         />
                                     </td>
                                 ))}
