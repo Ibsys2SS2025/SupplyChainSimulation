@@ -187,34 +187,45 @@ export default function Data() {
 
             const futureTotal = futureAmounts.reduce((sum, x) => sum + x, 0);
             const verfügbareMenge = anfangsbestand + futureTotal;
+            const verfügbareMengeFenster = anfangsbestand + futureAmounts.slice(0, lieferzeitFenster).reduce((sum, x) => sum + x, 0);
+            const verfügbareMengeN = anfangsbestand + futureAmounts[0];
 
             let bestellArt = 'kein';
             let bestellMenge = 0;
 
-            // --- PRIORISIERTE ANPASSUNGEN ---
-            if (futureTotal > 0 && verfügbareMenge >= bedarfMitPuffer) {
-                bestellArt = 'kein';
-                bestellMenge = 0;
-            } else if (futureTotal > 0 && verfügbareMenge < bedarfMitPuffer) {
-                bestellArt = 'N';
-                bestellMenge = row.diskontmenge;
-            }
-            // --- NORMALE LOGIK ---
-            else if (anfangsbestand < bruttobedarfN) {
-                bestellArt = 'JIT';
-                bestellMenge = row.diskontmenge;
-            } else if (anfangsbestand < bedarfInFenster) {
-                bestellArt = 'E';
-                bestellMenge = row.diskontmenge;
-            } else if (anfangsbestand >= bedarfMitPuffer) {
-                bestellArt = 'kein';
-                bestellMenge = 0;
-            } else if (anfangsbestand >= bedarfInFenster) {
-                bestellArt = 'N';
-                bestellMenge = row.diskontmenge;
+            // --- PRIORISIERTE LOGIK FÜR BESTEHENDE BESTELLUNGEN ---
+            if (futureTotal > 0) {
+                if (verfügbareMengeN < bruttobedarfN) {
+                    bestellArt = 'JIT';
+                    bestellMenge = row.diskontmenge;
+                } else if (verfügbareMengeFenster < bedarfInFenster) {
+                    bestellArt = 'E';
+                    bestellMenge = row.diskontmenge;
+                } else if (verfügbareMenge >= bedarfMitPuffer) {
+                    bestellArt = 'kein';
+                    bestellMenge = 0;
+                } else {
+                    bestellArt = 'N';
+                    bestellMenge = row.diskontmenge;
+                }
             } else {
-                bestellArt = 'N';
-                bestellMenge = row.diskontmenge;
+                // --- FALL OHNE BESTEHENDE BESTELLUNGEN ---
+                if (anfangsbestand < bruttobedarfN) {
+                    bestellArt = 'JIT';
+                    bestellMenge = row.diskontmenge;
+                } else if (anfangsbestand < bedarfInFenster) {
+                    bestellArt = 'E';
+                    bestellMenge = row.diskontmenge;
+                } else if (anfangsbestand >= bedarfMitPuffer) {
+                    bestellArt = 'kein';
+                    bestellMenge = 0;
+                } else if (anfangsbestand >= bedarfInFenster) {
+                    bestellArt = 'N';
+                    bestellMenge = row.diskontmenge;
+                } else {
+                    bestellArt = 'N';
+                    bestellMenge = row.diskontmenge;
+                }
             }
 
             return {
@@ -231,6 +242,7 @@ export default function Data() {
 
         setTableData(newData);
     };
+
 
 
 
