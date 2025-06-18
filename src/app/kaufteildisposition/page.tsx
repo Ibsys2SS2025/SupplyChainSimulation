@@ -64,7 +64,7 @@ export default function Data() {
         { kaufteilId: 52, lieferfrist: 1.6, abweichung: 0.4,P1: 2, P2: 0, P3: 0, diskontmenge: 600,bestellungMenge:600,bestellungArt:'E',lagerkosten:21.06},
         { kaufteilId: 53, lieferfrist: 1.6, abweichung: 0.2,P1: 72, P2: 0, P3: 0, diskontmenge: 22000,bestellungMenge:22000,bestellungArt:'E',lagerkosten:0.09},
         { kaufteilId: 57, lieferfrist: 1.7, abweichung: 0.3,P1: 0, P2: 2, P3: 0, diskontmenge: 600 ,bestellungMenge:600,bestellungArt:'E',lagerkosten:22.67},
-        { kaufteilId: 58, lieferfrist: 1.6, abweichung: 0.5,P1: 0, P2: 0, P3: 72,diskontmenge: 22000 ,bestellungMenge:22000,bestellungArt:'E',lagerkosten:0.13},
+        { kaufteilId: 58, lieferfrist: 1.6, abweichung: 0.5,P1: 0, P2: 72, P3: 0,diskontmenge: 22000 ,bestellungMenge:22000,bestellungArt:'E',lagerkosten:0.13},
         { kaufteilId: 59, lieferfrist: 0.7, abweichung: 0.2,P1: 2, P2: 2, P3: 2, diskontmenge: 1800 ,bestellungMenge:1800,bestellungArt:'E',lagerkosten:0.22}
     ];
     const getArtFromModus = (modus: string | number): string => {
